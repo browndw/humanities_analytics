@@ -1,0 +1,829 @@
+text_id,paper_title,paper_discipline,student_level,student_gender,speaker_status,speaker_l1,paper_type,token_count,paper_features
+BIO.G0.01.1,The Ecology and Epidemiology of Plague,Biology,Final Year Undergraduate,Female,NS,,Report,5193,"Literature review section, Reference to sources"
+BIO.G0.02.1,Host-Parasite Interactions: On the Presumed Sympatric Speciation of Vidua,Biology,Final Year Undergraduate,Male,NS,,Report,2772,"Tables, graphs or figures, Reference to sources"
+BIO.G0.02.2,Sensory Drive and Speciation,Biology,Final Year Undergraduate,Male,NS,,Report,776,Reference to sources
+BIO.G0.02.3,Plant Pollination Systems: Evolutionary Trends in Generalization and Specialization,Biology,Final Year Undergraduate,Male,NS,,Report,585,Reference to sources
+BIO.G0.02.4,"Chromosomal Rearrangements, Recombination Suppression, and Speciation: A Review of Rieseberg 2001",Biology,Final Year Undergraduate,Male,NS,,Report,655,Reference to sources
+BIO.G0.02.5,On the Origins of Man: Understanding the Last Two Million Years,Biology,Final Year Undergraduate,Male,NS,,Report,2935,"Definitions, Discussion of results section, Tables, graphs or figures, Reference to sources"
+BIO.G0.02.6,Genetic Analysis of Drosophila Melanogaster Mutants: To Determine Inheritance and Linkage Patterns,Biology,Final Year Undergraduate,Male,NS,,ResearchPaper,2064,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+BIO.G0.03.1,Lab 3: Plant Competition,Biology,Final Year Undergraduate,Female,NS,,ResearchPaper,1125,"Discussion of results section, Tables, graphs or figures, Reference to sources"
+BIO.G0.03.2,The Effects of Motor Oil on Aquatic Insect Predation,Biology,Final Year Undergraduate,Female,NS,,ResearchPaper,2214,"Abstract, Methodology section, Discussion of results section, Reference to sources"
+BIO.G0.03.3,Comparison of Hypothesis Testing in a High vs. Low-impact Journal,Biology,Final Year Undergraduate,Female,NS,,ResearchPaper,1024,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+BIO.G0.04.1,Fetal Endocrine System,Biology,Final Year Undergraduate,Female,NS,,Report,1270,"Abstract, Reference to sources"
+BIO.G0.04.2,Drosophila Lab Report,Biology,Final Year Undergraduate,Female,NS,,ResearchPaper,2380,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+BIO.G0.04.3,Conjugation Lab Report,Biology,Final Year Undergraduate,Female,NS,,ResearchPaper,1091,"Discussion of results section, Tables, graphs or figures"
+BIO.G0.05.1,Mn (III) TPPS4: A Metallophorphryin Used for Tumor Identification in MRI,Biology,Final Year Undergraduate,Female,NS,,Report,1327,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+BIO.G0.06.1,Global Reproductive Strategies of Tursiops and Stenella (Family Delphinidae),Biology,Final Year Undergraduate,Female,NS,,Report,3408,"Tables, graphs or figures, Literature review section, Reference to sources"
+BIO.G0.07.1,Complementation Between Histidine-Requiring Mutants of Saccharomyces Cerevisiae,Biology,Final Year Undergraduate,Female,NS,,Report,970,"Tables, graphs or figures, Methodology section, Problem-solution pattern, Discussion of results section, Reference to sources"
+BIO.G0.07.2,"Plasmid Transfer, Genetic Stability and Nisin Resistance in Lactococci",Biology,Final Year Undergraduate,Female,NS,,ResearchPaper,1370,"Abstract, Tables, graphs or figures, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+BIO.G0.07.3,Genetic Analysis of a Mutant Strain of Drosophila Melanogaster,Biology,Final Year Undergraduate,Female,NS,,ResearchPaper,2303,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+BIO.G0.08.1,Analysis of a Mutant Strain of Drosophila,Biology,Final Year Undergraduate,Female,NS,,ResearchPaper,2406,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+BIO.G0.09.1,Nest Selection In Weaver Birds,Biology,Final Year Undergraduate,Male,NS,,Report,1434,"Problem-solution pattern, Tables, graphs or figures, Reference to sources"
+BIO.G0.10.1,Bacterial Conjugation and Gene Mapping in E. Coli,Biology,Final Year Undergraduate,Female,NS,,ResearchPaper,1206,"Abstract, Tables, graphs or figures, Methodology section, Definitions, Discussion of results section"
+BIO.G0.10.2,Drosophila Melanogaster Genetic Analysis Experiment,Biology,Final Year Undergraduate,Female,NS,,ResearchPaper,2261,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures"
+BIO.G0.11.1,Exploring the Molecular Responses of Arabidopsis in Hypobaric Environments:,Biology,Final Year Undergraduate,Male,NS,,Proposal,2839,"Abstract, Discussion of results section, Reference to sources"
+BIO.G0.11.2,Mapping of Genes in a Mutant Strain of Drosophila Melanogaster,Biology,Final Year Undergraduate,Male,NS,,ResearchPaper,2056,"Abstract, Tables, graphs or figures, Methodology section, Definitions, Discussion of results section"
+BIO.G0.11.3,Fungal Eye Infections Due to ReNu MoistureLoc,Biology,Final Year Undergraduate,Male,NS,,Report,2060,Reference to sources
+BIO.G0.12.1,The Effect of Initial Carbon Dioxide Concentration on the Rate of Photosynthesis in the Aquatic Plant Elodea,Biology,Final Year Undergraduate,Female,NS,,ResearchPaper,1058,"Problem-solution pattern, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+BIO.G0.12.2,Lab Report 2: Plant Biodiversity ,Biology,Final Year Undergraduate,Female,NS,,Report,1148,"Definitions, Discussion of results section, Reference to sources"
+BIO.G0.13.1,Malaria Disease and Transmission,Biology,Final Year Undergraduate,Female,NS,,Report,2191,"Definitions, Reference to sources"
+BIO.G0.14.1,Mapping of Unknown Mutations in Drosophila Melanogaster,Biology,Final Year Undergraduate,Female,NS,,ResearchPaper,2728,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures"
+BIO.G0.15.1,Invading the Territory of Invasives: The Dangers of Biotic Disturbance,Biology,Final Year Undergraduate,Male,NNS,Chinese,Essay,1259,Reference to sources
+BIO.G0.16.1,Role of Leptin in Cardiovascular Disease,Biology,Final Year Undergraduate,Male,NS,,Report,1834,"Definitions, Tables, graphs or figures, Reference to sources"
+BIO.G0.17.1,Effects of Protein Deficiency on Organ Size in Mus Musculus,Biology,Final Year Undergraduate,Male,NS,,ResearchPaper,2424,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+BIO.G0.18.1,Mammal Diversification,Biology,Final Year Undergraduate,Male,NS,,Report,1342,"Abstract, Discussion of results section, Tables, graphs or figures, Reference to sources"
+BIO.G0.19.1,Malaria Disease and Transmission,Biology,Final Year Undergraduate,Female,NS,,Report,1881,
+BIO.G0.20.1,A Case for a US International Anti-Malaria Program,Biology,Final Year Undergraduate,Male,NS,,Report,1664,"Definitions, Reference to sources"
+BIO.G0.21.1,Prevalence of Haemosporidians in Birds of Northern Michigan,Biology,Final Year Undergraduate,Female,NS,,ResearchPaper,1524,"Abstract, Tables, graphs or figures, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+BIO.G0.22.1,Trunk Forking in Acer Saccharum: a Phototropic Response to Forest Canopy Gaps,Biology,Final Year Undergraduate,Male,NS,,ResearchPaper,2199,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+BIO.G0.23.1,Drosophila Melanogaster lab report,Biology,Final Year Undergraduate,Male,NS,,ResearchPaper,1969,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures"
+BIO.G0.24.1,Varying Infectivity of Diplostomum Flexicaudum in Fish Species of Douglas Lake,Biology,Final Year Undergraduate,Female,NS,,Report,2415,"Abstract, Discussion of results section, Methodology section, Definitions, Problem-solution pattern, Reference to sources"
+BIO.G0.25.1,Malaria in the Twenty-first Century,Biology,Final Year Undergraduate,Female,NS,,Report,1669,"Definitions, Reference to sources"
+BIO.G0.26.1,Case Analysis for Jean Redhorse Osceola ,Biology,Final Year Undergraduate,Female,NS,,Report,1760,"Problem-solution pattern, Discussion of results section, Reference to sources"
+BIO.G0.27.1,Small Mammal Response to Post-fire Forest Succession in Northern Lower Michigan,Biology,Final Year Undergraduate,Female,NS,,ResearchPaper,2111,"Abstract, Tables, graphs or figures, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+BIO.G0.28.1,Niche Partitioning in Bats,Biology,Final Year Undergraduate,Female,NS,,ResearchPaper,1514,"Abstract, Tables, graphs or figures, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+BIO.G0.29.1,Sexual Selection and Male Sacrifice:  From Darwin until Now,Biology,Final Year Undergraduate,Female,NS,,Report,1446,Reference to sources
+BIO.G0.30.1,Assessing selection hypotheses for the CCR5-delta32 mutation in Europeans,Biology,Final Year Undergraduate,Male,NS,,Report,3186,"Discussion of results section, Reference to sources"
+BIO.G0.31.1, Neurobiology Disease Explanation to a Parent,Biology,Final Year Undergraduate,Male,NS,,ResponsePaper,523,Reference to sources
+BIO.G0.32.1,Mangrove Deforestation,Biology,Final Year Undergraduate,Male,NS,,Report,1230,Reference to sources
+BIO.G1.01.1,V. Cholerae: First Steps towards a Spatially Explicit Model ,Biology,First Year Graduate,Male,NNS,Spanish,Proposal,2411,"Abstract, Methodology section, Reference to sources"
+BIO.G1.02.1,Biological Significance of Modular Structures in Protein Networks,Biology,First Year Graduate,Male,NNS,Chinese,ResearchPaper,1626,"Tables, graphs or figures, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+BIO.G1.03.1,Dispersal: a Review and Synthesis,Biology,First Year Graduate,Female,NS,,Report,2251,"Discussion of results section, Reference to sources"
+BIO.G1.04.1,The Evolution of Terrestriality: A Look at the Factors that Drove Tetrapods to Move Onto Land,Biology,First Year Graduate,Male,NS,,Essay,3716,"Tables, graphs or figures, Literature review section, Reference to sources"
+BIO.G1.05.1,Inferring Swimming Mode from Skeletal Proportions in Fossil Pinnipedimorphs,Biology,First Year Graduate,Male,NS,,ResearchPaper,3513,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+BIO.G1.06.1,Temp effects on nitrogen mineralization,Biology,First Year Graduate,Female,NS,,Report,3512,"Discussion of results section, Reference to sources"
+BIO.G1.07.1,Zebrafish and PGC mis-migration,Biology,First Year Graduate,Male,NNS,Chinese,Proposal,1185,
+BIO.G1.08.1,"Boc, sonic hedgehog and commissural axons",Biology,First Year Graduate,Female,NNS,Chinese,Report,862,
+BIO.G1.08.2,Drosophila neuroblasts,Biology,First Year Graduate,Female,NNS,Chinese,ResponsePaper,771,
+BIO.G2.01.1,Relationships and Biogeography of Antillean Cichlids,Biology,Second Year Graduate,Male,NS,,ResearchPaper,3758,"Abstract, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+BIO.G2.02.1,Modularity and the Evolution of Complex Systems,Biology,Second Year Graduate,Female,NS,,Report,2906,Reference to sources
+BIO.G2.03.1,"Cholera Seasonality, Rainfall, and Fadeouts: a Geostatistical Approach",Biology,Second Year Graduate,Male,NNS,Spanish,ResearchPaper,2442,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+BIO.G2.04.1,Polyphyly of the Old World Vultures and Phylogenetic Placement of Gypohierax Angolensis (Aves: Accipitridae) Inferred from Mitochondrial DNA,Biology,Second Year Graduate,Female,NS,,ResearchPaper,1411,"Methodology section, Discussion of results section, Literature review section, Reference to sources"
+BIO.G2.05.1,Application of Microarray Analysis in Drosophila,Biology,Second Year Graduate,Male,NNS,Chinese,Report,791,"Literature review section, Reference to sources"
+BIO.G2.05.2,Assignment: Subcellular Protein Localization,Biology,Second Year Graduate,Male,NNS,Chinese,Report,550,"Definitions, Methodology section, Tables, graphs or figures, Discussion of results section"
+BIO.G2.06.1,A Conserved Role of Cas-Spg System in Endoderm Specification during Early Vertebrate Development,Biology,Second Year Graduate,Female,NNS,Chinese,Proposal,1713,"Methodology section, Problem-solution pattern, Discussion of results section, Reference to sources"
+BIO.G2.07.1,Biofuels and Biodiversity,Biology,Second Year Graduate,Male,NS,,Report,3898,"Definitions, Problem-solution pattern, Reference to sources"
+BIO.G3.01.1,Do Programming-Oriented Environments Provide Favorable Growing Conditions for Hypotheses?,Biology,Third Year Graduate,Male,NS,,ResearchPaper,1578,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+BIO.G3.02.1,Linking scales to understand diversity,Biology,Third Year Graduate,Female,NS,,Proposal,8555,"Definitions, Literature review section, Reference to sources"
+BIO.G3.03.1,Intracellular Electric Field Sensing using Nano-sized Voltmeters,Biology,Third Year Graduate,Female,NS,,Essay,1148,
+CEE.G0.01.1,Mix Proportioning and Fresh Concrete Properties,Civil and Environmental Engineering,Final Year Undergraduate,Male,NS,,Report,1651,"Methodology section, Discussion of results section, Tables, graphs or figures"
+CEE.G0.01.2,Self-Compacting Concrete and Fresh Concrete Properties,Civil and Environmental Engineering,Final Year Undergraduate,Male,NS,,ResearchPaper,1566,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+CEE.G0.01.3,Gradation Analysis and Permeability Tests ,Civil and Environmental Engineering,Final Year Undergraduate,Male,NS,,ResearchPaper,857,"Methodology section, Tables, graphs or figures, Discussion of results section"
+CEE.G0.02.1,Assessment of Candidate Michigan Aggregate,Civil and Environmental Engineering,Final Year Undergraduate,Male,NS,,Report,1110,"Methodology section, Discussion of results section, Tables, graphs or figures"
+CEE.G0.03.1,Glacier Way Dam Site Soils Evaluation,Civil and Environmental Engineering,Final Year Undergraduate,Male,NS,,ResearchPaper,1357,"Discussion of results section, Methodology section, Problem-solution pattern"
+CEE.G0.04.1,Gradation Analyses and Permeability Tests for Glacier Way dam project,Civil and Environmental Engineering,Final Year Undergraduate,Male,NS,,ResearchPaper,1133,"Methodology section, Discussion of results section, Tables, graphs or figures"
+CEE.G0.05.1,Relative density testing for foundation soil of punch presses,Civil and Environmental Engineering,Final Year Undergraduate,Female,NS,,ResearchPaper,804,"Methodology section, Discussion of results section, Tables, graphs or figures"
+CEE.G0.05.2,Design development for the Wight-Green Building,Civil and Environmental Engineering,Final Year Undergraduate,Female,NS,,Report,589,
+CEE.G0.05.3,Schematic design of the Wight-Green Building,Civil and Environmental Engineering,Final Year Undergraduate,Female,NS,,Report,496,
+CEE.G0.06.1,Characteristics of Concrete Aggregates,Civil and Environmental Engineering,Final Year Undergraduate,Female,NS,,ResearchPaper,824,"Methodology section, Discussion of results section, Tables, graphs or figures"
+CEE.G1.01.1,Oral Bioavailability Evaluation of Soil-Borne Chemicals Using In Vitro Bioavailability Tests,Civil and Environmental Engineering,First Year Graduate,Male,NS,,Report,3471,"Abstract, Tables, graphs or figures, Literature review section, Reference to sources"
+CEE.G1.02.1,Necking and Localization in Plane Stress / Strain,Civil and Environmental Engineering,First Year Graduate,Male,NNS,Spanish,ResearchPaper,2194,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+CEE.G1.02.2,Self-Centering Seismic Resistant Systems,Civil and Environmental Engineering,First Year Graduate,Male,NNS,Spanish,Report,2297,"Tables, graphs or figures, Reference to sources"
+CEE.G1.02.3,Seismic Retrofit for Reinforced Concrete Structures: Analysis / Design Techniques,Civil and Environmental Engineering,First Year Graduate,Male,NNS,Spanish,Report,497,"Abstract, Discussion of results section, Reference to sources"
+CEE.G1.03.1,Dundee Wastewater Treatment Plant: a Brief Examination,Civil and Environmental Engineering,First Year Graduate,Female,NS,,Report,3418,"Discussion of results section, Tables, graphs or figures, Reference to sources"
+CEE.G1.04.1,Use of Reinforced Concrete Shear Walls in Steel Framed Buildings,Civil and Environmental Engineering,First Year Graduate,Male,NS,,Report,3435,"Methodology section, Tables, graphs or figures, Reference to sources"
+CEE.G1.05.1,Analysis and Design of Composite Steel-Concrete Columns,Civil and Environmental Engineering,First Year Graduate,Male,NS,,Report,4766,"Definitions, Abstract, Tables, graphs or figures, Reference to sources"
+CEE.G1.06.1,Worker Ergonomic Analysis,Civil and Environmental Engineering,First Year Graduate,Male,NS,,Report,3068,"Tables, graphs or figures"
+CEE.G1.07.1,Reinforced Concrete Design Term Project,Civil and Environmental Engineering,First Year Graduate,Male,NS,,Report,3321,"Abstract, Literature review section, Tables, graphs or figures, Problem-solution pattern, Reference to sources"
+CEE.G1.07.2,The State of Finite Element Modeling of Fiber Reinforced Cement Composites,Civil and Environmental Engineering,First Year Graduate,Male,NS,,Report,1890,"Abstract, Reference to sources"
+CEE.G1.08.1,Electrification of road transportation using ground level power supply,Civil and Environmental Engineering,First Year Graduate,Male,NNS,Malayalam,Critique,1753,"Abstract, Tables, graphs or figures, Problem-solution pattern, Methodology section, Definitions, Discussion of results section"
+CEE.G1.09.1,Durability of Reinforced Concrete ,Civil and Environmental Engineering,First Year Graduate,Male,NS,,Report,3386,
+CEE.G1.10.1,Seismic Design For Tunnels and Underground Infrastructure,Civil and Environmental Engineering,First Year Graduate,Male,NS,,Report,4435,"Abstract, Tables, graphs or figures, Reference to sources"
+CEE.G1.10.2,Soil Improvement: Designing with Tensar Geogrids,Civil and Environmental Engineering,First Year Graduate,Male,NS,,Report,4587,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+CEE.G2.01.1,Sustainability of the Internal Combustion Engine,Civil and Environmental Engineering,Second Year Graduate,Male,NS,,Report,6155,"Abstract, Tables, graphs or figures, Reference to sources"
+CEE.G3.01.1,A Study on an Interaction of Copper-Binding Compounds Between Methanotrophs,Civil and Environmental Engineering,Third Year Graduate,Male,NNS,Korean,ResearchPaper,5918,"Methodology section, Discussion of results section, Reference to sources"
+CEE.G3.02.1,Project: Computation of Deformation,Civil and Environmental Engineering,Third Year Graduate,Male,NNS,Mandarin,ResearchPaper,794,"Tables, graphs or figures"
+CEE.G3.03.1,Contaminant Transport in Constructed Wetlands for Urban Stormwater Management,Civil and Environmental Engineering,Third Year Graduate,Female,NS,,ResearchPaper,4027,"Definitions, Abstract, Tables, graphs or figures, Reference to sources"
+CEE.G3.04.1,Managing CAFOs: Regulatory and Grassroots Control,Civil and Environmental Engineering,Third Year Graduate,Male,NS,,Report,3192,Reference to sources
+CEE.G3.04.2,International Law and Environmental Policy,Civil and Environmental Engineering,Third Year Graduate,Male,NS,,Report,3584,"Definitions, Literature review section, Reference to sources"
+CEE.G3.04.3,Dish-Washing as a Multi-Actor Prisoner's Dilemma,Civil and Environmental Engineering,Third Year Graduate,Male,NS,,Essay,1063,"Tables, graphs or figures"
+CLS.G0.01.1,Comparison of Persian and Assyrian Kings,Classical Studies,Final Year Undergraduate,Female,NS,,Report,2502,Reference to sources
+CLS.G0.02.1,Augustine Anatomized ,Classical Studies,Final Year Undergraduate,Female,NS,,Essay,1144,Reference to sources
+CLS.G0.03.1,Regarding the Public Image of the Emperor Augustus,Classical Studies,Final Year Undergraduate,Male,NS,,Report,874,
+CLS.G0.04.1,Circe's portrayal as a witch in the Odyssey ,Classical Studies,Final Year Undergraduate,Female,NS,,ResponsePaper,440,
+CLS.G0.04.2,Analysis of the Oresteia,Classical Studies,Final Year Undergraduate,Female,NS,,Essay,1588,Reference to sources
+CLS.G0.05.1,The Importance of Germanicus to the Roman Empire,Classical Studies,Final Year Undergraduate,Female,NS,,Report,2205,
+CLS.G0.06.1,Analysis of the Parthenon Frieze,Classical Studies,Final Year Undergraduate,Female,NS,,Essay,1652,
+CLS.G1.01.1,Plato and Hellenistic Poetics:  A Study of Narratological Framing,Classical Studies,First Year Graduate,Male,NS,,Essay,5945,Reference to sources
+CLS.G1.02.1,"Academic Ambitions: Cicero, the Persona of the Philosopher, and Roman Elite Status",Classical Studies,First Year Graduate,Male,NS,,Report,3570,Reference to sources
+CLS.G1.03.1,The Role of Roman manus Marriage in the Institution of Classical Free Marriage,Classical Studies,First Year Graduate,Female,NS,,Report,1685,Reference to sources
+CLS.G1.04.1,The Bellum Hispaniense as a Face of Battle Narrative,Classical Studies,First Year Graduate,Male,NS,,Essay,2261,Reference to sources
+CLS.G2.01.1,The Nightmare of Arcady,Classical Studies,Second Year Graduate,Male,NS,,Essay,5848,Reference to sources
+CLS.G2.02.1,Platonic Thought in Book I of Livy's Ab Urbe Condita,Classical Studies,Second Year Graduate,Male,NS,,Essay,3473,Reference to sources
+CLS.G3.01.1,Corpse Demons in Ancient Greek Magic,Classical Studies,Third Year Graduate,Female,NS,,Essay,3477,"Tables, graphs or figures, Reference to sources"
+ECO.G0.01.1,Article Review: My Anti-Stump Speech,Economics,Final Year Undergraduate,Male,NNS,Mandarin,Report,790,"Tables, graphs or figures"
+ECO.G0.02.1,Analysis of the Microsoft Case,Economics,Final Year Undergraduate,Female,NS,,Report,1260,
+ECO.G0.02.2,The Lysine Cartel and Collusion Theory,Economics,Final Year Undergraduate,Female,NS,,Report,2239,"Abstract, Reference to sources"
+ECO.G0.03.1,Economics of the Illicit-Drug Market,Economics,Final Year Undergraduate,Male,NS,,Essay,3923,Reference to sources
+ECO.G0.04.1,FTC Approves Rocket Joint Venture,Economics,Final Year Undergraduate,Male,NNS,Russian,Report,1022,Reference to sources
+ECO.G0.04.2,Killing Labor with Kindness: The Road to Hell is Paved with Good Intentions,Economics,Final Year Undergraduate,Male,NNS,Russian,Critique,1069,Reference to sources
+ECO.G0.06.1,Family Size and Educational Attainment in Costa Rica,Economics,Final Year Undergraduate,Female,NS,,ResearchPaper,4715,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+ECO.G0.07.1,U.S. Health Insurance,Economics,Final Year Undergraduate,Female,NS,,Report,1951,Reference to sources
+ECO.G0.08.1,Transportation Costs and the Non-Agricultural Sector in 19th Century Brazil,Economics,Final Year Undergraduate,Male,NS,,ResearchPaper,3826,"Literature review section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+ECO.G1.01.1,Pooled Signals: The Effect of Competitive Admissions Processes on College Choice,Economics,First Year Graduate,Male,NS,,ResearchPaper,5227,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+ECO.G1.02.1,Correlation between Straits Times Industrial Index (STI) with Other Key Financial Stock Indexes ,Economics,First Year Graduate,Female,NS,,ResearchPaper,1419,"Abstract, Methodology section, Tables, graphs or figures, Discussion of results section, Reference to sources"
+ECO.G1.02.2,Malaysia and 1997 Asian Financial Crisis,Economics,First Year Graduate,Female,NS,,Report,520,Reference to sources
+ECO.G1.03.1,What Drives the Relationship between Education and Fertility?,Economics,First Year Graduate,Female,NNS,Chinese,ResearchPaper,5008,"Abstract, Tables, graphs or figures, Discussion of results section, Methodology section, Problem-solution pattern, Literature review section, Reference to sources"
+ECO.G2.01.1,Capital Flows and the Role of Institutions,Economics,Second Year Graduate,Female,NNS,"German, Mandarin",ResearchPaper,2052,"Literature review section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+ECO.G2.02.1,Evasion Technologies and Optimal Audits,Economics,Second Year Graduate,Male,NS,,Report,1597,"Definitions, Tables, graphs or figures, Methodology section, Literature review section, Reference to sources"
+ECO.G2.03.1,Debt and Labor Supply,Economics,Second Year Graduate,Male,NS,,Report,3751,Reference to sources
+ECO.G2.04.1,Asymmetric Stock Price Response to Firms' Earnings Announcements,Economics,Second Year Graduate,Male,NNS,Korean,ResearchPaper,4535,"Abstract, Tables, graphs or figures, Methodology section, Definitions, Discussion of results section, Literature review section, Reference to sources"
+ECO.G2.05.1,"Outsourcing Clerical Jobs, an Exploratory Analysis",Economics,Second Year Graduate,Female,NS,,ResearchPaper,5244,"Problem-solution pattern, Tables, graphs or figures, Reference to sources"
+ECO.G2.06.1,Optimal wage contracting with tax avoidance,Economics,Second Year Graduate,Male,NNS,Russian,Proposal,1609,
+ECO.G2.07.1,Shotgun marriages in the US,Economics,Second Year Graduate,Female,NS,,Proposal,782,
+ECO.G2.07.2,Myth and Reality of Flat Tax Reform in Russia,Economics,Second Year Graduate,Female,NS,,ResponsePaper,748,
+ECO.G2.07.3,Decentralization and water pollution,Economics,Second Year Graduate,Female,NS,,Critique,1018,
+ECO.G2.08.1,Referee Report for a Job Market Paper in International Finance,Economics,Second Year Graduate,Male,NNS,Turkish,ResearchPaper,3783,
+ECO.G3.01.1,A Model of the Discrepancy between Corporate Income Tax Report and Output Announcements,Economics,Third Year Graduate,Female,NNS,Korean,ResearchPaper,1274,"Abstract, Tables, graphs or figures, Discussion of results section, Methodology section, Problem-solution pattern, Reference to sources"
+ECO.G3.02.1,On the Covariance Structure of Changes in Consumption in the Health and Retirement,Economics,Third Year Graduate,Male,NS,,ResearchPaper,3448,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+EDU.G0.01.1,Learning In Economics,Education,Final Year Undergraduate,Male,NS,,Report,1964,
+EDU.G0.02.1,Lesson plan evaluation,Education,Final Year Undergraduate,Female,NS,,ResponsePaper,1500,
+EDU.G0.03.1,School Study: Abbott Middle School,Education,Final Year Undergraduate,Female,NS,,Report,1424,Reference to sources
+EDU.G0.04.1,Observations from interview with math student,Education,Final Year Undergraduate,Female,NS,,ResponsePaper,935,"Discussion of results section, Reference to sources"
+EDU.G0.05.1,5th Grade Science Lesson,Education,Final Year Undergraduate,Female,NS,,Report,1674,
+EDU.G0.06.1,Analysis of student discussions (5th grade),Education,Final Year Undergraduate,Female,NS,,Report,708,
+EDU.G0.06.2,Learning and Professional Growth,Education,Final Year Undergraduate,Female,NS,,ResponsePaper,1198,
+EDU.G0.06.3,"Lesson plan: Pepper, Spoons, and Static Electricity",Education,Final Year Undergraduate,Female,NS,,Proposal,1786,"Problem-solution pattern, Tables, graphs or figures"
+EDU.G0.07.1,Personal Reflection of a Learning Difficulty,Education,Final Year Undergraduate,Female,NS,,Report,1950,
+EDU.G0.08.1,Jim Colbert Final Paper,Education,Final Year Undergraduate,Female,NS,,Essay,2717,
+EDU.G0.09.1,Classroom study: Abbott Middle School,Education,Final Year Undergraduate,Female,NS,,Report,3326,Reference to sources
+EDU.G0.10.1,Analysis of 7 UP video,Education,Final Year Undergraduate,Female,NS,,Report,1769,
+EDU.G0.11.1,Student development report: Willow Run High School,Education,Final Year Undergraduate,Female,NS,,Report,1625,
+EDU.G0.12.1,Abbott Middle School Analysis,Education,Final Year Undergraduate,Male,NS,,Report,1553,
+EDU.G0.13.1,Teaching in the Field Reflection,Education,Final Year Undergraduate,Female,NS,,Report,1202,"Tables, graphs or figures"
+EDU.G0.14.1,Math methods final reflection,Education,Final Year Undergraduate,Female,NS,,ResponsePaper,588,
+EDU.G0.15.1,Classroom study: Latin,Education,Final Year Undergraduate,Female,NNS,Russian,Report,2435,Reference to sources
+EDU.G0.16.1,Lesson reflection (class on cloud types),Education,Final Year Undergraduate,Female,NS,,ResponsePaper,643,
+EDU.G0.17.1,Reflection on teaching experience from perspective of Educational Psychology,Education,Final Year Undergraduate,Female,NS,,Report,2104,Definitions
+EDU.G0.19.1,Strategies for Learning Grammar and Vocabulary,Education,Final Year Undergraduate,Female,NS,,Critique,1923,Reference to sources
+EDU.G0.20.1,1st grade teaching report,Education,Final Year Undergraduate,Male,NS,,ResponsePaper,942,
+EDU.G1.01.1,"Perspective on Textual Production, Student Collaboration, and Social Networking Sites",Education,First Year Graduate,Male,NS,,Proposal,2301,"Methodology section, Problem-solution pattern, Literature review section, Reference to sources"
+EDU.G1.03.1,Access to graduate education among women of color,Education,First Year Graduate,Female,NS,,ResearchPaper,6692,"Tables, graphs or figures, Discussion of results section, Definitions, Problem-solution pattern, Literature review section, Reference to sources"
+EDU.G1.04.1,Engaging Commuters in the Teaching and Learning Environment,Education,First Year Graduate,Female,NS,,Report,4382,"Literature review section, Reference to sources"
+EDU.G1.05.1,International Student Adjustment ,Education,First Year Graduate,Female,NNS,Korean,ResearchPaper,4956,"Methodology section, Discussion of results section, Literature review section, Reference to sources"
+EDU.G1.06.1,Lesson Adaptation Paper for Special Needs Student,Education,First Year Graduate,Female,NS,,Report,2274,
+EDU.G1.07.1,"Proficiency, Differentiation, and Universal Education",Education,First Year Graduate,Male,NS,,Critique,2878,Reference to sources
+EDU.G1.08.1,Higher education benefits,Education,First Year Graduate,Female,NS,,Report,3239,Reference to sources
+EDU.G1.09.1,A Critique of the Spellings Report,Education,First Year Graduate,Female,NS,,Critique,2182,"Problem-solution pattern, Reference to sources"
+EDU.G1.10.1,"Separatism, Americanization, and Catholic Schools",Education,First Year Graduate,Male,NS,,Report,2822,Reference to sources
+EDU.G1.11.1,Rethinking Academic Writing About Sexualized Violence,Education,First Year Graduate,Female,NS,,Proposal,5847,"Discussion of results section, Methodology section, Problem-solution pattern, Literature review section, Reference to sources"
+EDU.G1.12.1,Professional Development for Child Care Providers,Education,First Year Graduate,Female,NS,,Report,10041,"Methodology section, Discussion of results section, Literature review section, Reference to sources"
+EDU.G2.01.1,The Economics of Philippine Education,Education,Second Year Graduate,Male,NNS,"Chinese, Tagalog",Report,4351,"Tables, graphs or figures, Reference to sources"
+EDU.G2.01.2,"Language, Literacy, and Policy",Education,Second Year Graduate,Male,NNS,"Chinese, Tagalog",Report,4642,"Problem-solution pattern, Tables, graphs or figures, Reference to sources"
+EDU.G2.02.1,Student Informed Reform,Education,Second Year Graduate,Female,NS,,Essay,1216,Reference to sources
+EDU.G2.03.1,Diversifying Communities of Practice in Higher Education,Education,Second Year Graduate,Female,NS,,Essay,4122,Reference to sources
+EDU.G2.04.1,Beyond Cognitive Skills to Enactment in Sociocultural Contexts,Education,Second Year Graduate,Female,NS,,Critique,1170,Reference to sources
+EDU.G3.01.1,Schools and the development of national identity in young children: A justification for comparison,Education,Third Year Graduate,Female,NS,,Proposal,5557,"Definitions, Tables, graphs or figures, Reference to sources"
+EDU.G3.03.1,The History of American Education: Two Viewpoints,Education,Third Year Graduate,Female,NS,,Report,793,Reference to sources
+EDU.G3.03.2,The Intentions of the Progressive Reformers: Good or Bad?,Education,Third Year Graduate,Female,NS,,Report,1600,Reference to sources
+EDU.G3.03.3,American Education: A Force for Democracy and Integration?,Education,Third Year Graduate,Female,NS,,Essay,3353,Reference to sources
+EDU.G3.03.4,The Unintended Consequences of Reform,Education,Third Year Graduate,Female,NS,,Report,1060,
+EDU.G3.03.5,Immigration and Americanization: Then and Now,Education,Third Year Graduate,Female,NS,,Report,957,
+EDU.G3.03.6,Curriculum Changes in the Progressive Era and Great Depression,Education,Third Year Graduate,Female,NS,,Report,717,Reference to sources
+EDU.G3.03.7,A Turbulent Decade in the Lives of Three American Families,Education,Third Year Graduate,Female,NS,,Report,791,Reference to sources
+EDU.G3.04.1,Growing Trend of Part-time Faculty at Community Colleges,Education,Third Year Graduate,Female,NS,,Report,7314,"Definitions, Tables, graphs or figures, Literature review section, Reference to sources"
+ENG.G0.01.1,Woolf's Women,English,Final Year Undergraduate,Female,NS,,Report,1052,Reference to sources
+ENG.G0.01.2,Douglas's Declaration,English,Final Year Undergraduate,Female,NS,,Report,482,Reference to sources
+ENG.G0.02.1,The Vicar of Wakefield as a Failed Morality Story,English,Final Year Undergraduate,Female,NS,,Essay,1981,Reference to sources
+ENG.G0.03.1,HIV-AIDS Funding,English,Final Year Undergraduate,Female,NS,,Essay,2993,Reference to sources
+ENG.G0.03.2,William Faulkner's As I Lay Dying,English,Final Year Undergraduate,Female,NS,,Essay,2187,Reference to sources
+ENG.G0.04.1,The Absolute Necessity of College Level Writing Courses,English,Final Year Undergraduate,Female,NS,,Essay,743,"Definitions, Reference to sources"
+ENG.G0.05.1,People or Property?,English,Final Year Undergraduate,Female,NS,,Essay,1621,Reference to sources
+ENG.G0.06.1,My Life Is Not a Movie Starring Michelle Pfeiffer or Hilary Swank,English,Final Year Undergraduate,Female,NS,,CreativeWriting,2077,
+ENG.G0.06.2,A (Solitary) Place For Fantasy in Reality,English,Final Year Undergraduate,Female,NS,,Essay,916,Reference to sources
+ENG.G0.06.3,Human-Animal Nature in H.G. Wells and Edgar Allen Poe        ,English,Final Year Undergraduate,Female,NS,,Essay,921,Reference to sources
+ENG.G0.07.1,Effects of digital age on children's literature,English,Final Year Undergraduate,Female,NS,,Essay,1237,Reference to sources
+ENG.G0.09.2,"Historical Places, Violent Spaces: ",English,Final Year Undergraduate,Female,NS,,Essay,2315,Reference to sources
+ENG.G0.10.1,Close Reading Paper: The Tempest (4.1.146-163),English,Final Year Undergraduate,Male,NS,,Report,964,
+ENG.G0.11.1,Bloom &amp; Martha: Are You Not Happy in Your Home?,English,Final Year Undergraduate,Female,NS,,Essay,1751,
+ENG.G0.12.1,Women in Beowulf,English,Final Year Undergraduate,Female,NS,,Essay,1543,Reference to sources
+ENG.G0.13.1,The Love Covenant,English,Final Year Undergraduate,Female,NS,,Essay,1776,
+ENG.G0.13.2,Abraham Drafted to Team Galatians,English,Final Year Undergraduate,Female,NS,,Report,1543,
+ENG.G0.14.1,James Joyce: A Portrait of the Artist as a Young Man,English,Final Year Undergraduate,Female,NS,,Essay,953,
+ENG.G0.15.1,Anna Karenina,English,Final Year Undergraduate,Male,NS,,Essay,2294,Reference to sources
+ENG.G0.16.1,Humans and Animals in the Book of Genesis,English,Final Year Undergraduate,Male,NS,,Report,1285,"Definitions, Reference to sources"
+ENG.G0.17.1,The Grey Zone of Shame,English,Final Year Undergraduate,Male,NS,,Essay,834,Reference to sources
+ENG.G0.17.2,"Survival in Auschwitz: Irony, Reality, and Power",English,Final Year Undergraduate,Male,NS,,Report,1104,Reference to sources
+ENG.G0.18.1,Individuality and Isolation in Moll Flanders,English,Final Year Undergraduate,Female,NNS,Mandarin Chinese,Essay,1766,Reference to sources
+ENG.G0.18.2,Frames and Resistance in Pride and Prejudice,English,Final Year Undergraduate,Female,NNS,Mandarin Chinese,Essay,1765,Reference to sources
+ENG.G0.18.3,Satire and Morality in the Vicar of Wakefield,English,Final Year Undergraduate,Female,NNS,Mandarin Chinese,Essay,1747,Reference to sources
+ENG.G0.18.4,The Space of Dreams in The Age of Innocence,English,Final Year Undergraduate,Female,NNS,Mandarin Chinese,Essay,1695,Reference to sources
+ENG.G0.19.1,A compare and contrast paper using two texts from a Science Fiction course,English,Final Year Undergraduate,Female,NS,,Report,929,
+ENG.G0.19.2,Paper on Invisible Man for an American Lit course,English,Final Year Undergraduate,Female,NS,,Essay,1726,Reference to sources
+ENG.G0.20.1,Autonomy in Robinson Crusoe,English,Final Year Undergraduate,Male,NS,,Essay,1714,Reference to sources
+ENG.G0.21.1,Elevated Language in Beowulf,English,Final Year Undergraduate,Male,NS,,Essay,1670,
+ENG.G0.22.1,Autumnal Imagery in Austen's Persuasion,English,Final Year Undergraduate,Female,NS,,Essay,1389,
+ENG.G0.22.2,Chaucer's The Franklin's Tale and Boccaccio's Il Filocolo,English,Final Year Undergraduate,Female,NS,,Report,3160,Reference to sources
+ENG.G0.23.1,Milton's Relativism ,English,Final Year Undergraduate,Female,NS,,Essay,2105,
+ENG.G0.24.1,Contradiction and Religious Critique: The Pardoner in The Canterbury Tales,English,Final Year Undergraduate,Female,NS,,Essay,2925,Reference to sources
+ENG.G0.25.1,Sexualized Violence and Identity in Achy Obejas' Memory Mambo,English,Final Year Undergraduate,Female,NS,,Essay,3840,Reference to sources
+ENG.G0.26.1,Autoethnography,English,Final Year Undergraduate,Female,NS,,CreativeWriting,1816,Reference to sources
+ENG.G0.26.2,Comparison of Hermia in A Midsummer Night's Dream and Jessica in TheMerchant of Venice,English,Final Year Undergraduate,Female,NS,,Essay,1623,"Definitions, Reference to sources"
+ENG.G0.27.1,The Representation of Jesus and Women in the Gospel of Mark,English,Final Year Undergraduate,Female,NS,,Essay,2251,Reference to sources
+ENG.G0.28.1,Bloom the Critic in Joyce's Ulysses,English,Final Year Undergraduate,Male,NS,,Essay,1936,"Tables, graphs or figures, Reference to sources"
+ENG.G0.29.1,Good People Breaking Rules,English,Final Year Undergraduate,Male,NS,,Essay,1486,"Definitions, Reference to sources"
+ENG.G0.30.1,SIgnificance of Menstruation in Joyce's Ulysses,English,Final Year Undergraduate,Female,NS,,Critique,2971,
+ENG.G0.31.1,"Cursed Inheritances in Go Down, Moses",English,Final Year Undergraduate,Female,NS,,Report,1654,Reference to sources
+ENG.G0.31.2,Jack Zipes and Fairy Tales,English,Final Year Undergraduate,Female,NS,,Report,923,"Definitions, Reference to sources"
+ENG.G0.32.1,Slavery in Robinson Crusoe,English,Final Year Undergraduate,Male,NS,,Essay,1774,Reference to sources
+ENG.G0.33.1,Limited Recovery: Trauma in Obejas' Cuban America,English,Final Year Undergraduate,Male,NS,,Report,2496,
+ENG.G0.34.1,The Law of Love,English,Final Year Undergraduate,Male,NS,,Essay,1558,Reference to sources
+ENG.G0.34.2,The Words of Love Between Us: The Covenant in Hosea,English,Final Year Undergraduate,Male,NS,,Report,1949,Reference to sources
+ENG.G0.34.3,Names of God and Man,English,Final Year Undergraduate,Male,NS,,Report,1776,Reference to sources
+ENG.G0.35.1,Less is More: Courtship in Twelfth Night,English,Final Year Undergraduate,Female,NS,,Essay,1850,
+ENG.G0.35.2,Andrew Marvell's Definition of Love,English,Final Year Undergraduate,Female,NS,,Essay,1174,Reference to sources
+ENG.G0.36.1,Stephen's Deconstruction of Himself in Ulysses,English,Final Year Undergraduate,Male,NS,,Report,2687,Reference to sources
+ENG.G0.37.1,The Last Paper I Ever Wrote in College,English,Final Year Undergraduate,Female,NS,,Essay,2297,Reference to sources
+ENG.G0.38.1,Roman Polanski's Macbeth,English,Final Year Undergraduate,Female,NS,,ResponsePaper,566,
+ENG.G0.38.2,Julie Taymor's Titus,English,Final Year Undergraduate,Female,NS,,ResponsePaper,519,
+ENG.G0.38.3,Return to Suomi,English,Final Year Undergraduate,Female,NS,,CreativeWriting,2270,
+ENG.G0.39.2,The Image of Mary,English,Final Year Undergraduate,Female,NS,,Essay,1290,Reference to sources
+ENG.G0.40.1,Deep Sleep And The Inability To Exist In Works of Fantasy,English,Final Year Undergraduate,Male,NS,,Essay,951,
+ENG.G0.41.1,Anti-Aristotelian Kane,English,Final Year Undergraduate,Male,NS,,Essay,1408,Reference to sources
+ENG.G0.41.2,"Seasons, Ages, Cycles: All As You Like It",English,Final Year Undergraduate,Male,NS,,Critique,1552,Reference to sources
+ENG.G0.41.3,Classical and Modern Representations in O'Neill,English,Final Year Undergraduate,Male,NS,,Essay,1823,Reference to sources
+ENG.G0.42.1,Perspectives on the English Revolution,English,Final Year Undergraduate,Female,NS,,Report,1235,
+ENG.G0.42.2,Sexuality in Ancient Greece,English,Final Year Undergraduate,Female,NS,,Essay,427,Reference to sources
+ENG.G0.43.1,Margery Kempe's Self-Fashioning: Visioning Herself in God,English,Final Year Undergraduate,Female,NS,,Essay,2839,Reference to sources
+ENG.G0.43.2,Defining Wild Nature,English,Final Year Undergraduate,Female,NS,,Report,2512,"Definitions, Reference to sources"
+ENG.G0.44.1,Eve's Understanding of Natural Patriarchy in Paradise Lost,English,Final Year Undergraduate,Female,NS,,Essay,3092,Reference to sources
+ENG.G0.45.1,Charity in Sir Thornhill,English,Final Year Undergraduate,Female,NS,,Essay,1875,Reference to sources
+ENG.G0.46.1,With Magic Comes Power: Exploring Marlowe's Doctor Faustus and Shakespeare's The Tempest,English,Final Year Undergraduate,Male,NS,,Essay,2076,Reference to sources
+ENG.G0.47.1,Female Bonding in the Novel Roxana,English,Final Year Undergraduate,Female,NNS,Urdu,Essay,983,Reference to sources
+ENG.G0.48.1,Creative Exercise in Style and Content,English,Final Year Undergraduate,Female,NS,,Critique,1936,Reference to sources
+ENG.G0.49.1,The Purgatory of the Postmodern,English,Final Year Undergraduate,Female,NS,,Essay,1174,Reference to sources
+ENG.G0.49.2,"The Officer, Solness, and the Dionysian Man",English,Final Year Undergraduate,Female,NS,,Essay,2124,Reference to sources
+ENG.G0.49.3,"This Man Loved Earth, Not Heaven, Enough to Die",English,Final Year Undergraduate,Female,NS,,Essay,2103,Reference to sources
+ENG.G0.50.1,Rosamond Vincy and the Real Sphere,English,Final Year Undergraduate,Female,NS,,Report,1587,Reference to sources
+ENG.G0.51.1,Rejecting Colonial Memory,English,Final Year Undergraduate,Male,NS,,Essay,1971,Reference to sources
+ENG.G0.52.1,Deborah and the Degradation of Israel,English,Final Year Undergraduate,Female,NS,,Essay,1442,
+ENG.G0.53.1,Carwin and the Imp of the Perverse,English,Final Year Undergraduate,Female,NS,,Essay,1374,Reference to sources
+ENG.G0.54.1,Analysis of T.C. Boyle's A Friend of the Earth,English,Final Year Undergraduate,Female,NS,,Report,2606,
+ENG.G0.55.1,Self Destruction in Kindred,English,Final Year Undergraduate,Female,NS,,Essay,1824,Reference to sources
+ENG.G0.55.2,Illustrations in Persepolis,English,Final Year Undergraduate,Female,NS,,Essay,1906,Reference to sources
+ENG.G0.57.1,"Hire Me, You Know You Want To",English,Third Year Graduate,Female,NNS,Chinese,CreativeWriting,1737,
+ENG.G0.58.1,My Reading of Chaucer,English,Third Year Graduate,Male,NNS,Chinese,Essay,2396,"Literature review section, Reference to sources"
+ENG.G1.01.1,Clarissa Consumed,English,First Year Graduate,Female,NS,,Report,3640,Reference to sources
+ENG.G1.02.1,Seeing Selves in Troilus and Cressida,English,First Year Graduate,Male,NS,,Essay,2763,Reference to sources
+ENG.G1.03.1,Theorizing the Analysand Desire,English,First Year Graduate,Female,NS,,Essay,7669,Reference to sources
+ENG.G1.04.1,Sports Literacy and Rhetoric as Power,English,First Year Graduate,Female,NS,,Essay,5704,"Definitions, Reference to sources"
+ENG.G1.05.1,Yeats and Spenser,English,First Year Graduate,Female,NS,,Essay,2135,Reference to sources
+ENG.G1.06.1,Intergenerational Trauma in Nora Okja Keller's Comfort Woman,English,First Year Graduate,Male,NNS,Tamil,Essay,3829,Reference to sources
+ENG.G1.07.1,Categorical Entanglement ,English,First Year Graduate,Female,NS,,Report,8744,Reference to sources
+ENG.G2.01.1,Messianic Masochism in H. Rider Haggard,English,Second Year Graduate,Male,NS,,Essay,2834,
+ENG.G2.02.1,Dramatic Adaptations: Jewish Identity and Narrative Form in The Island Within,English,Second Year Graduate,Male,NS,,Essay,2800,
+ENG.G2.02.2,'City Troubles': Miss Lonelyhearts and the Publicized Privacy of Urban Space,English,Second Year Graduate,Male,NS,,Essay,4410,Reference to sources
+ENG.G2.03.1,Domesticity in Cold War Black Fiction on the Left,English,Second Year Graduate,Female,NS,,Essay,5928,Reference to sources
+ENG.G2.04.1,Augusta Webster Paper,English,Second Year Graduate,Female,NS,,Essay,2264,Reference to sources
+ENG.G2.05.1,St. Alban and English Exemplarity,English,Second Year Graduate,Male,NS,,Critique,7007,Reference to sources
+ENG.G2.06.1,Jews in the New York Harbor,English,Second Year Graduate,Male,NS,,Report,5096,"Literature review section, Reference to sources"
+ENG.G2.07.1,Pedagogical genres,English,Second Year Graduate,Female,NS,,Report,4659,Reference to sources
+ENG.G3.03.1,Into the Light: Avedon's Images of Inmates,English,Third Year Graduate,Female,NS,,Critique,5830,Reference to sources
+ENG.G3.04.1,Creative Multivalence: Social Engagement in Gwendolyn Brooks's 'Maud Martha',English,Third Year Graduate,Female,NS,,Essay,2735,Reference to sources
+HIS.G0.01.1,Unless the Lord Build the House,History,Final Year Undergraduate,Male,NS,,Report,1216,
+HIS.G0.02.1,Early 20th century Britain,History,Final Year Undergraduate,Female,NS,,Report,1084,Reference to sources
+HIS.G0.02.2,Engaging with Documents,History,Final Year Undergraduate,Female,NS,,Report,803,Reference to sources
+HIS.G0.03.1,Smith and Malthus,History,Final Year Undergraduate,Male,NS,,Essay,850,Reference to sources
+HIS.G0.03.2,History as a Philosophic Domain,History,Final Year Undergraduate,Male,NS,,Essay,515,Reference to sources
+HIS.G0.04.1,'Arrowsmith' Book Report,History,Final Year Undergraduate,Female,NS,,Essay,1924,Reference to sources
+HIS.G1.01.1,New Social History,History,First Year Graduate,Female,NS,,Essay,1084,
+HIS.G1.02.1,Joan Scott's 'Gender' in 2007,History,First Year Graduate,Female,NS,,Report,2110,
+HIS.G1.03.1,Sex Education in East and West Germany,History,First Year Graduate,Male,NS,,Essay,6220,Reference to sources
+HIS.G1.04.1,Outsourcing History: On the Necessity of Stepping Out of the Archive,History,First Year Graduate,Female,NNS,Hebrew,Essay,3917,Reference to sources
+HIS.G1.05.1,Trickster Travels Review,History,First Year Graduate,Female,NS,,Report,2745,Reference to sources
+HIS.G1.05.2,Microhistory Review,History,First Year Graduate,Female,NS,,Critique,1971,Reference to sources
+HIS.G1.06.1,Review of Jon T. Coleman's Vicious,History,First Year Graduate,Female,NS,,Report,2504,
+HIS.G1.07.1,Marxist Historical Analysis,History,First Year Graduate,Male,NS,,Report,873,Reference to sources
+HIS.G1.07.2,Capitalism as a Historical Agent,History,First Year Graduate,Male,NS,,Report,1163,
+HIS.G1.08.1,Diaspora and Nation,History,First Year Graduate,Male,NS,,Report,4805,"Literature review section, Reference to sources"
+HIS.G1.09.1,A Battle to Remember? Arrian's Ectaxis contra Alanos,History,First Year Graduate,Male,NS,,Report,3309,"Literature review section, Reference to sources"
+HIS.G1.10.1,Orientalism and History,History,First Year Graduate,Male,NNS,Korean,Critique,2621,Reference to sources
+HIS.G2.01.1,"Crime, Criminal Justice Policy and Space",History,Second Year Graduate,Male,NS,,Report,5212,"Problem-solution pattern, Reference to sources"
+HIS.G2.02.1,Whiteness Studies in Labor History,History,Second Year Graduate,Male,NS,,Report,5004,Reference to sources
+HIS.G2.03.1,Black feminism response paper,History,Second Year Graduate,Female,NS,,ResponsePaper,881,
+HIS.G2.03.2,Black Women and Performance book review,History,Second Year Graduate,Female,NS,,Report,4945,Reference to sources
+HIS.G2.04.1,Chechen War Imaginary,History,Second Year Graduate,Male,NS,,Essay,8529,"Definitions, Reference to sources"
+HIS.G2.05.1,Medieval pilgrimage guides,History,Second Year Graduate,Female,NS,,Essay,8316,Reference to sources
+HIS.G3.01.1,A Gendered Reading of B.R. Ambedkar's Writings and Speeches,History,Third Year Graduate,Female,NS,,Report,4668,Reference to sources
+HIS.G3.02.1,Technology in the Indian Ocean,History,Third Year Graduate,Female,NS,,Report,9803,"Tables, graphs or figures, Reference to sources"
+IOE.G0.01.1,Improving Process Flow in The Oasis and Integrating a New Deli,Industrial and Operational Engineering,Final Year Undergraduate,Female,NS,,Proposal,1493,"Methodology section, Discussion of results section"
+IOE.G0.02.1,Speedometer Design Parameters,Industrial and Operational Engineering,Final Year Undergraduate,Male,NS,,ResearchPaper,2601,"Tables, graphs or figures, Discussion of results section, Methodology section, Problem-solution pattern"
+IOE.G0.03.1,Molding Temperature Analysis for Liquid Rubber Supplier ,Industrial and Operational Engineering,Final Year Undergraduate,Male,NS,,Critique,689,"Problem-solution pattern, Tables, graphs or figures"
+IOE.G0.03.2,Assembly Tolerance Analysis for BBM ,Industrial and Operational Engineering,Final Year Undergraduate,Male,NS,,Critique,1610,"Discussion of results section, Methodology section, Problem-solution pattern, Tables, graphs or figures"
+IOE.G0.04.1,Final Report for the Emergency Department Front End Study to Improve Patient Privacy and Patient and Visitor Flow,Industrial and Operational Engineering,Final Year Undergraduate,Female,NS,,Proposal,6209,"Methodology section, Tables, graphs or figures, Discussion of results section, Reference to sources"
+IOE.G0.05.1,The Importance of Anthropometric Data in Product Design,Industrial and Operational Engineering,Final Year Undergraduate,Female,NS,,ResearchPaper,2395,"Definitions, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+IOE.G0.06.1,External Analysis of the National Society of Black Engineers,Industrial and Operational Engineering,Final Year Undergraduate,Male,NS,,Report,4611,"Tables, graphs or figures"
+IOE.G0.07.1,Honda Facility Location Analysis,Industrial and Operational Engineering,Final Year Undergraduate,Male,NS,,Report,2695,"Discussion of results section, Tables, graphs or figures, Reference to sources"
+IOE.G0.08.1,E-Dining Expansion Project Proposal,Industrial and Operational Engineering,Final Year Undergraduate,Male,NS,,Proposal,1443,Problem-solution pattern
+IOE.G0.09.1,Final Report of E-Dining's New Shipping/Packing Process and Retail Store Layout,Industrial and Operational Engineering,Final Year Undergraduate,Male,NS,,Critique,1562,"Tables, graphs or figures"
+IOE.G0.10.1,Rubberland Liquid Rubber Failure Analysis,Industrial and Operational Engineering,Final Year Undergraduate,Female,NS,,ResearchPaper,2017,"Tables, graphs or figures, Methodology section, Definitions, Discussion of results section, Reference to sources"
+IOE.G0.11.1,Improving Tuttle Springs Operations,Industrial and Operational Engineering,Final Year Undergraduate,Female,NS,,Proposal,3173,
+IOE.G0.12.1,"Choosing between paper towels, cloth toweling rolls and hot air dryers for drying hands",Industrial and Operational Engineering,Final Year Undergraduate,Female,NNS,Bahasa Indonesia,Report,1106,"Discussion of results section, Tables, graphs or figures"
+IOE.G0.12.2,Change of Layout and Processes in the Midville Academy Cafeteria,Industrial and Operational Engineering,Final Year Undergraduate,Female,NNS,Bahasa Indonesia,Proposal,2038,
+IOE.G0.13.1,Developing a Student Transportation Plan in Downtown Detroit,Industrial and Operational Engineering,Final Year Undergraduate,Male,NS,,Report,3552,"Tables, graphs or figures"
+IOE.G1.01.1,Work Methods Analysis for Bagel Preparation ,Industrial and Operational Engineering,First Year Graduate,Male,NS,,ResearchPaper,2016,"Tables, graphs or figures, Methodology section, Problem-solution pattern, Discussion of results section"
+IOE.G1.02.1,Society of Automotive Engineers (SAE) Annual Congress Review,Industrial and Operational Engineering,First Year Graduate,Female,NNS,Korean,ResponsePaper,884,
+IOE.G1.02.2,Effect on Legibility of Surround Luminance and Background/Character Color,Industrial and Operational Engineering,First Year Graduate,Female,NNS,Korean,ResearchPaper,947,"Tables, graphs or figures, Methodology section, Problem-solution pattern, Discussion of results section, Reference to sources"
+IOE.G1.02.3,Hand Grip Force and Coefficient of Friction with Different Materials and Conditions,Industrial and Operational Engineering,First Year Graduate,Female,NNS,Korean,Critique,3337,"Abstract, Tables, graphs or figures, Discussion of results section, Methodology section, Problem-solution pattern, Literature review section, Reference to sources"
+IOE.G1.02.4,2D Static Biomechanical Computations,Industrial and Operational Engineering,First Year Graduate,Female,NNS,Korean,ResearchPaper,1453,"Methodology section, Discussion of results section, Tables, graphs or figures"
+IOE.G1.03.1,Changing the Game: Representing Innovation Through Football,Industrial and Operational Engineering,First Year Graduate,Male,NS,,Report,1704,Reference to sources
+IOE.G1.04.1,A Failed Design or Designed To Fail?,Industrial and Operational Engineering,First Year Graduate,Female,NNS,Marathi,Report,6937,"Tables, graphs or figures, Reference to sources"
+IOE.G1.05.1,Complexity Theory: Simplifying Life for Organizational Theorists,Industrial and Operational Engineering,First Year Graduate,Male,NNS,Teluga,Report,6312,"Definitions, Tables, graphs or figures, Reference to sources"
+IOE.G1.05.2,To Best or Not to Best,Industrial and Operational Engineering,First Year Graduate,Male,NNS,Teluga,Report,2537,Reference to sources
+IOE.G1.06.1,Organizations as Brains: An Information Processing View - An Analysis of the Challenger Disaster,Industrial and Operational Engineering,First Year Graduate,Female,NNS,Chinese,Report,1455,Reference to sources
+IOE.G1.07.1,Supplemental Orders Analysis for Materiel Services Center,Industrial and Operational Engineering,First Year Graduate,Female,NS,,ResearchPaper,2520,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+IOE.G1.08.1,Investigation of MP3 Compression Quality,Industrial and Operational Engineering,First Year Graduate,Male,NS,,ResearchPaper,2839,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+IOE.G1.09.1,Imagen Healthcare Inventory Sharing Plan,Industrial and Operational Engineering,First Year Graduate,Male,NNS,Hindi,Report,1739,"Methodology section, Discussion of results section, Tables, graphs or figures"
+IOE.G1.10.1,Acme Omega Case Study,Industrial and Operational Engineering,First Year Graduate,Male,NNS,Marathi,ResponsePaper,625,"Tables, graphs or figures"
+IOE.G1.10.2,Core and Non Core Processes,Industrial and Operational Engineering,First Year Graduate,Male,NNS,Marathi,Report,753,"Definitions, Tables, graphs or figures"
+IOE.G1.11.1,Revenue Sharing in the National Bossaball League in Tinland,Industrial and Operational Engineering,First Year Graduate,Male,NNS,Tamil,Report,569,"Problem-solution pattern, Discussion of results section, Tables, graphs or figures"
+IOE.G1.11.2,Factory flow benchmarking report,Industrial and Operational Engineering,First Year Graduate,Male,NNS,Tamil,Report,822,
+IOE.G2.01.1,Parameter Optimization of High-Fidelity Simulation Using DOE and Response Surface Methods,Industrial and Operational Engineering,Second Year Graduate,Male,NS,,ResearchPaper,2824,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+IOE.G2.01.2,Organizations as Cultures ,Industrial and Operational Engineering,Second Year Graduate,Male,NS,,Report,1839,"Tables, graphs or figures, Reference to sources"
+IOE.G2.01.3,Managing Change,Industrial and Operational Engineering,Second Year Graduate,Male,NS,,Critique,2020,Reference to sources
+IOE.G2.02.1,"Review of Zheng: Optimality of (S,s) Policies",Industrial and Operational Engineering,Second Year Graduate,Male,NS,,Report,544,
+IOE.G2.02.2,Convergence of Simulation-Based Policy Iteration,Industrial and Operational Engineering,Second Year Graduate,Male,NS,,Essay,345,
+IOE.G2.02.3,Optimality of Randomized Trunk Reservation,Industrial and Operational Engineering,Second Year Graduate,Male,NS,,ResponsePaper,724,
+IOE.G2.03.1,Large Scale Optimization Project,Industrial and Operational Engineering,Second Year Graduate,Female,NS,,ResearchPaper,8170,"Discussion of results section, Problem-solution pattern, Tables, graphs or figures"
+IOE.G2.04.2,Memo - Project Debriefing,Industrial and Operational Engineering,Second Year Graduate,Female,NS,,Critique,1682,Discussion of results section
+IOE.G3.01.1,Water Utility Efficiency Assessment Using a Data Envelopment Analysis ,Industrial and Operational Engineering,Third Year Graduate,Male,NS,,ResearchPaper,4847,"Abstract, Tables, graphs or figures, Discussion of results section, Methodology section, Problem-solution pattern, Reference to sources"
+IOE.G3.03.1,Policy Recommendations for Plug-In Hybrid Vehicles,Industrial and Operational Engineering,Third Year Graduate,Male,NS,,Report,4668,"Abstract, Tables, graphs or figures, Reference to sources"
+LIN.G0.01.1,Interlanguage Analysis Project,Linguistics,Final Year Undergraduate,Female,NS,,ResearchPaper,1035,"Methodology section, Discussion of results section"
+LIN.G0.01.2,Language Lesson Plan,Linguistics,Final Year Undergraduate,Female,NS,,Proposal,1058,"Tables, graphs or figures"
+LIN.G0.02.1,Individual Colonies: Dialect Acquisition in Immigrants ,Linguistics,Final Year Undergraduate,Female,NS,,Essay,2667,Reference to sources
+LIN.G0.03.1,Attitudes towards and Frequency of Multiple Hedging in Written Academic,Linguistics,Final Year Undergraduate,Female,NS,,ResearchPaper,10670,"Methodology section, Definitions, Discussion of results section, Literature review section, Reference to sources"
+LIN.G0.04.1,Instant Messaging: R U Ready 4 It?,Linguistics,Final Year Undergraduate,Female,NNS,Korean,ResearchPaper,2595,"Problem-solution pattern, Discussion of results section, Reference to sources"
+LIN.G0.05.1,The Genre Set for Synchronized Swimmers: A Discourse Analysis at Michigan,Linguistics,Final Year Undergraduate,Female,NS,,Report,3792,
+LIN.G0.06.1,Distinctive Features of Indo-Pakistani English,Linguistics,Final Year Undergraduate,Male,NS,,Report,5953,Reference to sources
+LIN.G0.06.2,A Short Critique of Urdu Teaching Materials,Linguistics,Final Year Undergraduate,Male,NS,,ResponsePaper,922,
+LIN.G0.06.3,Using Limericks in English Language Teaching,Linguistics,Final Year Undergraduate,Male,NS,,Report,1472,
+LIN.G0.07.1,Announcements of Self-Repair in Micase: an Analysis,Linguistics,Final Year Undergraduate,Female,NS,,ResearchPaper,2648,"Methodology section, Tables, graphs or figures, Discussion of results section, Reference to sources"
+LIN.G0.07.2,Age and Input: Which is More Important in Language Learning?,Linguistics,Final Year Undergraduate,Female,NS,,Report,1692,"Problem-solution pattern, Reference to sources"
+LIN.G0.07.3,Morphological Deficits in Children with Specific Language Impairment,Linguistics,Final Year Undergraduate,Female,NS,,Report,1765,Reference to sources
+LIN.G0.08.1,Nicaraguan Sign Language: The Role of Adult Input in the Formation and Development of a Unique Creole,Linguistics,Final Year Undergraduate,Female,NS,,ResearchPaper,4238,"Abstract, Discussion of results section, Literature review section, Reference to sources"
+LIN.G0.09.1,Writing About Portrait Paintings: A Discourse Analysis,Linguistics,Final Year Undergraduate,Female,NS,,Report,3369,Reference to sources
+LIN.G0.10.1,Assignment 2: ESL Lesson Plan,Linguistics,Final Year Undergraduate,Female,NS,,Proposal,1519,
+LIN.G0.10.2,The Distribution of Anaphoric 'So' in Micase,Linguistics,Final Year Undergraduate,Female,NS,,ResearchPaper,2712,"Methodology section, Tables, graphs or figures, Discussion of results section, Reference to sources"
+LIN.G0.11.1,Review of Muniz: Ebonics And Tex-Mex - English By Any Other Name,Linguistics,Final Year Undergraduate,Female,NS,,Critique,757,
+LIN.G0.12.1,National Identity and Language Education Policy,Linguistics,Final Year Undergraduate,Female,NS,,Essay,3438,Reference to sources
+LIN.G0.13.1,Narrative Initiation in Personal Versus Co-Constructed Narratives,Linguistics,Final Year Undergraduate,Female,NS,,Report,2689,"Literature review section, Reference to sources"
+LIN.G0.14.1,My Service Learning Experience,Linguistics,Final Year Undergraduate,Female,NS,,ResponsePaper,912,
+LIN.G1.01.1,Recognizing Textual Entailment With a Modified BLEU Algorithm,Linguistics,First Year Graduate,Male,NS,,ResearchPaper,3682,"Abstract, Tables, graphs or figures, Discussion of results section, Methodology section, Definitions, Problem-solution pattern, Reference to sources"
+LIN.G1.01.2,An Analysis of Vowel Variation in Vlach,Linguistics,First Year Graduate,Male,NS,,ResearchPaper,2154,"Methodology section, Discussion of results section, Tables, graphs or figures"
+LIN.G1.01.3,"Vlach Affricates, Stops, and Fricatives",Linguistics,First Year Graduate,Male,NS,,ResearchPaper,3775,"Methodology section, Discussion of results section, Tables, graphs or figures"
+LIN.G1.01.4,Vlach Stress,Linguistics,First Year Graduate,Male,NS,,ResearchPaper,1406,"Methodology section, Discussion of results section, Tables, graphs or figures"
+LIN.G1.01.5,The Role of Pitch in the Perception of Vlach Stressed Syllables,Linguistics,First Year Graduate,Male,NS,,ResearchPaper,2481,"Methodology section, Discussion of results section, Tables, graphs or figures"
+LIN.G1.02.1,Division of Labor,Linguistics,First Year Graduate,Male,NS,,Essay,2301,"Problem-solution pattern, Reference to sources"
+LIN.G1.02.2,Give Me a Break!  The English Double Object Construction,Linguistics,First Year Graduate,Male,NS,,Report,4402,"Tables, graphs or figures, Reference to sources"
+LIN.G1.03.1,A Discussion of the VP-External and VP-Internal Subjects Hypotheses,Linguistics,First Year Graduate,Male,NS,,Essay,2815,"Tables, graphs or figures, Reference to sources"
+LIN.G1.05.1,Stress in Hawaiian,Linguistics,First Year Graduate,Male,NS,,ResearchPaper,2735,"Tables, graphs or figures, Problem-solution pattern, Discussion of results section, Literature review section, Reference to sources"
+LIN.G1.06.1,German Fricatives,Linguistics,First Year Graduate,Female,NS,,ResearchPaper,2122,"Methodology section, Discussion of results section, Tables, graphs or figures"
+LIN.G1.06.2,Perceptions of Speaker in Computer-Mediated Communication,Linguistics,First Year Graduate,Female,NS,,Proposal,4169,
+LIN.G1.06.3,Variation in Existential Constructions,Linguistics,First Year Graduate,Female,NS,,Report,5428,Reference to sources
+LIN.G1.06.4,Critique of Landau's Explanation of Super-Equi,Linguistics,First Year Graduate,Female,NS,,Critique,5009,
+LIN.G2.01.1,On Question Operators in Chinese Wh-multiple Questions,Linguistics,Second Year Graduate,Female,NNS,Mandarin,Report,4103,"Discussion of results section, Literature review section, Reference to sources"
+LIN.G2.01.2,A Dynamic POS-Tagging-Learned Approach of Chinese WSD,Linguistics,Second Year Graduate,Female,NNS,Mandarin,Proposal,2992,"Definitions, Methodology section, Tables, graphs or figures, Reference to sources"
+LIN.G2.01.3,Reviewing 'On Sense and Reference',Linguistics,Second Year Graduate,Female,NNS,Mandarin,Report,2549,"Tables, graphs or figures, Reference to sources"
+LIN.G2.02.1,Meng- and Wh- Movement in Malay / Indonesian: Review of Cole &amp; Hermon 1998,Linguistics,Second Year Graduate,Female,NS,,Critique,6111,"Tables, graphs or figures, Reference to sources"
+LIN.G2.03.1,A CVX theory of Dutch Syllable Structure,Linguistics,Second Year Graduate,Male,NS,,ResearchPaper,2547,"Abstract, Tables, graphs or figures, Discussion of results section, Methodology section, Problem-solution pattern, Literature review section, Reference to sources"
+LIN.G3.01.1,Conversation as a 'Collaborative Achievement',Linguistics,Third Year Graduate,Female,NNS,"Cantonese, Mandarin",Report,1412,
+LIN.G3.01.2,'Lazy Pronunciation' and the Ideologies of Cantonese Standardization,Linguistics,Third Year Graduate,Female,NNS,"Cantonese, Mandarin",Report,8143,"Problem-solution pattern, Literature review section, Reference to sources"
+LIN.G3.02.1,A Multi-lingual Segmenter by Using Viterbi Algorithm,Linguistics,Third Year Graduate,Female,NNS,Mandarin,ResearchPaper,1691,"Abstract, Discussion of results section, Methodology section, Problem-solution pattern, Literature review section, Reference to sources"
+MEC.G0.02.1,Report on Vapor Compression Cycle Training Cart Testing,Mechanical Engineering,Final Year Undergraduate,Male,NS,,ResearchPaper,1306,"Methodology section, Problem-solution pattern, Discussion of results section, Reference to sources"
+MEC.G0.03.1,Manufacturing System Design for a Car Assembly Process,Mechanical Engineering,Final Year Undergraduate,Male,NS,,Proposal,1434,"Abstract, Methodology section, Tables, graphs or figures"
+MEC.G0.04.1,Thermoelectric Waste Heat Recovery for a Toyota Prius,Mechanical Engineering,Final Year Undergraduate,Female,NS,,ResearchPaper,3211,"Abstract, Tables, graphs or figures, Discussion of results section, Methodology section, Definitions, Problem-solution pattern, Reference to sources"
+MEC.G0.05.1,Design Modifications to Reduce Vibration on Electric Vehicle Drive Shaft,Mechanical Engineering,Final Year Undergraduate,Male,NS,,ResearchPaper,2532,"Tables, graphs or figures, Problem-solution pattern, Discussion of results section, Reference to sources"
+MEC.G0.06.1,Safety Shield Test Fixture,Mechanical Engineering,Final Year Undergraduate,Male,NS,,Report,7361,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+MEC.G0.07.1,Human Fall Monitoring Using MEMS Accelerometers,Mechanical Engineering,Final Year Undergraduate,Male,NS,,ResearchPaper,2022,"Abstract, Tables, graphs or figures, Discussion of results section, Methodology section, Problem-solution pattern, Reference to sources"
+MEC.G0.08.1,Fall-related hip fractures and injury avoidance maneuvers,Mechanical Engineering,Final Year Undergraduate,Male,NS,,ResearchPaper,2635,"Abstract, Tables, graphs or figures, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+MEC.G0.08.2,Identification of Best Damping Material for Impact Vibrations through Solid Wood Flooring Using MEMS Accelerometer,Mechanical Engineering,Final Year Undergraduate,Male,NS,,ResearchPaper,2402,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+MEC.G0.08.3,Modeled Flow Around a Swimmer and their Head to Evaluate TYR's Patented Design,Mechanical Engineering,Final Year Undergraduate,Male,NS,,ResearchPaper,1796,"Discussion of results section, Tables, graphs or figures, Reference to sources"
+MEC.G0.08.4,2D Flow through Channel with Step for 6 k-epsilon Models in Fluent,Mechanical Engineering,Final Year Undergraduate,Male,NS,,Report,1395,"Methodology section, Discussion of results section, Tables, graphs or figures"
+MEC.G0.08.5,Unsteady Flow Across Pipe,Mechanical Engineering,Final Year Undergraduate,Male,NS,,ResearchPaper,1384,"Tables, graphs or figures, Discussion of results section"
+MEC.G0.08.6,Investigation of a Microprocessor Chip Cooling System,Mechanical Engineering,Final Year Undergraduate,Male,NS,,ResearchPaper,1463,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+MEC.G0.10.1,Predicting the Biomechanical Behavior of Aortic Tissue Using Constitutive Models,Mechanical Engineering,Final Year Undergraduate,Female,NNS,Tamil,ResearchPaper,1797,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+MEC.G0.11.1,ME395 - Aluminum Toughness Testing Lab Report,Mechanical Engineering,Final Year Undergraduate,Female,NS,,Report,1591,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+MEC.G0.11.2,ME395 - Thermodynamic Performance of VCC Training Carts,Mechanical Engineering,Final Year Undergraduate,Female,NS,,ResearchPaper,2190,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+MEC.G0.12.1,Attitude Control Report,Mechanical Engineering,Final Year Undergraduate,Female,NS,,Report,801,"Tables, graphs or figures"
+MEC.G1.01.1,Energy Harvesting Using an Embedded Piezoelectric in a Bicycle Tire: Proof of Concept,Mechanical Engineering,First Year Graduate,Male,NS,,ResearchPaper,3598,"Methodology section, Discussion of results section, Literature review section, Tables, graphs or figures, Reference to sources"
+MEC.G1.02.1,Autobody structure mini project,Mechanical Engineering,First Year Graduate,Male,NNS,Korean,Proposal,1929,"Tables, graphs or figures, Problem-solution pattern, Discussion of results section"
+MEC.G1.03.1,Detection and Avoidance of Pedestrians: Literature Review,Mechanical Engineering,First Year Graduate,Female,NS,,Report,5380,"Problem-solution pattern, Reference to sources"
+MEC.G1.04.1,Product Development in a Competitive Global Environment,Mechanical Engineering,First Year Graduate,Male,NNS,Marathi,Proposal,6107,"Problem-solution pattern, Tables, graphs or figures"
+MEC.G1.05.1,Turbulence in internal combustion engines,Mechanical Engineering,First Year Graduate,Female,NNS,Malayalam,ResearchPaper,1591,"Abstract, Tables, graphs or figures, Discussion of results section, Methodology section, Problem-solution pattern, Reference to sources"
+MEC.G1.05.2,A Discussion of Research into Cyclic Flow Variations in Internal Combustion Engines,Mechanical Engineering,First Year Graduate,Female,NNS,Malayalam,Report,2643,"Discussion of results section, Literature review section, Reference to sources"
+MEC.G1.06.1,Results of material properties testing for aluminum specimens,Mechanical Engineering,First Year Graduate,Male,NS,,ResearchPaper,1511,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+MEC.G1.07.1,Anaylsis of midsize car,Mechanical Engineering,First Year Graduate,Male,NS,,ResearchPaper,5435,"Methodology section, Discussion of results section, Tables, graphs or figures"
+MEC.G1.08.1,Multiphase Flow Final Project,Mechanical Engineering,First Year Graduate,Female,NS,,Report,3333,"Tables, graphs or figures, Problem-solution pattern, Discussion of results section, Reference to sources"
+MEC.G1.09.1,Water Irrigation Pump Final Report,Mechanical Engineering,First Year Graduate,Female,NNS,Hindi,Report,6778,"Abstract, Tables, graphs or figures, Discussion of results section, Methodology section, Definitions, Problem-solution pattern, Reference to sources"
+MEC.G2.01.1,Simulation of Quantum Dot Formation Using Finite Element Method,Mechanical Engineering,Second Year Graduate,Male,NNS,Chinese,ResearchPaper,1772,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+MEC.G2.03.1,Achieving 100% Renewable Electricity: A University of Michigan Case Study,Mechanical Engineering,Second Year Graduate,Male,NNS,Hindi,ResearchPaper,2413,"Abstract, Tables, graphs or figures, Discussion of results section, Methodology section, Problem-solution pattern, Reference to sources"
+MEC.G2.04.1,Provably Stable Walking Gaits for a 3-link Robot with Point Feet,Mechanical Engineering,Second Year Graduate,Male,NS,,ResearchPaper,2308,"Tables, graphs or figures, Reference to sources"
+MEC.G3.01.1,Feedforward and feedback control of lane keeping by the human driver,Mechanical Engineering,Third Year Graduate,Male,NNS,Chinese,ResearchPaper,3460,"Abstract, Discussion of results section, Tables, graphs or figures, Reference to sources"
+MEC.G3.02.1,A Pressure Dependent Plasticity Model of Nitinol,Mechanical Engineering,Third Year Graduate,Male,NS,,Report,1611,"Tables, graphs or figures, Methodology section, Problem-solution pattern, Discussion of results section, Reference to sources"
+MEC.G3.03.1,Stretchable Electronics,Mechanical Engineering,Third Year Graduate,Male,NNS,Hindi,Report,1685,"Literature review section, Reference to sources"
+NRE.G0.01.1,Senior Honors Thesis: Factors influencing zooplankton community assemblage,Natural Resources,Final Year Undergraduate,Female,NS,,ResearchPaper,2774,"Abstract, Methodology section, Discussion of results section, Reference to sources"
+NRE.G0.02.1,The World Bank and IMF: Broken but Worth Fixing,Natural Resources,Final Year Undergraduate,Male,NS,,Essay,565,
+NRE.G0.02.2,The New Green Revolution: Positive or Negative?,Natural Resources,Final Year Undergraduate,Male,NS,,Critique,416,
+NRE.G0.02.3,Stiglitz and the UNDP: Differing Perspectives,Natural Resources,Final Year Undergraduate,Male,NS,,Critique,718,
+NRE.G0.03.1,Economics: One of the Many Components of Sustainability,Natural Resources,Final Year Undergraduate,Male,NS,,Essay,989,
+NRE.G0.03.2,Ecology Research Paper,Natural Resources,Final Year Undergraduate,Male,NS,,ResearchPaper,1740,"Abstract, Tables, graphs or figures, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+NRE.G0.04.1,The American Landscape: A Personal Reflection from a Bike Seat,Natural Resources,Final Year Undergraduate,Female,NS,,CreativeWriting,2801,Reference to sources
+NRE.G0.05.1,"The Role of Corporations in the American Public Health Crisis Over Nutrition, Diet, and Diet Related Diseases",Natural Resources,Final Year Undergraduate,Female,NS,,Report,3320,"Problem-solution pattern, Tables, graphs or figures, Reference to sources"
+NRE.G0.06.1,Environmental Justice Movement in SE Asia &amp; The US,Natural Resources,Final Year Undergraduate,Male,NS,,Report,3875,"Abstract, Reference to sources"
+NRE.G0.07.1,Nicotine as a Toxicant,Natural Resources,Final Year Undergraduate,Female,NS,,Report,2634,"Problem-solution pattern, Tables, graphs or figures, Reference to sources"
+NRE.G0.08.1,Urban Planning Memo,Natural Resources,Final Year Undergraduate,Female,NNS,Vietnamese,Report,1734,"Tables, graphs or figures"
+NRE.G0.09.1,Bear Valley Structural Analysis,Natural Resources,Final Year Undergraduate,Female,NS,,Report,587,"Abstract, Methodology section, Tables, graphs or figures"
+NRE.G0.10.1,Acid Mine Drainage,Natural Resources,Final Year Undergraduate,Male,NS,,Critique,1118,"Abstract, Literature review section, Problem-solution pattern, Discussion of results section, Reference to sources"
+NRE.G0.11.1,Materials and the Environment,Natural Resources,Final Year Undergraduate,Male,NS,,Essay,1287,"Abstract, Problem-solution pattern, Tables, graphs or figures, Reference to sources"
+NRE.G1.01.1,Coal-to-Liquids Policy Memo,Natural Resources,First Year Graduate,Male,NS,,Report,3194,Reference to sources
+NRE.G1.02.1,Uniformity in the Food System,Natural Resources,First Year Graduate,Female,NS,,Essay,1801,
+NRE.G1.03.1,Emeral Ash Boror,Natural Resources,First Year Graduate,Female,NS,,Report,1172,"Tables, graphs or figures, Reference to sources"
+NRE.G1.04.1,Managing Conflicts in Agroforestry,Natural Resources,First Year Graduate,Male,NS,,Report,3420,Reference to sources
+NRE.G1.05.1,Propoerty Rights and Decentralization of Forest Management in India,Natural Resources,First Year Graduate,Male,NNS,Hindi,Report,3647,"Tables, graphs or figures, Reference to sources"
+NRE.G1.06.1,Conflict Management: Maine's Moosehead Lake,Natural Resources,First Year Graduate,Female,NS,,Report,3520,Reference to sources
+NRE.G1.07.1,Secondary Plant Compounds of Quaking Aspen (Populus tremuloides): A Review,Natural Resources,First Year Graduate,Female,NS,,Report,1874,"Tables, graphs or figures, Reference to sources"
+NRE.G1.08.1,Renewable Transportation Fuels - 2007 Energy Bill,Natural Resources,First Year Graduate,Female,NS,,Report,665,Reference to sources
+NRE.G1.09.1,Forest Stewardship Council Certification,Natural Resources,First Year Graduate,Female,NS,,Report,2544,
+NRE.G1.10.1,Food Web Ecology,Natural Resources,First Year Graduate,Male,NS,,Proposal,1029,
+NRE.G1.10.2,Assessment and Comparison of Five Different Michigan Streams,Natural Resources,First Year Graduate,Male,NS,,Report,1806,
+NRE.G1.11.1,Comparison of Five Michigan Streams,Natural Resources,First Year Graduate,Female,NS,,Report,1837,"Tables, graphs or figures"
+NRE.G1.12.1,Renewable Energy Expert Report,Natural Resources,First Year Graduate,Male,NS,,Report,4991,"Definitions, Tables, graphs or figures, Reference to sources"
+NRE.G1.14.1,The Northern Rockies Ecosystem Protection Act,Natural Resources,First Year Graduate,Female,NS,,Report,1568,Reference to sources
+NRE.G1.14.2,Executive Order on Off-Road Vehicle Use,Natural Resources,First Year Graduate,Female,NS,,Critique,827,
+NRE.G1.15.1,Created Wetlands,Natural Resources,First Year Graduate,Female,NS,,Report,2802,"Definitions, Tables, graphs or figures, Reference to sources"
+NRE.G1.15.2,Integrated Assessment Final,Natural Resources,First Year Graduate,Female,NS,,Report,786,Problem-solution pattern
+NRE.G1.16.1,Conflict Management: MBTA Term Paper,Natural Resources,First Year Graduate,Female,NS,,Report,3490,"Tables, graphs or figures, Reference to sources"
+NRE.G1.17.1,My Landscape Cultural History,Natural Resources,First Year Graduate,Female,NS,,Report,4783,"Tables, graphs or figures, Reference to sources"
+NRE.G1.18.1,Sewage Treatment and the Need for Regulation,Natural Resources,First Year Graduate,Male,NS,,ResearchPaper,2027,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures"
+NRE.G1.18.2,Farmland Conversion in California,Natural Resources,First Year Graduate,Male,NS,,Report,1802,"Tables, graphs or figures, Reference to sources"
+NRE.G1.19.1,Offshore Drilling Issue Network,Natural Resources,First Year Graduate,Male,NS,,Report,322,Reference to sources
+NRE.G1.20.1,GIS Multi-criteria Analysis Lab,Natural Resources,First Year Graduate,Male,NS,,ResearchPaper,1326,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+NRE.G1.21.1,Conservation of Red Squirrel,Natural Resources,First Year Graduate,Female,NS,,ResearchPaper,1971,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+NRE.G1.22.1,Species Conservation Lab Report,Natural Resources,First Year Graduate,Female,NS,,Report,1564,"Abstract, Tables, graphs or figures, Methodology section, Definitions, Discussion of results section, Reference to sources"
+NRE.G1.22.2,Paper review for Fluvial Ecosystems,Natural Resources,First Year Graduate,Female,NS,,Essay,790,Reference to sources
+NRE.G1.23.1,Snow Leopard Conservation,Natural Resources,First Year Graduate,Female,NS,,Report,1701,"Abstract, Methodology section, Tables, graphs or figures, Discussion of results section, Reference to sources"
+NRE.G1.24.1,Global Warming and Vegetation Types,Natural Resources,First Year Graduate,Male,NS,,Report,1714,"Methodology section, Tables, graphs or figures, Reference to sources"
+NRE.G1.24.2,Ancestral Roots Research Paper: The Farm,Natural Resources,First Year Graduate,Male,NS,,Report,4047,"Tables, graphs or figures, Reference to sources"
+NRE.G1.25.1,Arid Land Restoration,Natural Resources,First Year Graduate,Female,NS,,Report,3390,Reference to sources
+NRE.G1.26.1,Issue Network,Natural Resources,First Year Graduate,Female,NS,,Report,732,"Definitions, Tables, graphs or figures, Reference to sources"
+NRE.G1.27.1,Dissolved Oxygen effected by pollution,Natural Resources,First Year Graduate,Male,NS,,ResearchPaper,2151,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures"
+NRE.G1.27.2,Florida Panther population stabilization tactics,Natural Resources,First Year Graduate,Male,NS,,ResearchPaper,1804,"Abstract, Tables, graphs or figures, Methodology section, Definitions, Discussion of results section, Reference to sources"
+NRE.G1.27.3,"Invasive species, Purple Loosestrife",Natural Resources,First Year Graduate,Male,NS,,Report,1432,Reference to sources
+NRE.G1.27.4,CO2 sequestration,Natural Resources,First Year Graduate,Male,NS,,ResearchPaper,1740,"Abstract, Tables, graphs or figures, Discussion of results section, Methodology section, Problem-solution pattern, Reference to sources"
+NRE.G1.28.1,Garden Grant Proposal,Natural Resources,First Year Graduate,Female,NS,,Proposal,3074,"Abstract, Tables, graphs or figures, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+NRE.G1.29.1,Local people mobilization for China's Reforestation Project,Natural Resources,First Year Graduate,Female,NNS,Chinese,Report,5334,"Abstract, Discussion of results section, Reference to sources"
+NRE.G1.30.1,Individual Exploratory: Yoga,Natural Resources,First Year Graduate,Female,NS,,Report,1749,
+NRE.G1.31.1,Policy decision memo,Natural Resources,First Year Graduate,Female,NNS,Thai,Essay,3387,
+NRE.G2.01.1,The Future of Sustainability,Natural Resources,Second Year Graduate,Male,NS,,Critique,1629,
+NRE.G2.02.1,Brownfield Remediation and Community Revitalization,Natural Resources,Second Year Graduate,Female,NS,,Report,1114,"Abstract, Methodology section, Discussion of results section, Reference to sources"
+NRE.G2.03.1,A Critique of Minnesota's Lakeshore Development Policy,Natural Resources,Second Year Graduate,Male,NS,,Report,4026,"Problem-solution pattern, Tables, graphs or figures, Reference to sources"
+NRE.G2.04.1,Degredation of the Mesoamerican Reef,Natural Resources,Second Year Graduate,Female,NS,,Report,1431,"Problem-solution pattern, Tables, graphs or figures, Reference to sources"
+NRE.G2.05.1,From Sabotage to Sandwiches - The Transformation of Conflict in the Clackamas River Watershed,Natural Resources,Second Year Graduate,Male,NS,,Report,4761,Reference to sources
+NRE.G2.07.1,Impact on atmospheric carbon dioxide levels: Sequestration vs. reduced emissions,Natural Resources,Second Year Graduate,Female,NS,,ResearchPaper,784,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+NRE.G2.08.1,Environmental improvement example,Natural Resources,Second Year Graduate,Female,NNS,Thai,Report,513,Reference to sources
+NRE.G3.01.1,Modeling Top-Down and Bottom-Up Effects on Estuarine Food Webs,Natural Resources,Third Year Graduate,Male,NS,,ResearchPaper,3181,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+NRE.G3.02.1,Policy Decision Memo,Natural Resources,Third Year Graduate,Female,NS,,Essay,2707,Reference to sources
+NUR.G0.01.1,Case Study Analysis of Emergency Contraception Can Reveal Characteristics of Society as a Whole,Nursing,Final Year Undergraduate,Female,NS,,Essay,4003,Reference to sources
+NUR.G0.02.1,Family Paper: An Invitation into the World,Nursing,Final Year Undergraduate,Female,NS,,Report,7900,"Discussion of results section, Tables, graphs or figures, Reference to sources"
+NUR.G0.03.1,What Women Want: Comprehensive Contraceptive Coverage,Nursing,Final Year Undergraduate,Female,NNS,Tamil,Essay,2227,Reference to sources
+NUR.G0.04.1,Socially-Constructed Stress on Women's Health,Nursing,Final Year Undergraduate,Female,NNS,Mandarin,Essay,2704,
+NUR.G0.05.1,High-Risk Antepartum Case Study,Nursing,Final Year Undergraduate,Female,NS,,Report,2460,Reference to sources
+NUR.G0.06.1,Community Aggregate Paper,Nursing,Final Year Undergraduate,Female,NS,,Report,3198,"Tables, graphs or figures, Problem-solution pattern, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+NUR.G0.07.1,Registered Nurse Satisfaction with Nurse Technician Delegation,Nursing,Final Year Undergraduate,Female,NS,,Report,3112,"Tables, graphs or figures, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+NUR.G0.08.1,Psychiatric Nursing Case Study,Nursing,Final Year Undergraduate,Female,NS,,Report,4347,Reference to sources
+NUR.G0.09.1,Hand Hygiene Project ,Nursing,Final Year Undergraduate,Female,NS,,Report,3387,"Methodology section, Discussion of results section, Literature review section, Reference to sources"
+NUR.G0.10.1,Management Paper - Wound Documentation ,Nursing,Final Year Undergraduate,Female,NS,,Report,4288,Reference to sources
+NUR.G0.11.1,Postpartum Exercise and Activity,Nursing,Final Year Undergraduate,Female,NS,,Report,5637,"Literature review section, Reference to sources"
+NUR.G0.12.1,An Aggregate-Based Diabetes Prevention Project,Nursing,Final Year Undergraduate,Female,NS,,Proposal,1605,"Discussion of results section, Reference to sources"
+NUR.G0.13.1,HIV education intervention,Nursing,Final Year Undergraduate,Female,NS,,ResearchPaper,2041,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+NUR.G0.14.1,Mother-to-Child Transmission of AIDS,Nursing,Final Year Undergraduate,Female,NS,,Report,2919,"Discussion of results section, Literature review section, Reference to sources"
+NUR.G0.15.1,Circumcision: Challenging a Social Norm,Nursing,Final Year Undergraduate,Female,NS,,Essay,4479,"Problem-solution pattern, Tables, graphs or figures, Reference to sources"
+NUR.G0.15.2,Inadequate Activity: Assessment and Intervention,Nursing,Final Year Undergraduate,Female,NS,,ResearchPaper,3174,"Methodology section, Discussion of results section, Literature review section, Reference to sources"
+NUR.G0.16.1,A Call For Change: Racial Disparities in Infant Mortality Rates,Nursing,Final Year Undergraduate,Female,NS,,Report,2614,Reference to sources
+NUR.G0.17.1,Children at the Expense of Our Health?,Nursing,Final Year Undergraduate,Female,NS,,Essay,3420,Reference to sources
+NUR.G1.01.1,The Critique of Bracht's Community Analysis,Nursing,First Year Graduate,Female,NNS,Mandarin,Report,3255,"Definitions, Reference to sources"
+NUR.G1.02.1,"Interrelationship of Theory, Research, &amp; Practice",Nursing,First Year Graduate,Female,NS,,Report,868,Reference to sources
+NUR.G1.02.2,A Concept Analysis of Trust,Nursing,First Year Graduate,Female,NS,,Report,1996,"Definitions, Literature review section, Reference to sources"
+NUR.G1.03.1,Effects of Environmental Manipulation in Congestive Heart Failure,Nursing,First Year Graduate,Male,NS,,Report,1541,"Tables, graphs or figures, Reference to sources"
+NUR.G1.04.1,Practice Paradigm in Nursing,Nursing,First Year Graduate,Female,NNS,Romanian,Report,1164,Reference to sources
+NUR.G1.04.2,Practice Paradigm in Nursing: From Theory to Practice,Nursing,First Year Graduate,Female,NNS,Romanian,Report,953,Reference to sources
+NUR.G1.05.1,Autism and Vaccines: Where does the Evidence Stand?,Nursing,First Year Graduate,Female,NS,,Report,1595,"Literature review section, Reference to sources"
+NUR.G1.06.1,Top Ten U.S. Health Problems,Nursing,First Year Graduate,Female,NS,,Report,2878,Reference to sources
+NUR.G1.07.1,Value in Health Care,Nursing,First Year Graduate,Female,NNS,Bengali,Essay,2715,Reference to sources
+NUR.G1.08.1,Improving patient value in health care,Nursing,First Year Graduate,Female,NS,,Report,2845,"Definitions, Problem-solution pattern, Reference to sources"
+NUR.G2.01.1,The 10 most effective life strategies,Nursing,Second Year Graduate,Female,NS,,Report,3683,"Problem-solution pattern, Reference to sources"
+NUR.G2.02.1,Family and Chronic Illness: A Home Visit,Nursing,Second Year Graduate,Female,NS,,Report,8692,"Tables, graphs or figures, Reference to sources"
+NUR.G2.03.1,Reflection &amp; Analysis Critique on a Client with Chronic Illness,Nursing,Second Year Graduate,Female,NNS,Korean,Report,4598,"Problem-solution pattern, Literature review section, Reference to sources"
+NUR.G2.03.2,Bipolar disorder management plan,Nursing,Second Year Graduate,Female,NNS,Korean,Proposal,2481,"Definitions, Methodology section, Reference to sources"
+NUR.G2.03.3,Integrated Literature Review and Proposal for Provide-Patient Interaction,Nursing,Second Year Graduate,Female,NNS,Korean,Proposal,4440,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+NUR.G2.03.4,Interaction Model of Client Health Behavior and Womanist Thought,Nursing,Second Year Graduate,Female,NNS,Korean,Report,3700,"Tables, graphs or figures, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+NUR.G2.04.1,Nursing Minimum Data Sets and Gadamer's Hermeneutic Philosophy of Language,Nursing,Second Year Graduate,Female,NS,,Report,2063,"Problem-solution pattern, Literature review section, Reference to sources"
+NUR.G2.05.1,Adolescent Condom Use and the Theory of Planned Behavior,Nursing,Second Year Graduate,Female,NNS,Unknown,Report,2147,"Literature review section, Reference to sources"
+NUR.G3.01.1,A Model to Test the Effectiveness of Standardized Nursing Terminologies in Electronic Medical Records,Nursing,Third Year Graduate,Female,NS,,Proposal,2904,"Methodology section, Tables, graphs or figures, Literature review section, Reference to sources"
+NUR.G3.02.1,Parent Question Paper,Nursing,Third Year Graduate,Female,NS,,Report,993,Reference to sources
+NUR.G3.03.1,Family Caregivers of Recurrent Breast Cancer Patients: Factors Affecting Perceived Burden,Nursing,Third Year Graduate,Female,NS,,Report,4653,"Tables, graphs or figures, Literature review section, Reference to sources"
+NUR.G3.04.1,Colon Therapy: Science or Pseudoscience?,Nursing,Third Year Graduate,Female,NS,,Report,1688,"Definitions, Reference to sources"
+NUR.G3.05.1,KASE-AQ Pediatric,Nursing,Third Year Graduate,Female,NS,,ResearchPaper,6117,"Abstract, Tables, graphs or figures, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+NUR.G3.06.1,Research protocol for dissertation research,Nursing,Third Year Graduate,Female,NNS,Urdu,Proposal,4022,"Methodology section, Tables, graphs or figures, Discussion of results section"
+PHI.G0.01.1,George Schlesinger and Pascal's Wager,Philosophy,Final Year Undergraduate,Female,NS,,Critique,1678,Reference to sources
+PHI.G0.02.1,Aristotle on Friendship,Philosophy,Final Year Undergraduate,Male,NS,,Critique,2008,Reference to sources
+PHI.G0.02.2,Explaining Locke's Primary and Secondary Qualities,Philosophy,Final Year Undergraduate,Male,NS,,Critique,1648,"Definitions, Problem-solution pattern, Reference to sources"
+PHI.G0.02.3,Two Distinctions in Kant,Philosophy,Final Year Undergraduate,Male,NS,,Report,1810,Reference to sources
+PHI.G0.03.1,Grice's Analysis of Metaphor and Irony,Philosophy,Final Year Undergraduate,Female,NS,,Report,2111,"Definitions, Reference to sources"
+PHI.G0.04.1,The Morality of Commonality and Agent-Specific Restrictions,Philosophy,Final Year Undergraduate,Male,NS,,Report,2144,Reference to sources
+PHI.G0.04.2,Moral Approval and Disapproval,Philosophy,Final Year Undergraduate,Male,NS,,Essay,1874,Reference to sources
+PHI.G0.05.1,The Pits and Folds of Religious Tolerance,Philosophy,Final Year Undergraduate,Male,NS,,Essay,1647,Reference to sources
+PHI.G0.06.1,Examining Socrates' Desire Theory,Philosophy,Final Year Undergraduate,Female,NS,,Critique,1303,
+PHI.G0.06.2,Pleonexia and Socrates&#8217; Republic,Philosophy,Final Year Undergraduate,Female,NS,,Critique,1353,Reference to sources
+PHI.G0.06.3,The Meaning of Wrong,Philosophy,Final Year Undergraduate,Female,NS,,Report,1498,
+PHI.G0.06.4,The Embezzlement Problem,Philosophy,Final Year Undergraduate,Female,NS,,Essay,1352,Reference to sources
+PHI.G0.06.5,The Evaluative Role of Pain,Philosophy,Final Year Undergraduate,Female,NS,,ResponsePaper,260,
+PHI.G0.06.6,Emotivism and Solomon's Theory of Emotions,Philosophy,Final Year Undergraduate,Female,NS,,Essay,392,Reference to sources
+PHI.G0.06.7,Gilbert and Directions of Correspondence: a Critique of Velleman,Philosophy,Final Year Undergraduate,Female,NS,,Critique,600,
+PHI.G0.06.8,Reliabilism as a theory of justification,Philosophy,Final Year Undergraduate,Female,NS,,Essay,2052,Reference to sources
+PHI.G0.07.1,"Hypothetical Imperatives, Moral Imperatives, and the Objectivity of Values",Philosophy,Final Year Undergraduate,Male,NS,,Essay,1992,Reference to sources
+PHI.G0.07.2,The Doctrine of Double Effect and Intuitions Regarding Hiroshima and Nagasaki,Philosophy,Final Year Undergraduate,Male,NS,,Essay,2302,Reference to sources
+PHI.G0.08.1,The Cartesian Circle,Philosophy,Final Year Undergraduate,Male,NS,,Report,868,Reference to sources
+PHI.G0.08.2,Reliabilism as a theory of knowledge,Philosophy,Final Year Undergraduate,Male,NS,,Report,1091,Reference to sources
+PHI.G0.09.1,Kant's Transcendental Aesthetic,Philosophy,Final Year Undergraduate,Female,NS,,Critique,1539,
+PHI.G0.10.1,Music and Negative Emotion,Philosophy,Final Year Undergraduate,Female,NS,,Critique,2902,
+PHI.G0.11.1,Final Cause and Necessity in Nature,Philosophy,Final Year Undergraduate,Male,NS,,Report,1366,Reference to sources
+PHI.G0.12.1,Homosexuality and Marriage,Philosophy,Final Year Undergraduate,Female,NS,,Essay,1548,Reference to sources
+PHI.G0.13.1,"The Chinese Room, and What it Takes to Build a Mind",Philosophy,Final Year Undergraduate,Male,NS,,Critique,1318,Reference to sources
+PHI.G0.14.1,Early Fetuses and Constitutional Rights,Philosophy,Final Year Undergraduate,Female,NS,,Essay,2237,Reference to sources
+PHI.G0.15.1,Transaction Ethics,Philosophy,Final Year Undergraduate,Female,NNS,Bosnian,Essay,1177,Reference to sources
+PHI.G0.16.1,Basic Frameworks of Moral Justification and Hierarchy of Human Needs,Philosophy,Final Year Undergraduate,Female,NNS,Chinese,Essay,2054,Reference to sources
+PHI.G0.17.1,The composition of the Earth,Philosophy,Final Year Undergraduate,Female,NS,,Report,1391,Reference to sources
+PHI.G0.17.2,God and Omnipotence,Philosophy,Final Year Undergraduate,Female,NS,,Report,1602,
+PHI.G0.18.1,John Locke and Knowledge,Philosophy,Final Year Undergraduate,Male,NS,,Essay,1289,
+PHI.G0.18.2,Determinism and Free Will,Philosophy,Final Year Undergraduate,Male,NS,,Report,1619,Definitions
+PHI.G0.19.1,Hume and Smith on Justice ,Philosophy,Final Year Undergraduate,Male,NS,,Report,4118,Reference to sources
+PHI.G1.01.1,Can a lump of clay and a statue be identical?,Philosophy,First Year Graduate,Male,NS,,Essay,2624,Reference to sources
+PHI.G1.02.1,A Defense of Ontological Relativity,Philosophy,First Year Graduate,Male,NNS,Spanish,Essay,5477,Reference to sources
+PHI.G1.02.2,The Problem of Necessary / a posteriori and Contingent / a priori Truths,Philosophy,First Year Graduate,Male,NNS,Spanish,ResearchPaper,3485,"Definitions, Tables, graphs or figures, Reference to sources"
+PHI.G1.03.1,Does Conceivability Imply Possibility? Relieveing Kripke's Worries about Mind-Body Identity,Philosophy,First Year Graduate,Male,NS,,Report,4511,Abstract
+PHI.G1.04.1,Explanation and Understanding,Philosophy,First Year Graduate,Male,NNS,Swedish,Essay,1974,Reference to sources
+PHI.G1.05.1,The priority of equal opportunity,Philosophy,First Year Graduate,Male,NS,,Critique,3368,"Problem-solution pattern, Reference to sources"
+PHI.G2.01.1,On Hempel's Account of Scientific Explanations,Philosophy,Second Year Graduate,Female,NS,,Essay,2245,Reference to sources
+PHI.G2.02.1,Can We Say the Luminiferous Aether Isn't Real?,Philosophy,Second Year Graduate,Male,NS,,Essay,2893,"Problem-solution pattern, Reference to sources"
+PHI.G3.01.1,That's Some Fancy Thinkin': Accounting for Pretended Ideas in Hume's Treatise,Philosophy,Third Year Graduate,Male,NS,,Essay,7923,Reference to sources
+PHI.G3.02.1,Defending a Broader Intentionalism,Philosophy,Third Year Graduate,Male,NS,,Essay,3478,"Definitions, Abstract, Problem-solution pattern, Reference to sources"
+PHI.G3.03.1,Aristotle on Belief and Imagination,Philosophy,Third Year Graduate,Male,NS,,Essay,12118,"Definitions, Reference to sources"
+PHY.G0.01.1,Measuring Planck's Constant with the Photoelectric Effect,Physics,Final Year Undergraduate,Male,NS,,ResearchPaper,1294,"Abstract, Tables, graphs or figures, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+PHY.G0.01.2,Quantum Mechanical Solutions to Problems with the Solar Model,Physics,Final Year Undergraduate,Male,NS,,Report,1642,"Definitions, Problem-solution pattern, Reference to sources"
+PHY.G0.02.1,"Energy Minimization, Molecular Mechanics, and Chemistry",Physics,Final Year Undergraduate,Male,NS,,ResearchPaper,3582,"Tables, graphs or figures, Discussion of results section"
+PHY.G0.03.1,Determination of the Charge-to-Mass Ratio of the Electron ,Physics,Final Year Undergraduate,Female,NS,,ResearchPaper,1215,"Discussion of results section, Tables, graphs or figures"
+PHY.G0.04.1,Gamma Ray Spectroscopy,Physics,Final Year Undergraduate,Female,NS,,ResearchPaper,2076,"Abstract, Tables, graphs or figures, Methodology section, Definitions, Discussion of results section, Reference to sources"
+PHY.G0.04.2,Atomic and Molecular Spectroscopy,Physics,Final Year Undergraduate,Female,NS,,ResearchPaper,1268,"Abstract, Methodology section, Tables, graphs or figures"
+PHY.G1.01.1,Bose-Einstein Condensation,Physics,First Year Graduate,Male,NS,,Report,1470,"Abstract, Tables, graphs or figures, Reference to sources"
+PHY.G1.02.1,Optical Lattices: A Study of Bose-Hubbard Model,Physics,First Year Graduate,Female,NNS,Chinese,Report,1129,"Discussion of results section, Reference to sources"
+PHY.G2.01.1,The Weaponization of Space,Physics,Second Year Graduate,Male,NS,,Report,2846,Reference to sources
+PHY.G2.02.1,Search for SUSY Signatures in the Dilepton Channel at CDF,Physics,Second Year Graduate,Male,NNS,Sinhala,Report,1545,"Abstract, Discussion of results section, Tables, graphs or figures, Reference to sources"
+PHY.G2.03.1,Fast Quantum Gates with Trapped Ions,Physics,Second Year Graduate,Male,NS,,Report,1531,"Abstract, Tables, graphs or figures, Discussion of results section, Reference to sources"
+PHY.G2.03.2,Teleportation with Trapped Ions,Physics,Second Year Graduate,Male,NS,,Critique,649,Reference to sources
+PHY.G2.04.1,Tripod-STIRAP,Physics,Second Year Graduate,Female,NS,,Report,1082,"Tables, graphs or figures, Reference to sources"
+PHY.G2.05.1,Opinion Dynamics in a Voter Model,Physics,Second Year Graduate,Male,NS,,ResearchPaper,1309,"Definitions, Methodology section, Discussion of results section, Reference to sources"
+PHY.G2.05.2,Fixation in a generalized voter model,Physics,Second Year Graduate,Male,NS,,Report,887,"Definitions, Tables, graphs or figures, Reference to sources"
+PHY.G2.06.1,Percolation on the Kleinberg Small-World Networks,Physics,Second Year Graduate,Male,NS,,ResearchPaper,1357,"Tables, graphs or figures, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+PHY.G2.07.1,Interacting network dynamics of neural populations,Physics,Second Year Graduate,Female,NS,,Report,1669,"Methodology section, Reference to sources"
+PHY.G2.08.1,Atom Interferometer as a Sagnac Effect Gyroscope,Physics,Second Year Graduate,Female,NS,,Report,689,"Tables, graphs or figures, Reference to sources"
+PHY.G3.01.1,2D Electronic Spectroscopy of Biological Systems,Physics,Third Year Graduate,Male,NS,,Proposal,1494,"Methodology section, Tables, graphs or figures, Reference to sources"
+PHY.G3.02.1,Quantum Information Article Critique,Physics,Third Year Graduate,Male,NS,,Report,717,"Tables, graphs or figures"
+PHY.G3.03.1,Effective Gauge Fields in Optical Lattices,Physics,Third Year Graduate,Male,NS,,Report,2373,"Abstract, Tables, graphs or figures, Literature review section, Reference to sources"
+POL.G0.01.1,Roe v. Wade,Political Science,Final Year Undergraduate,Female,NS,,Essay,2930,Reference to sources
+POL.G0.01.2,Electoral Reform in Indonesia,Political Science,Final Year Undergraduate,Female,NS,,ResearchPaper,3851,"Tables, graphs or figures, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+POL.G0.02.1," midterm, law and public policy/ constitutional law",Political Science,Final Year Undergraduate,Female,NNS,Filipino,Critique,904,Reference to sources
+POL.G0.02.2,Curbing corruption through electoral reform ,Political Science,Final Year Undergraduate,Female,NNS,Filipino,Report,2801,"Definitions, Tables, graphs or figures, Reference to sources"
+POL.G0.03.1,The impact of the rise of political activity on the Internet on Democratic victories in the midterm elections of 2006,Political Science,Final Year Undergraduate,Male,NS,,Proposal,2417,"Methodology section, Problem-solution pattern, Literature review section"
+POL.G0.03.2,The E.U.: An Intergovernmental Organization with Supranational Aspirations,Political Science,Final Year Undergraduate,Male,NS,,Essay,3106,Reference to sources
+POL.G0.04.1,Democratization of the European Union,Political Science,Final Year Undergraduate,Male,NS,,Essay,2218,Reference to sources
+POL.G0.05.1,How much choice is too much?,Political Science,Final Year Undergraduate,Male,NS,,Essay,1781,Reference to sources
+POL.G0.06.1,Candidate debates in Vermont ??,Political Science,Final Year Undergraduate,Male,NS,,Report,791,Reference to sources
+POL.G0.07.1,Legal Reasoning in Lawrence v Texas,Political Science,Final Year Undergraduate,Male,NS,,Essay,2511,Reference to sources
+POL.G0.09.1,Estelle v. Gamble - Healthcare in the Prison System,Political Science,Final Year Undergraduate,Male,NS,,Essay,3094,Reference to sources
+POL.G0.11.1,German Surrender of Autonomy to Fascism,Political Science,Final Year Undergraduate,Female,NS,,Essay,1280,
+POL.G0.12.1,The Role of Party Identification in Voting Behavior,Political Science,Final Year Undergraduate,Male,NS,,Essay,2774,Reference to sources
+POL.G0.13.1,Daily Show Political Analysis,Political Science,Final Year Undergraduate,Female,NNS,Hindi,ResearchPaper,4229,"Tables, graphs or figures, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+POL.G0.14.1,Tufte and The Political Business Cycle,Political Science,Final Year Undergraduate,Male,NS,,Proposal,2744,"Methodology section, Literature review section, Reference to sources"
+POL.G0.15.1,Presidential Library- Vietnam Withdrawal,Political Science,Final Year Undergraduate,Male,NS,,Report,1356,Reference to sources
+POL.G0.16.1,Human Trafficking in an International Context,Political Science,Final Year Undergraduate,Female,NS,,Report,2558,Reference to sources
+POL.G0.17.1,Theories of Legal Constraint ,Political Science,Final Year Undergraduate,Female,NS,,Essay,2370,Reference to sources
+POL.G0.17.2,Direct vs. Indirect Effects of the Supreme Court,Political Science,Final Year Undergraduate,Female,NS,,Critique,925,
+POL.G0.18.1,Increases in HIV/AIDS Education and Prevention in China,Political Science,Final Year Undergraduate,Female,NS,,Report,2094,Reference to sources
+POL.G0.19.1,"Space, Class, and Party&#8212;Critical Tools of Democratization in Nicaragua",Political Science,Final Year Undergraduate,Male,NS,,Report,1872,Reference to sources
+POL.G0.20.1,Implications of Georgian NATO Membership,Political Science,Final Year Undergraduate,Male,NS,,Report,3199,"Tables, graphs or figures, Reference to sources"
+POL.G0.21.1,Political Realignment in the South,Political Science,Final Year Undergraduate,Male,NNS,Urdu,Report,1441,Reference to sources
+POL.G0.22.1,China's Evolving Role in Peacekeeping,Political Science,Final Year Undergraduate,Male,NS,,Report,2506,Reference to sources
+POL.G0.23.1,'In God we trust?' - The Battle between Evolution and Intelligent Design,Political Science,Final Year Undergraduate,Male,NS,,Report,2971,"Definitions, Reference to sources"
+POL.G0.24.1,Ethics in International Devolopment,Political Science,Final Year Undergraduate,Female,NS,,Report,4302,
+POL.G0.25.1,What Is A Jew?,Political Science,Final Year Undergraduate,Female,NS,,Report,3696,Reference to sources
+POL.G0.26.1,Hannah Arendt's Conception of Totalitarianism,Political Science,Final Year Undergraduate,Female,NS,,Critique,938,Reference to sources
+POL.G0.27.1,Family Leave in US,Political Science,Final Year Undergraduate,Female,NS,,Critique,2915,Reference to sources
+POL.G0.28.1,Socio-Economic Rights and the South African Truth and Reconciliation Comission,Political Science,Final Year Undergraduate,Female,NS,,Essay,1949,"Definitions, Problem-solution pattern, Reference to sources"
+POL.G0.29.1,Seeking Hope at Home,Political Science,Final Year Undergraduate,Male,NS,,Report,4092,Reference to sources
+POL.G0.30.1,The Politicization of SCHIP,Political Science,Final Year Undergraduate,Female,NS,,ResearchPaper,8957,"Tables, graphs or figures, Methodology section, Definitions, Discussion of results section, Literature review section, Reference to sources"
+POL.G0.31.1,Union Now: Day Care Providers in NY,Political Science,Final Year Undergraduate,Male,NS,,Report,4272,Reference to sources
+POL.G0.32.1,The Countermjoritarian Myth,Political Science,Final Year Undergraduate,Male,NS,,Essay,1670,Reference to sources
+POL.G0.32.2,The Blocking Machine,Political Science,Final Year Undergraduate,Male,NS,,Report,946,
+POL.G0.33.1,Education Policy in Singapore and the U.S.,Political Science,Final Year Undergraduate,Female,NS,,Report,7881,Reference to sources
+POL.G0.34.1,The Jewish Republican,Political Science,Final Year Undergraduate,Male,NS,,Report,6980,"Methodology section, Reference to sources"
+POL.G0.35.1,Inherent Racism in our Political System,Political Science,Final Year Undergraduate,Male,NS,,Report,953,Reference to sources
+POL.G0.36.1,Disability Rights,Political Science,Final Year Undergraduate,Male,NS,,Report,550,
+POL.G0.37.1,U.S. Civil Liberties,Political Science,Final Year Undergraduate,Female,NNS,Russian,Critique,1437,
+POL.G0.38.1,Does BCRA really work?,Political Science,Final Year Undergraduate,Male,NS,,Report,3994,Reference to sources
+POL.G0.39.1,Analysis of British Rule of India,Political Science,Final Year Undergraduate,Female,NS,,Essay,1571,Reference to sources
+POL.G0.40.1,The Many Faces of Populism in Latin America,Political Science,Final Year Undergraduate,Female,NS,,Report,1868,Reference to sources
+POL.G0.41.1,Evgenia Ginzburg's Into the Whirlwind,Political Science,Final Year Undergraduate,Female,NS,,Essay,1897,Reference to sources
+POL.G0.42.1,You can't hurt me. I'm with the Union.,Political Science,Final Year Undergraduate,Female,NS,,Critique,1956,Reference to sources
+POL.G0.43.1,Violence and the Nation,Political Science,Final Year Undergraduate,Male,NS,,Report,2035,Reference to sources
+POL.G0.44.1,Power and the Urban Center,Political Science,Final Year Undergraduate,Male,NS,,Essay,1013,
+POL.G0.45.1,International Organization and Integration Thought Paper,Political Science,Final Year Undergraduate,Female,NS,,Report,2469,Reference to sources
+POL.G0.45.2,Human Rights in Sierra Leone,Political Science,Final Year Undergraduate,Female,NS,,Report,2605,Reference to sources
+POL.G0.46.1,International Law During the War on Terror,Political Science,Final Year Undergraduate,Male,NNS,Arabic,Report,2473,"Definitions, Reference to sources"
+POL.G0.47.1,Political Ad Analysis ,Political Science,Final Year Undergraduate,Male,NNS,Korean,Critique,1600,
+POL.G1.01.1,Divided Government in France,Political Science,First Year Graduate,Female,NS,,Report,2266,Reference to sources
+POL.G1.02.1,The Divergent Trajectories of Political Islam in Turkey and Indonesia,Political Science,First Year Graduate,Female,NS,,Report,3348,Reference to sources
+POL.G1.03.1,Revolution and Family in Locke's Second Treatise,Political Science,First Year Graduate,Female,NS,,Essay,3372,Reference to sources
+POL.G1.04.1,Democracy Derailed in Russia ,Political Science,First Year Graduate,Male,NS,,Report,1945,Reference to sources
+POL.G1.05.1,White Nostalgia and Reflective Solidarity: Remembering the Combahee River Collective,Political Science,First Year Graduate,Female,NS,,Essay,5794,Reference to sources
+POL.G2.01.1,Wilson's When Work Disappears,Political Science,Second Year Graduate,Male,NNS,Spanish,Report,1064,"Tables, graphs or figures"
+POL.G2.02.1,Perpetual Peace: Is a Cosmopolitan Constitutional Order a Prerequsite?,Political Science,Second Year Graduate,Female,NS,,Essay,3656,Reference to sources
+POL.G2.03.1,Deportation Policy,Political Science,Second Year Graduate,Female,NS,,Critique,5386,"Problem-solution pattern, Tables, graphs or figures, Reference to sources"
+POL.G3.01.1,Measuring Racial Prejudice,Political Science,Third Year Graduate,Female,NS,,Essay,1869,Reference to sources
+POL.G3.02.1,Effect of Anxiety to Citizens' Political Capability,Political Science,Third Year Graduate,Male,NNS,Japanese,Essay,3193,"Literature review section, Reference to sources"
+POL.G3.03.1,Priming the Common Enemy,Political Science,Third Year Graduate,Female,NS,,Proposal,3942,"Methodology section, Tables, graphs or figures, Literature review section, Reference to sources"
+PSY.G0.01.1,World Leaders Pretend,Psychology,Final Year Undergraduate,Male,NS,,Essay,3567,Reference to sources
+PSY.G0.02.1,Review of Eysenck: The Effects of Psychotherapy,Psychology,Final Year Undergraduate,Female,NS,,Critique,1183,Reference to sources
+PSY.G0.02.2,Review of Rosenhan: On Being Sane in Insane Places ,Psychology,Final Year Undergraduate,Female,NS,,Essay,1561,Reference to sources
+PSY.G0.03.1,Negative Effects of Early-Onset Puberty in Girls,Psychology,Final Year Undergraduate,Female,NS,,Report,3873,"Problem-solution pattern, Literature review section, Reference to sources"
+PSY.G0.04.1,"Metagames: An Analysis, Interpretation, and Application to the Theory of Mind Through a Consideration of the Prisoner&#226;&#128;&#153;s Dilemma",Psychology,Final Year Undergraduate,Male,NNS,Mandarin,ResearchPaper,2262,"Abstract, Tables, graphs or figures, Discussion of results section"
+PSY.G0.05.1,Immigrant Life History Paper,Psychology,Final Year Undergraduate,Male,NNS,Mandarin,Report,3888,Reference to sources
+PSY.G0.06.1,Advanced Methods in Organizational Psychology Literature Review,Psychology,Final Year Undergraduate,Female,NS,,Report,1602,"Literature review section, Reference to sources"
+PSY.G0.07.1,Homosexuality: A Literature Review,Psychology,Final Year Undergraduate,Male,NS,,Report,9481,Reference to sources
+PSY.G0.08.1,Subliminal Message Effect on Color Preference and Self Esteem,Psychology,Final Year Undergraduate,Female,NS,,ResearchPaper,1408,"Abstract, Tables, graphs or figures, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+PSY.G0.08.2,Initial Perspective,Psychology,Final Year Undergraduate,Female,NS,,Report,1460,Reference to sources
+PSY.G0.09.1,Perceptual Fluency Effects on Status-quo Response Styles,Psychology,Final Year Undergraduate,Male,NS,,Report,2957,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+PSY.G0.10.1,Can Vouchers Improve the US School System?,Psychology,Final Year Undergraduate,Female,NS,,Report,902,Reference to sources
+PSY.G0.10.2,Investing the Learning Technologies,Psychology,Final Year Undergraduate,Female,NS,,Essay,605,Reference to sources
+PSY.G0.11.1,Psychology Underground of Power: Cell Phones,Psychology,Final Year Undergraduate,Male,NS,,ResponsePaper,926,
+PSY.G0.11.2,Architecture and Power: William L. Clements Library,Psychology,Final Year Undergraduate,Male,NS,,Report,899,"Tables, graphs or figures"
+PSY.G0.12.1,Longitudinal Syndrome Follow-Up: PTSD,Psychology,Final Year Undergraduate,Female,NS,,Report,884,Reference to sources
+PSY.G0.13.1,Duality and the Mind,Psychology,Final Year Undergraduate,Female,NS,,Essay,1082,Reference to sources
+PSY.G0.14.1,The Possible Effects of Isolation and Conspecifics in the Emission of 22kHz USVs in Adult Rats,Psychology,Final Year Undergraduate,Female,NNS,Vietnamese,Proposal,1532,"Methodology section, Discussion of results section, Literature review section, Reference to sources"
+PSY.G0.14.2,Circadian Rhythms,Psychology,Final Year Undergraduate,Female,NNS,Vietnamese,Report,466,
+PSY.G0.15.1,The Cultural Effects on the Self,Psychology,Final Year Undergraduate,Female,NNS,Greek,Essay,1936,Reference to sources
+PSY.G0.16.1,The Role of Gender in Physically Interactive Play: An Observation Study,Psychology,Final Year Undergraduate,Female,NS,,ResearchPaper,2358,"Methodology section, Discussion of results section, Literature review section, Reference to sources"
+PSY.G0.17.1,Prevention Mechanisms for Clinical and Sub-Clinical Eating Disorders: A Proposal Study,Psychology,Final Year Undergraduate,Female,NS,,Proposal,1428,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+PSY.G0.17.2,Psychodynamic Theory in Therapy Techniques,Psychology,Final Year Undergraduate,Female,NS,,Report,1598,
+PSY.G0.18.1,Multi-Dimensional Assessment of Creativity,Psychology,Final Year Undergraduate,Female,NS,,ResearchPaper,4035,"Abstract, Tables, graphs or figures, Methodology section, Definitions, Discussion of results section, Literature review section, Reference to sources"
+PSY.G0.19.1,Thoughts on Positive Psychology,Psychology,Final Year Undergraduate,Female,NS,,ResponsePaper,698,
+PSY.G0.19.2,Throwing Caution to the Wind,Psychology,Final Year Undergraduate,Female,NS,,ResponsePaper,565,
+PSY.G0.19.3,If Only I Had Read Ahead,Psychology,Final Year Undergraduate,Female,NS,,CreativeWriting,619,
+PSY.G0.20.1,Experience Paper: Adult Rehabilitation at the University of Michigan Hospital,Psychology,Final Year Undergraduate,Male,NS,,Report,1684,
+PSY.G0.21.1,Fear Conditioning Lab,Psychology,Final Year Undergraduate,Male,NNS,Arabic,ResearchPaper,2726,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+PSY.G0.23.1,Evaluation of Psychology class,Psychology,Final Year Undergraduate,Male,NS,,Essay,2638,
+PSY.G0.23.2,The influence of hormones on spatial performance and maternal behavior in rodents,Psychology,Final Year Undergraduate,Male,NS,,Report,4036,
+PSY.G0.24.1,Behavior of the Indri indri,Psychology,Final Year Undergraduate,Male,NS,,Report,3672,Reference to sources
+PSY.G0.26.1,Critical Review of Whorf: An American Indian Model of the Universe,Psychology,Final Year Undergraduate,Male,NS,,Critique,2907,Reference to sources
+PSY.G0.27.1,Gender Stereotypes and Mathematics Lab Performance,Psychology,Final Year Undergraduate,Female,NS,,ResearchPaper,1660,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+PSY.G0.28.1,Political Generations in America,Psychology,Final Year Undergraduate,Female,NS,,ResearchPaper,3267,"Methodology section, Discussion of results section, Reference to sources"
+PSY.G0.29.1,Through the Eyes of Immigrants:  An Analysis of Three Life Histories,Psychology,Final Year Undergraduate,Male,NS,,ResearchPaper,4534,Reference to sources
+PSY.G0.30.1,"The Relationship between Depressed Mood and Perceived Parental Alienation, Trust, and Pride in Academic Accomplishments",Psychology,Final Year Undergraduate,Female,NNS,Marathi,ResearchPaper,4001,"Abstract, Tables, graphs or figures, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+PSY.G0.31.1,Race Relations between Asian Americans and African Americans,Psychology,Final Year Undergraduate,Female,NS,,Report,1717,Reference to sources
+PSY.G0.32.1,The Psychology and Socialization of Male Rape,Psychology,Final Year Undergraduate,Female,NS,,Report,1327,Reference to sources
+PSY.G0.32.2,Diagnosis of Actress with Mental Disorder,Psychology,Final Year Undergraduate,Female,NS,,ResearchPaper,2247,"Definitions, Methodology section, Discussion of results section, Reference to sources"
+PSY.G0.33.1,Just Bad Genes,Psychology,Final Year Undergraduate,Female,NS,,ResponsePaper,734,"Tables, graphs or figures"
+PSY.G0.34.1,John/Joan Case Study and the Obedience Study,Psychology,Final Year Undergraduate,Female,NNS,Korean,Critique,1291,"Definitions, Reference to sources"
+PSY.G0.34.2,The Trouble with Evan,Psychology,Final Year Undergraduate,Female,NNS,Korean,Essay,1644,Reference to sources
+PSY.G0.35.1,Forrest Gump and Child Development,Psychology,Final Year Undergraduate,Female,NS,,Report,1922,Reference to sources
+PSY.G0.36.1,Attention Deficit Hyperactivity Disorder,Psychology,Final Year Undergraduate,Female,NNS,Hindi,Report,1568,Reference to sources
+PSY.G0.37.1,Bilingual Education,Psychology,Final Year Undergraduate,Female,NS,,Essay,3133,Reference to sources
+PSY.G0.38.1,Sexual Education in Adolescence,Psychology,Final Year Undergraduate,Female,NS,,Report,2968,"Literature review section, Reference to sources"
+PSY.G0.38.2,Increasing women in math and science,Psychology,Final Year Undergraduate,Female,NS,,Critique,2863,"Problem-solution pattern, Literature review section, Reference to sources"
+PSY.G0.39.1,Gender Development: Differences in Verbal Communications and Physical Interactions across Age Groups,Psychology,Final Year Undergraduate,Female,NS,,ResearchPaper,2840,"Abstract, Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+PSY.G0.40.1,Biopsychosocial Effects of Rheumatoid Arthritis,Psychology,Final Year Undergraduate,Female,NS,,Report,2167,"Definitions, Reference to sources"
+PSY.G0.40.2,Case Study of Mary Kate Olsen,Psychology,Final Year Undergraduate,Female,NS,,Report,1743,"Abstract, Reference to sources"
+PSY.G0.41.1,The Effects of Adoptee Status on Identity Formation in Adolescence,Psychology,Final Year Undergraduate,Female,NS,,Report,2332,Reference to sources
+PSY.G0.42.1,The Broken Cord Assignment,Psychology,Final Year Undergraduate,Female,NS,,Report,1200,"Definitions, Reference to sources"
+PSY.G0.42.2,There Are No Children Here Assignment,Psychology,Final Year Undergraduate,Female,NS,,Report,1029,Reference to sources
+PSY.G0.43.1,Sleep Grant Proposal,Psychology,Final Year Undergraduate,Female,NS,,Proposal,2415,"Tables, graphs or figures, Methodology section, Definitions, Discussion of results section, Literature review section, Reference to sources"
+PSY.G1.01.1,Complexity Theory and Psychological Inquiry,Psychology,First Year Graduate,Male,NS,,Report,2589,Reference to sources
+PSY.G1.02.1,Is Trauma Research Unethical?,Psychology,First Year Graduate,Female,NNS,Marathi,Report,1712,"Literature review section, Reference to sources"
+PSY.G1.03.1,The Effects of Musical Training on Cognitive Ability,Psychology,First Year Graduate,Female,NS,,Report,4770,"Abstract, Tables, graphs or figures, Literature review section, Reference to sources"
+PSY.G1.04.1,"Exam: Cultural Divergence, Terror, and Social Judgment",Psychology,First Year Graduate,Male,NS,,Report,2832,
+PSY.G1.05.1,Improving Affective Forecasting,Psychology,First Year Graduate,Female,NS,,Report,2695,Reference to sources
+PSY.G1.06.1,Self-Enhancing Ingroup Stereotyping,Psychology,First Year Graduate,Female,NS,,Proposal,3820,"Methodology section, Problem-solution pattern, Literature review section, Reference to sources"
+PSY.G1.07.1,Emotion and the Ultimatum Game: How Rumination and,Psychology,First Year Graduate,Female,NS,,Report,3003,Reference to sources
+PSY.G1.08.1,The relation of social address variables to developmental outcomes,Psychology,First Year Graduate,Female,NS,,Critique,2035,
+PSY.G1.09.1,Bio-ecological theory in socialization and ASD,Psychology,First Year Graduate,Female,NS,,Report,2992,Reference to sources
+PSY.G1.10.1,Applying Erikson: a proposed model,Psychology,First Year Graduate,Female,NS,,Critique,3955,"Definitions, Problem-solution pattern, Tables, graphs or figures, Reference to sources"
+PSY.G1.11.1,The Psychological Well-Being of Latino/a Adolescents,Psychology,First Year Graduate,Female,NNS,German And Spanish,Report,3409,"Definitions, Reference to sources"
+PSY.G1.11.3,The moderating effects of cultural values and racial/cultural identity in the relation between gender and the psychological well-being of Latino adolescents,Psychology,First Year Graduate,Female,NNS,German And Spanish,Proposal,1138,"Literature review section, Reference to sources"
+PSY.G1.11.4,Treating psychopathology in adults,Psychology,First Year Graduate,Female,NNS,German And Spanish,Essay,1845,Reference to sources
+PSY.G1.11.5,Final paper scholarship women of color,Psychology,First Year Graduate,Female,NNS,German And Spanish,Critique,2698,Reference to sources
+PSY.G1.12.1,Changes in social functioning during the transition to retirement communities,Psychology,First Year Graduate,Female,NS,,Report,3427,Reference to sources
+PSY.G1.13.1,Risk and Protective Factors for Youth Violence Exposure,Psychology,First Year Graduate,Female,NS,,Report,7192,"Literature review section, Reference to sources"
+PSY.G2.01.1,"The Mediating Effects of Explanatory Style: Examining Blood Pressure, Preventative Health Behaviors, and Compliance with Medical Regimes in a Diverse Sample of Hypertensive Women",Psychology,Second Year Graduate,Female,NS,,ResearchPaper,4137,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+PSY.G2.02.1,School Readiness: Research on Children's Transition to Schooling,Psychology,Second Year Graduate,Female,NS,,Report,3182,"Definitions, Reference to sources"
+PSY.G2.02.2,The Role of Symbolic Gestures in Early Language Development,Psychology,Second Year Graduate,Female,NS,,Report,2738,"Literature review section, Reference to sources"
+PSY.G2.02.3,"Do Bilingual Foreign Language Learners have a Unique Learning Profile?  An Examination of their Learning Strategies, Motivation, and Achievement",Psychology,Second Year Graduate,Female,NS,,Report,3173,"Problem-solution pattern, Literature review section, Reference to sources"
+PSY.G2.03.1,Development of Prefrontal Cortex in Adolescence,Psychology,Second Year Graduate,Female,NS,,Essay,3259,Reference to sources
+PSY.G2.04.1,Early Predictors of Later Reading Ability,Psychology,Second Year Graduate,Female,NS,,Report,4272,"Methodology section, Discussion of results section, Reference to sources"
+PSY.G2.05.1,A Brief Critique of the DSM-IV,Psychology,Second Year Graduate,Female,NS,,Critique,2406,"Definitions, Reference to sources"
+PSY.G2.06.1,Biological Aspects of Behavior,Psychology,Second Year Graduate,Female,NS,,Report,859,"Literature review section, Reference to sources"
+PSY.G2.06.2,Social / Organizational Aspects of Behavior,Psychology,Second Year Graduate,Female,NS,,Report,1150,Reference to sources
+PSY.G2.07.1,Incorporating Emotion into a Unified Theory of Cognition,Psychology,Second Year Graduate,Male,NS,,Report,4089,"Definitions, Tables, graphs or figures, Literature review section, Reference to sources"
+PSY.G2.08.1,Dissatisfactions with Job Satisfaction Measurement: The Context-Dependency of Work Attitudes,Psychology,Second Year Graduate,Male,NS,,Essay,3634,"Discussion of results section, Literature review section, Reference to sources"
+PSY.G2.09.1,Implicit Racism: Cognitive Origins and Potential Interventions,Psychology,Second Year Graduate,Male,NS,,Report,8218,Reference to sources
+PSY.G2.10.1,Can projective assessment instruments be helpful with the five common reasons for psychological testing?,Psychology,Second Year Graduate,Female,NNS,Korean,Essay,1679,Reference to sources
+PSY.G2.10.2,Understanding Dorris's The Broken Cord from a Multiple Systems Perspective,Psychology,Second Year Graduate,Female,NNS,Korean,Essay,2330,Reference to sources
+PSY.G2.10.3,Hippocampal Abnormalities in Psychiatric Disorders,Psychology,Second Year Graduate,Female,NNS,Korean,Report,1939,"Definitions, Literature review section, Reference to sources"
+PSY.G2.10.4,Evaluation of Behavioral and Cognitive Behavioral Theories and Interventions,Psychology,Second Year Graduate,Female,NNS,Korean,Critique,2560,Reference to sources
+PSY.G2.10.5,Critique of the DSM-IV,Psychology,Second Year Graduate,Female,NNS,Korean,Critique,1922,"Definitions, Problem-solution pattern, Reference to sources"
+PSY.G2.11.1,Emerging reading ability: interplay between theory and research,Psychology,Second Year Graduate,Female,NNS,Cantonese,Report,1397,Reference to sources
+PSY.G2.11.2,Constraints on a big-picture of cognitive development,Psychology,Second Year Graduate,Female,NNS,Cantonese,Report,1083,Reference to sources
+PSY.G2.12.1,A Brief History of Social &amp; Organizational Psychology,Psychology,Second Year Graduate,Female,NS,,Report,1785,Reference to sources
+PSY.G2.13.1,"Think Globally, Act Locally",Psychology,Second Year Graduate,Female,NS,,ResearchPaper,2317,"Discussion of results section, Methodology section, Problem-solution pattern, Tables, graphs or figures, Reference to sources"
+PSY.G2.14.1,How Do Children Learn from Television?,Psychology,Second Year Graduate,Female,NS,,Report,3740,"Tables, graphs or figures, Reference to sources"
+PSY.G2.15.1,"The Product, Process, and Prediction of Precocious Reading",Psychology,Second Year Graduate,Female,NS,,Report,3814,"Definitions, Tables, graphs or figures, Reference to sources"
+PSY.G3.01.1,Environmental and Social Influences on Sula,Psychology,Third Year Graduate,Female,NS,,Essay,3989,"Problem-solution pattern, Reference to sources"
+PSY.G3.02.1,Communication of Appetitive Emotion in Rats: Exploring the Nature of 50kHz Ultrasonic Vocalizations,Psychology,Third Year Graduate,Male,NS,,Proposal,3180,Reference to sources
+PSY.G3.03.1,"Culture, Mental Disorders, and Evolutionary Analyses",Psychology,Third Year Graduate,Female,NS,,Essay,3114,"Definitions, Problem-solution pattern, Literature review section, Reference to sources"
+PSY.G3.03.2,A Cultural and Evolutionary Analysis of Dissociative Identity Disorder / Multiple Personality Disorder,Psychology,Third Year Graduate,Female,NS,,Report,2957,"Definitions, Reference to sources"
+PSY.G3.04.1,Individual Differences in Decision Making: Need for Cognition and Need to Maximize,Psychology,Third Year Graduate,Female,NS,,Report,2246,"Definitions, Tables, graphs or figures, Reference to sources"
+PSY.G3.05.1,An Optimistic Origin for Naive Causal Theories of Attributions,Psychology,Third Year Graduate,Female,NS,,Report,5377,"Discussion of results section, Literature review section, Reference to sources"
+PSY.G3.06.1,Development of the Heteronormative Attitudes and Beliefs Scale ,Psychology,Third Year Graduate,Female,NS,,ResearchPaper,2720,"Methodology section, Discussion of results section, Literature review section, Tables, graphs or figures, Reference to sources"
+PSY.G3.07.1,Walker Percy&#8217;s The Loss of the Creature,Psychology,Third Year Graduate,Male,NS,,Report,3281,
+PSY.G3.08.1,Sexual Harassment... Not so sexual,Psychology,Third Year Graduate,Female,NS,,Essay,3889,"Definitions, Discussion of results section, Literature review section, Reference to sources"
+SOC.G0.01.1,Ideology and the Transition to Democracy,Sociology,Final Year Undergraduate,Female,NS,,Essay,2362,
+SOC.G0.02.1,The Nature of Poverty,Sociology,Final Year Undergraduate,Female,NS,,Critique,1860,
+SOC.G0.02.2,Potential Causes of Suicide,Sociology,Final Year Undergraduate,Female,NS,,ResearchPaper,2244,"Tables, graphs or figures, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+SOC.G0.03.1,Individual and Societal Determinants of Suicidal Behavior,Sociology,Final Year Undergraduate,Female,NS,,ResearchPaper,2192,"Abstract, Tables, graphs or figures, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+SOC.G0.03.2,The Role of Gender in a Class Analysis of Poverty,Sociology,Final Year Undergraduate,Female,NS,,Critique,1201,Reference to sources
+SOC.G0.03.3,Spanish as a National Language of the United States,Sociology,Final Year Undergraduate,Female,NS,,Essay,1578,Reference to sources
+SOC.G0.03.4,Domestic Violence as a Social Problem: The Origins of its Construction and Implications for Future Institutional Response,Sociology,Final Year Undergraduate,Female,NS,,Report,3879,"Methodology section, Reference to sources"
+SOC.G0.04.1,How Reclaiming Solidarity Can Heal a Sick France: A Research Proposal,Sociology,Final Year Undergraduate,Female,NS,,Proposal,4773,"Methodology section, Problem-solution pattern, Reference to sources"
+SOC.G0.05.1,Critique of Gandhi,Sociology,Final Year Undergraduate,Female,NS,,Essay,1505,Reference to sources
+SOC.G0.05.2,The Economics of Poverty,Sociology,Final Year Undergraduate,Female,NS,,Essay,2112,Reference to sources
+SOC.G0.06.1,Race and the Frequency of Developing Type II Diabetes,Sociology,Final Year Undergraduate,Male,NS,,Report,505,"Definitions, Problem-solution pattern, Discussion of results section"
+SOC.G0.07.1,Restrictive Covenants and their Role in the Rise of Residential Segregation in the US in the First Half of the 19th Century,Sociology,Final Year Undergraduate,Female,NS,,Report,2087,"Abstract, Reference to sources"
+SOC.G0.08.1,Coastal-Inland Inequalities in China,Sociology,Final Year Undergraduate,Female,NS,,Report,3298,Reference to sources
+SOC.G0.09.1,Agency and Laziness,Sociology,Final Year Undergraduate,Female,NS,,Essay,957,
+SOC.G0.10.1,Book Review: The Second Shift by Arlie Russell Hochschild,Sociology,Final Year Undergraduate,Female,NS,,Report,1657,
+SOC.G0.11.1,Abortion in the 21st century,Sociology,Final Year Undergraduate,Female,NS,,ResearchPaper,2879,"Methodology section, Discussion of results section, Tables, graphs or figures"
+SOC.G0.11.2,Gender in Schools,Sociology,Final Year Undergraduate,Female,NS,,Essay,1372,Reference to sources
+SOC.G0.11.3,Gender Dialogue,Sociology,Final Year Undergraduate,Female,NS,,Report,2697,
+SOC.G0.12.1,Educational Autobiography in a Sociology Eye,Sociology,Final Year Undergraduate,Female,NS,,CreativeWriting,3423,Reference to sources
+SOC.G0.12.2,Research Paper on Tracking,Sociology,Final Year Undergraduate,Female,NS,,Essay,705,Reference to sources
+SOC.G0.13.1,Thoughts on the 40 Year Old Virgin,Sociology,Final Year Undergraduate,Female,NS,,Report,1985,Reference to sources
+SOC.G0.13.2,Sociological Perspectives on Organ Donation Against the Backdrop of Various Religions,Sociology,Final Year Undergraduate,Female,NS,,Report,3022,Reference to sources
+SOC.G0.14.1,Urrea&#8217;s The Devil&#8217;s Highway,Sociology,Final Year Undergraduate,Male,NS,,Report,1190,
+SOC.G1.01.1,The Self and Other in Society,Sociology,First Year Graduate,Female,NS,,Essay,3173,"Definitions, Reference to sources"
+SOC.G1.01.2,Reconsidering the Black-White Binary: Where Do We Go from Here?,Sociology,First Year Graduate,Female,NS,,Essay,3237,"Definitions, Reference to sources"
+SOC.G1.02.1,"Concepts of Polanyi, Adrent and Harbermas in a conceptual network of utilitarian and liberal social thoughts: Part 1",Sociology,First Year Graduate,Female,NNS,Chinese,Report,2719,Reference to sources
+SOC.G1.02.2,"Concepts of Polanyi, Adrent and Harbermas in a conceptual network of utilitarian and liberal social thoughts: Part 2",Sociology,First Year Graduate,Female,NNS,Chinese,Report,2813,Reference to sources
+SOC.G1.03.1,Social Movements Literature Review,Sociology,First Year Graduate,Female,NS,,Report,8938,"Tables, graphs or figures, Literature review section, Reference to sources"
+SOC.G1.04.1,Freud and Heidegger,Sociology,First Year Graduate,Female,NS,,Report,1517,Reference to sources
+SOC.G1.05.1,"Marx and Hobbes on Social Division, Historical Change, and the State",Sociology,First Year Graduate,Male,NS,,Essay,1977,"Definitions, Reference to sources"
+SOC.G1.05.2,Freud and Weber,Sociology,First Year Graduate,Male,NS,,Report,1819,Reference to sources
+SOC.G1.06.1,Thomas Hobbes and Thomas Malthus in Contrast,Sociology,First Year Graduate,Female,NS,,Essay,1530,Reference to sources
+SOC.G1.06.3,Karl Marx's Methods,Sociology,First Year Graduate,Female,NS,,Report,1371,Reference to sources
+SOC.G1.07.1,Women and Work Lit Review,Sociology,First Year Graduate,Female,NS,,Report,5103,"Discussion of results section, Reference to sources"
+SOC.G1.08.1,In what ways do spatial environments affect health?,Sociology,First Year Graduate,Female,NS,,ResponsePaper,353,
+SOC.G1.08.2,Time Matters,Sociology,First Year Graduate,Female,NS,,Proposal,1323,
+SOC.G1.09.1,A Proposal: Studying Class in the Classroom,Sociology,First Year Graduate,Female,NS,,Proposal,2500,"Methodology section, Reference to sources"
+SOC.G1.10.1,"Interpreting the Theoretical Origin of the Utilitarian, Liberalism and Marxism: Part 1",Sociology,First Year Graduate,Female,NNS,Chinese,Essay,2628,
+SOC.G1.10.2,Interpreting the Social Theories on Power and Social Knowledge: Part 1,Sociology,First Year Graduate,Female,NNS,Chinese,Essay,2015,Reference to sources
+SOC.G1.10.3,Stratification and Mobility of Chinese Peasant Workers,Sociology,First Year Graduate,Female,NNS,Chinese,Proposal,2182,"Methodology section, Tables, graphs or figures, Reference to sources"
+SOC.G1.10.4,The Role of Township and Village Enterprises Play on Income Inequality in Rural China,Sociology,First Year Graduate,Female,NNS,Chinese,Proposal,2233,Reference to sources
+SOC.G1.10.5,"The Determinants of Attitudes toward Unhappy Marriages in Gansu, China",Sociology,First Year Graduate,Female,NNS,Chinese,ResearchPaper,1350,"Methodology section, Discussion of results section, Tables, graphs or figures"
+SOC.G1.10.6,"Interpreting the Theoretical Origin of the Utilitarian, Liberalism and Marxism: Part 2",Sociology,First Year Graduate,Female,NNS,Chinese,Essay,1199,Reference to sources
+SOC.G1.10.7,Interpreting the Social Theories on Power and Social Knowledge: Part 2,Sociology,First Year Graduate,Female,NNS,Chinese,Essay,1677,Reference to sources
+SOC.G1.11.1,"Hegel and Marx: Social division, social change, and the state",Sociology,First Year Graduate,Female,NS,,Report,1738,Reference to sources
+SOC.G1.11.2,Althusser: Ideology &amp; Ideological State Apparatuses,Sociology,First Year Graduate,Female,NS,,Report,2125,Reference to sources
+SOC.G2.01.1,Teen Pregnancy,Sociology,Second Year Graduate,Female,NS,,Report,2408,
+SOC.G2.02.1,Towards an Economy of Desire,Sociology,Second Year Graduate,Male,NS,,Report,1410,Reference to sources
+SOC.G2.02.2,Reading Lovejoy's Reading of Rousseau's Discourse on Inequality,Sociology,Second Year Graduate,Male,NS,,Essay,1372,Reference to sources
+SOC.G2.03.1,"Polanyi, Marshall, Somers and utilitarian and liberal theories: Part 1",Sociology,Second Year Graduate,Female,NS,,Report,2486,Reference to sources
+SOC.G2.03.2,Hobbes&#8217; Leviathan and Malthus&#8217; An Essay on the Principle of Population,Sociology,Second Year Graduate,Female,NS,,Essay,2732,Reference to sources
+SOC.G2.03.3,"Polanyi, Marshall, Somers and utilitarian and liberal theories: Part 2",Sociology,Second Year Graduate,Female,NS,,Report,2438,Reference to sources
+SOC.G2.04.1,The Effects of Domestic Violence Prosecution on Families: A Literature Review and Research Proposal,Sociology,Second Year Graduate,Female,NS,,Proposal,4840,"Methodology section, Literature review section, Reference to sources"
+SOC.G2.05.1,Class Identity and Class Consciousness ,Sociology,Second Year Graduate,Female,NS,,Report,914,Definitions
+SOC.G3.01.1,Alienation of Workers: The Contemporary Japanese Working Class's Situation,Sociology,Third Year Graduate,Female,NNS,Japanese,Report,3553,"Problem-solution pattern, Reference to sources"
+SOC.G3.01.2,Rethinking the 'Cultural turn' in Class Formation Theory - To Be a Marxist or Not?,Sociology,Third Year Graduate,Female,NNS,Japanese,Essay,1479,Reference to sources
+SOC.G3.01.3,Rethinking Power in Marx,Sociology,Third Year Graduate,Female,NNS,Japanese,Essay,1394,Reference to sources
+SOC.G3.02.1,"Hobbes, Durkheim, and Spencer: On the Emergence of a Supra-individual Realm",Sociology,Third Year Graduate,Female,NNS,Korean,Critique,2603,Reference to sources
+SOC.G3.03.1,The Modern State: Imagined or Real?,Sociology,Third Year Graduate,Male,NNS,Korean,Essay,2682,Reference to sources
+SOC.G3.04.1,Household Decision Making in Nepal: Attitudes Toward Gender Roles,Sociology,Third Year Graduate,Female,NNS,Nepali,ResearchPaper,3958,"Methodology section, Discussion of results section, Tables, graphs or figures, Reference to sources"
+SOC.G3.05.1,Does Practice Makes Perfect Apply to Theory? A Look at Feminist Theory and Practice in the US Battered Women's Movement,Sociology,Third Year Graduate,Female,NS,,Report,6174,"Literature review section, Reference to sources"
+SOC.G3.05.2,Drunk Girls Are Easy: Binge-Drinking College Women's Engagement with the 'Slutty' Discourse and its Implications for Sexual Violence,Sociology,Third Year Graduate,Female,NS,,ResearchPaper,8458,"Abstract, Methodology section, Discussion of results section, Literature review section, Reference to sources"
+SOC.G3.06.1,Revolution: Never Obsolete,Sociology,Third Year Graduate,Male,NNS,Urdu,Essay,1307,
+SOC.G3.06.2,Marx and imperialism,Sociology,Third Year Graduate,Male,NNS,Urdu,Report,2026,Reference to sources
+SOC.G3.07.1,Better Late Than Never: Social Stratification and Higher Education Through the Life Course,Sociology,Third Year Graduate,Female,NS,,ResearchPaper,4775,"Discussion of results section, Abstract, Tables, graphs or figures, Literature review section, Reference to sources"
+SOC.G3.08.1,Do Other Femininity: Chinese Women and Professionalization in Engineering,Sociology,Third Year Graduate,Female,NNS,Mandarin,ResearchPaper,4077,"Abstract, Methodology section, Discussion of results section, Literature review section"
+SOC.G3.09.1,Rethinking Marx: Rethinking Race,Sociology,Third Year Graduate,Male,NS,,Essay,1246,Reference to sources
+SOC.G3.09.2,Rethinking Marx: Outline of a Theory of Needs,Sociology,Third Year Graduate,Male,NS,,Essay,953,Reference to sources
+SOC.G3.10.1,Repression and the Emergence of the Bourgeois Self: The Social Origins of Neuroses,Sociology,Third Year Graduate,Female,NNS,Russian,Report,2117,"Definitions, Reference to sources"
+SOC.G3.10.2,Goffman and Butler: Two Complementary Approaches for Understanding a Queer Social Interaction,Sociology,Third Year Graduate,Female,NNS,Russian,Report,2514,Reference to sources
+SOC.G3.10.3,"Emergence of the Supra-Individual Realm in Hobbes, Rousseau and Spencer",Sociology,Third Year Graduate,Female,NNS,Russian,Critique,3649,
+SOC.G3.11.1,Investor Activism on Climate Risk Disclosure,Sociology,Third Year Graduate,Female,NS,,Proposal,4225,Reference to sources
