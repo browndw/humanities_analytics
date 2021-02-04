@@ -2,7 +2,7 @@
 dispersions_all <- function(df_matrix) {
   
   #convert dfm to matrix object
-  m <- as.matrix(df_matrix[,-1)
+  m <- as.matrix(df_matrix[,-1])
   #create a column index
   idx <- seq(1:ncol(m))
   
