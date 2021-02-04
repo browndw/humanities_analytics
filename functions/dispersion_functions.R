@@ -1,7 +1,6 @@
 
 dispersions_all <- function(df_matrix) {
   
-  if (class(df_matrix) != "dfm") stop ("your target must be a quanteda dfm object")
   #convert dfm to matrix object
   m <- as.matrix(df_matrix)
   #create a column index
