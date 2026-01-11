@@ -1,0 +1,210 @@
+---
+author: "David Brown"
+---
+
+# Welcome {.unnumbered}
+
+Welcome to **Methods in Humanities Analytics**, a course designed for upper-level undergraduate and graduate students interested in computational approaches to analyzing texts. This course emphasizes **computational reasoning** and **flexible, adaptable research tools** over rote programming or mathematical formulas.
+
+## Course Philosophy
+
+### Python as a Research Tool
+
+This course uses **Python in Google Colab** as the primary computing environment. This approach serves two audiences:
+
+**For students with coding experience:**
+
+- Build on your introductory Python knowledge
+- Learn specialized packages for text analysis
+- Adapt code examples for your own research projects
+- Develop custom analytical workflows
+
+**For students without coding experience:**
+
+- Simply **run each code cell** to generate results
+- Focus on interpreting output and understanding concepts
+- Export tables and visualizations to Google Sheets or Drive  
+- Use computational tools without being limited by pre-built interfaces
+
+::: {.callout-important}
+## The Goal
+The goal is not to make you expert programmers. The goal is to give you **access to flexible analytical tools** that you can use to explore questions you find compelling, without being constrained by someone else's user interface.
+:::
+
+### Computational Reasoning > Code Memorization
+
+You don't need to understand every line of code or every mathematical formula. What matters is:
+
+- **Understanding what methods do** (conceptually)
+- **Knowing when to use them** (methodologically)
+- **Interpreting results critically** (analytically)
+- **Making informed choices** about approaches
+
+## How This Site Works
+
+This documentation is organized into distinct sections, each serving a different purpose:
+
+### 📚 Tutorials (Read & Learn)
+
+Comprehensive, conceptual explanations of text analysis methods. These are **readable documentation** with code examples you can reference, but not interactive notebooks. They cover:
+
+- **Foundations:** Basic concepts like sentiment analysis, corpus processing, and pipelines
+- **Core Methods:** Frequency analysis, keyness, collocations, time series
+- **Advanced Analysis:** Categorical variables, clustering, correlations, multidimensional analysis, vector models
+- **Applications:** Real-world case studies like the Federalist Papers classification
+
+### 🔬 Hands-On Labs (Do & Experiment)
+
+Interactive Jupyter notebooks designed to run in **Google Colab**. Each lab:
+
+- Opens directly in Colab with one click
+- Includes all necessary setup and data loading
+- Guides you through practical analytical tasks
+- Can be adapted for your own projects
+
+See the [Hands-On Labs](#hands-on-labs) section for the complete list with "Open in Colab" buttons.
+
+### 📦 Course Resources
+
+Documentation for the specialized Python packages used throughout the course, plus guides for accessing course datasets. No need to read this upfront—refer to it as needed.
+
+## Getting Started
+
+### What You Need
+
+**Required:**
+
+- A Google account (for Colab access)
+- An internet connection
+- A curious mind and interesting research questions
+
+**Not Required:**
+
+- Python installation on your computer
+- Prior programming experience
+- Advanced mathematics background
+- Expensive software or computing resources
+
+### Your First Steps
+
+1. **Browse the Tutorials** to understand conceptual foundations
+2. **Open Lab 1 in Colab** to see how the environment works
+3. **Run all cells** (Runtime → Run all) to see the full analysis
+4. **Explore the output** and try modifying a parameter
+5. **Save a copy** to your Google Drive for future reference
+
+::: {.callout-tip}
+## Learning by Doing
+Don't try to understand everything at once. Run the code, look at the results, and gradually build understanding through repeated exposure. Computational literacy develops over time.
+:::
+
+## Course Structure
+
+### Progression Through Topics
+
+The course follows a carefully designed progression:
+
+1. **Start with the familiar** (sentiment in narratives)
+2. **Build fundamental skills** (tokenization, frequencies)
+3. **Add statistical methods** (keyness, distributions)
+4. **Introduce advanced techniques** (clustering, dimensions, vectors)
+5. **Apply to real problems** (classification, genre analysis)
+
+### Tutorial + Lab Pairs
+
+Most topics have both:
+
+- A **tutorial** explaining concepts and theory
+- A **mini lab** providing hands-on practice
+
+Read the tutorial to understand *why* and *how*, then do the lab to see it in action.
+
+## Python Packages for This Course
+
+We use specialized packages designed for humanities text analysis:
+
+### Primary Packages
+
+- **[docuscospacy](https://docuscospacy.readthedocs.org)** - Rhetorical and functional tagging using DocuScope
+- **[pybiber](https://browndw.github.io/pybiber)** - Multi-dimensional analysis of text registers
+- **[moodswing](https://browndw.github.io/moodswing)** - Sentiment trajectory analysis for narratives
+- **[google_ngrams](https://github.com/browndw/google_ngrams)** - Diachronic analysis with Google Books data
+
+### Supporting Libraries
+
+- **spaCy** - NLP processing (POS tagging, parsing, NER)
+- **Polars** - Fast data manipulation (alternative to pandas)
+- **matplotlib** - Visualization and plotting
+- **great_tables** - Publication-ready table formatting
+
+See [Python Packages](#python-packages-for-this-course) for detailed documentation.
+
+## About the Data
+
+All course data is hosted in this repository and accessible via direct URLs—no downloads required. Datasets include:
+
+- Sample corpora (MICUSP, Brown, inaugural addresses)
+- Classic literary texts (Pride and Prejudice, Madame Bovary, etc.)
+- Pre-processed word lists and frequency tables
+- Metadata for register and genre analysis
+
+See [Course Data Resources](#course-data-resources) for the complete catalog.
+
+## Computational Ethics & Critical Thinking
+
+::: {.callout-warning}
+## Methods are Tools, Not Truth
+Every computational method makes assumptions, has limitations, and can be misused. Throughout this course, we emphasize:
+
+- **Critical interpretation** - Question your results
+- **Method transparency** - Document your choices
+- **Reproducibility** - Share your code and data
+- **Ethical awareness** - Consider impacts and biases
+:::
+
+Computational text analysis is powerful, but it's not magic. It augments human interpretation; it doesn't replace it.
+
+## Getting Help
+
+When you're stuck or confused:
+
+1. **Read the error message** - Often tells you exactly what's wrong
+2. **Check the tutorials** - Conceptual background and examples
+3. **Review the relevant lab** - See working code in action
+4. **Consult package docs** - Detailed API references
+5. **Ask questions** - Use course discussion boards or office hours
+6. **Search online** - Stack Overflow, documentation, forums
+
+::: {.callout-note}
+## A Note on AI Assistants
+Tools like ChatGPT can help explain concepts or debug code, but:
+
+- They sometimes provide incorrect information
+- They can't replace understanding of methods
+- Copy-pasting without comprehension is a missed learning opportunity
+- Understanding *why* code works matters for adapting it to your needs
+:::
+
+## Acknowledgments
+
+This course and these materials build on decades of research in:
+
+- Corpus linguistics (Biber, Conrad, Reppen, Gries, and many others)
+- Digital humanities (Jockers, Moretti, Underwood, Rhody, and many others)  
+- Computational linguistics (Jurafsky, Manning, Bird, and many others)
+- Rhetoric and composition (Kaufer, Ishizaki, Geisler, and many others)
+
+The Python packages were developed with support from Carnegie Mellon University and the broader open-source community.
+
+## Let's Begin
+
+Ready to start? Head to the [Foundations](#foundations) section to begin with sentiment analysis, or jump directly to [Hands-On Labs](#hands-on-labs) to start experimenting in Colab.
+
+Remember: **You don't need to be a programmer to do computational text analysis.** You just need curiosity, patience, and a willingness to experiment.
+
+---
+
+**Course:** Methods in Humanities Analytics (76-380/780)  
+**Institution:** Carnegie Mellon University  
+**Instructor:** David Brown  
+**Repository:** [github.com/browndw/humanities_analytics](https://github.com/browndw/humanities_analytics)
