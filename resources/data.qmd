@@ -146,7 +146,7 @@ text = response.text
 **Disciplines:** Biology, Civil Engineering, Economics, Education, English, History, Industrial Engineering, Linguistics, Mechanical Engineering, Natural Resources, Nursing, Philosophy, Physics, Political Science, Psychology, Statistics, Sociology  
 **Use cases:** Register variation studies, academic writing analysis, multidimensional analysis, disciplinary comparison, classification
 
-**Related tutorials:** [Multi-Dimensional Analysis](../tutorials/multi-dimensional-analysis.qmd), [Correlation Analysis](../tutorials/correlation-analysis.qmd), [ANOVA & R²](../tutorials/anova-and-r-squared.qmd)
+**Related tutorials:** [Multi-Dimensional Analysis](../tutorials/multi-dimensional-analysis.qmd), [Correlation Analysis](../tutorials/correlations.qmd), [ANOVA & R²](../tutorials/categorical-variables.qmd)
 
 ---
 
@@ -166,7 +166,7 @@ text = response.text
 **Variables:** `doc_id`, `token`, `pos`, `lemma`  
 **Use cases:** Part-of-speech analysis, lemmatization studies, linguistic feature extraction, Biber feature calculation
 
-**Related tutorials:** [Multi-Dimensional Analysis](../tutorials/multi-dimensional-analysis.qmd), [Correlation Analysis](../tutorials/correlation-analysis.qmd), Mini Lab 10
+**Related tutorials:** [Multi-Dimensional Analysis](../tutorials/multi-dimensional-analysis.qmd), [Correlation Analysis](../tutorials/correlations.qmd), Mini Lab 10
 
 ---
 
