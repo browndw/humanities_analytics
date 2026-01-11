@@ -1,0 +1,68 @@
+project:
+  type: book
+  output-dir: docs
+  render:
+    - "*.qmd"
+    - "tutorials/*.qmd"
+    - "reports/*.qmd"
+    - "resources/*.qmd"
+    - "!mini_labs/*.ipynb"
+  
+book:
+  title: Methods in Humanities Analytics
+  author: David Brown
+  navbar:
+    search: true
+    logo: images/text_analysis.png
+  repo-url: https://github.com/browndw/humanities_analytics
+  repo-branch: master
+  repo-actions: [issue]
+  chapters:
+    - index.qmd
+    
+    - part: "Foundations"
+      chapters:
+        - tutorials/sentiment-and-syuzhet.qmd
+        - tutorials/corpus-basics.qmd
+        - tutorials/spacy-basics.qmd
+        - tutorials/frequency-and-distributions.qmd
+    
+    - part: "Core Methods"
+      chapters:
+        - tutorials/keyness.qmd
+        - tutorials/collocations.qmd
+        - tutorials/time-series.qmd
+        - tutorials/topic-modeling.qmd
+    
+    - part: "Advanced Analysis"
+      chapters:
+        - tutorials/categorical-variables.qmd
+        - tutorials/cluster-analysis.qmd
+        - tutorials/correlations.qmd
+        - tutorials/multi-dimensional-analysis.qmd
+        - tutorials/contextual-embeddings.qmd
+    
+    - part: "Applications"
+      chapters:
+        - tutorials/classification-federalist-papers.qmd
+    
+    - part: "Reports"
+      chapters:
+         - reports/cbe_01.qmd
+         - reports/cbe_02.qmd
+         - reports/cbe_03.qmd
+         - reports/final-project.qmd
+         - reports/statistical-reporting-guide.qmd
+    
+    - part: "Course Resources"
+      chapters:
+         - tutorials/using-colab.qmd
+         - resources/packages.qmd
+         - resources/data.qmd
+
+         
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
