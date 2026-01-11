@@ -1,0 +1,39 @@
+# Core data manipulation and analysis
+polars>=1.35.0
+numpy>=1.24
+pandas>=2.0
+
+# Custom packages for text analysis
+docuscospacy>=0.3.6
+pybiber>=0.3.0
+moodswing
+google_ngrams
+
+# NLP libraries
+spacy>=3.7
+sentence-transformers
+
+# Statistical analysis
+scipy>=1.11
+statsmodels>=0.14
+scikit-learn>=1.3
+factor-analyzer
+
+# Visualization
+matplotlib>=3.7
+seaborn>=0.13
+networkx>=3.1
+great_tables
+
+# Topic modeling and embeddings
+gensim
+
+# Jupyter support for Quarto
+jupyter
+nbformat
+nbclient
+ipykernel
+
+# Additional dependencies
+beautifulsoup4
+requests
