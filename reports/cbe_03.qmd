@@ -121,7 +121,7 @@ You now have access to the **full repertoire** of tutorials and mini labs. Here'
 - **Pilot use**: Check if temporal variation exists before committing to full historical analysis
 - **Mini Lab 7**: Change-point detection, VNC clustering
 
-**spaCy Processing** ([Tutorial: spaCy Basics](../tutorials/processing-pipelines.qmd))
+**spaCy Processing** ([Tutorial: spaCy Basics](../tutorials/spacy-basics.qmd))
 - Good for: Linguistic annotation (POS, dependencies, NER)
 - **Pilot use**: Test processing pipeline, check annotation quality on sample before scaling
 - **Mini Lab 8**: Custom pipelines, token filtering
@@ -138,7 +138,7 @@ You now have access to the **full repertoire** of tutorials and mini labs. Here'
 - **Pilot use**: *Risky for CBE #3* unless you have 50+ texts; consider deferring to final project
 - **Mini Lab 9**: LDA, coherence, interpretation
 
-**Vector Models (Word2Vec, Embeddings)** ([Tutorial: Vector Models](../tutorials/vector-models.qmd), [Contextual Embeddings](../tutorials/contextual-embeddings.qmd))
+**Vector Models (Word2Vec, Embeddings)** ([Tutorial: Vector Models](../tutorials/spacy-basics.qmd), [Contextual Embeddings](../tutorials/contextual-embeddings.qmd))
 - Good for: Semantic similarity, meaning in context
 - **Pilot use**: Test if semantic clustering reveals patterns; requires moderate corpus size
 - **Mini Labs 9, 11**: word2vec, sentence transformers, similarity
@@ -165,7 +165,7 @@ You now have access to the **full repertoire** of tutorials and mini labs. Here'
 - Feature selection for classification/regression
 - **Pilot use**: Check which features co-occur before MDA or classification
 
-**ANOVA and R²** ([Tutorial: ANOVA](../tutorials/anova-and-r-squared.qmd))
+**ANOVA and R²** ([Tutorial: ANOVA](../tutorials/categorical-variables.qmd))
 - Testing if groups differ on dimensions
 - Quantifying variance explained
 - **Pilot use**: Validate that extracted dimensions distinguish your categories
