@@ -37,3 +37,4 @@ ipykernel
 # Additional dependencies
 beautifulsoup4
 requests
+tmtoolkit>=0.12.0
