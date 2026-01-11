@@ -1,0 +1,629 @@
+
+# Coffee Break Experiment #3: Final Project Pilot Study {.unnumbered}
+
+This assignment is your **testing ground for the final project**. Unlike CBE #2 (which used pre-determined data and methods), CBE #3 gives you freedom to explore your own research questions using your own data—but on a smaller, manageable scale.
+
+::: {.callout-important}
+## This is a Stepping Stone, Not a Final Product
+CBE #3 is designed as a **pilot study** that:
+- Tests your data collection and processing pipeline
+- Tries out analytical methods on a small sample
+- Identifies challenges before you commit to the full project
+- Generates preliminary findings to refine your research questions
+
+**You're not expected to solve everything**—you're expected to learn what works, what doesn't, and what adjustments you need to make.
+:::
+
+::: {.callout-note}
+## Template Access
+**Read-only template**: <https://www.overleaf.com/read/sfhmdxyqftzf#ad72b5>
+
+If you choose to collaborate, select a team manager and have them make a copy of this template and share it with team members (same template as CBE #2).
+:::
+
+## Part 1: Approaching CBE #3 as a Pilot Study
+
+### Two Strategic Approaches
+
+**Option 1: Preliminary Exploration of Final Project Data**
+
+Analyze a **subset** of your final project corpus using **simpler methods**:
+
+**Example**:
+- **Final project**: Topic modeling 500 congressional speeches (1990-2020) to track political discourse evolution
+- **CBE #3 pilot**: Analyze 30 speeches (5 per decade) using basic frequency analysis and keyness to identify distinctive vocabulary by era, confirming your corpus shows temporal variation before investing in full topic modeling
+
+**Why this works**: Tests data collection, validates that patterns exist, identifies preprocessing needs
+
+---
+
+**Option 2: Full Pipeline on Small Sample**
+
+Test your **complete analytical workflow** on a **small corpus** before scaling up:
+
+**Example**:
+- **Final project**: Multi-Dimensional Analysis of 1,000 19th-century novels to identify register differences across publishers
+- **CBE #3 pilot**: Process 10 novels (2 per publisher) through spaCy → pybiber → MDA to test pipeline, check processing time, ensure features extract correctly, see if preliminary patterns emerge
+
+**Why this works**: Debugs technical workflow, estimates computational requirements, reveals whether your approach is viable
+
+---
+
+::: {.callout-tip}
+## Choose Based on Your Uncertainty
+**Uncertain about data quality or patterns?** → Option 1 (simple methods on small sample)  
+**Uncertain about technical pipeline?** → Option 2 (full workflow on tiny corpus)  
+**Uncertain about both?** → Option 1, then scale to Option 2 for final project
+:::
+
+### What Makes a Good Pilot Study?
+
+**Good pilots answer specific questions:**
+
+✅ "Does my corpus actually show the variation I expect?" (test with keyness, frequency comparisons)  
+✅ "Can I successfully process texts with this tool?" (test pipeline on 5-10 documents)  
+✅ "Do preliminary patterns suggest my hypothesis is worth pursuing?" (exploratory visualization)  
+✅ "How long will processing take for the full corpus?" (time 10 documents, extrapolate to 1000)
+
+**Poor pilots try to do everything:**
+
+❌ Attempting definitive analysis with insufficient data (3 texts can't support topic modeling)  
+❌ Using complex methods before verifying basic patterns (MDA on data you haven't checked for variation)  
+❌ Perfect polished prose instead of learning from failures
+
+### Scoping Your Pilot Appropriately
+
+**Corpus size guidelines:**
+
+| Method | Minimum for CBE #3 | Ideal for Final Project |
+|--------|-------------------|------------------------|
+| Frequency/Distributions | 10-20 texts | 100+ texts |
+| Keyness | 15+ per group (30 total) | 50+ per group |
+| Collocations | 20-30 texts | 100+ texts |
+| Sentiment/Syuzhet | 5-10 narratives | 50+ narratives |
+| Topic Modeling | 50+ texts (bare minimum) | 200+ texts |
+| MDA (Factor Analysis) | 30+ texts (risky) | 100+ texts |
+| Classification | 20+ per class (40 total) | 100+ per class |
+| Clustering | 20-30 texts | 100+ texts |
+| Time Series | 15+ time points | 30+ time points |
+| Vector Models | 30+ texts | 200+ texts |
+
+**For CBE #3**: Use the **minimum** or even smaller (to test feasibility). For final project, aim for **ideal** range.
+
+## Part 2: Connecting to Course Materials
+
+You now have access to the **full repertoire** of tutorials and mini labs. Here's how to leverage them for CBE #3:
+
+### Core Analysis Methods
+
+**Basic Text Statistics** ([Tutorial: Corpus Basics](../tutorials/corpus-basics.qmd))
+- Good for: Initial corpus exploration, validating data structure
+- **Pilot use**: Check text lengths, vocabulary sizes, basic distributions before committing to complex analysis
+- **Mini Lab 2**: Practice with Brown corpus subsetting
+
+**Frequency and Distributions** ([Tutorial: Frequency](../tutorials/frequency-and-distributions.qmd))
+- Good for: Identifying salient features, comparing genres/authors
+- **Pilot use**: See if hypothesized differences actually exist in data
+- **Mini Lab 3**: Frequency calculations, dispersion measures
+
+**Keyness Analysis** ([Tutorial: Keyness](../tutorials/keyness.qmd))
+- Good for: Finding distinctive features between corpora, hypothesis generation
+- **Pilot use**: Quick test of whether two categories differ linguistically
+- **Mini Labs 4-5**: Log-likelihood, effect sizes, visualization
+
+**Collocations** ([Tutorial: Collocations](../tutorials/collocations.qmd))
+- Good for: Local co-occurrence patterns, phrase identification
+- **Pilot use**: Test if target keywords have interesting collocational patterns worth pursuing
+- **Mini Lab 6**: MI scores, t-scores, cluster extraction
+
+**Time Series** ([Tutorial: Time Series](../tutorials/time-series.qmd))
+- Good for: Diachronic change, periodization
+- **Pilot use**: Check if temporal variation exists before committing to full historical analysis
+- **Mini Lab 7**: Change-point detection, VNC clustering
+
+**spaCy Processing** ([Tutorial: spaCy Basics](../tutorials/processing-pipelines.qmd))
+- Good for: Linguistic annotation (POS, dependencies, NER)
+- **Pilot use**: Test processing pipeline, check annotation quality on sample before scaling
+- **Mini Lab 8**: Custom pipelines, token filtering
+
+**Sentiment and Narrative Analysis** ([Tutorial: Sentiment/Syuzhet](../tutorials/sentiment-and-syuzhet.qmd))
+- Good for: Emotional arcs, plot structures
+- **Pilot use**: Test if narrative shapes emerge in small sample
+- **Mini Labs 1, 11-12**: Sentiment lexicons, syuzhet curves
+
+### Advanced Methods
+
+**Topic Modeling** ([Tutorial: Topic Modeling](../tutorials/topic-modeling.qmd))
+- Good for: Discovering thematic structure in large corpora
+- **Pilot use**: *Risky for CBE #3* unless you have 50+ texts; consider deferring to final project
+- **Mini Lab 9**: LDA, coherence, interpretation
+
+**Vector Models (Word2Vec, Embeddings)** ([Tutorial: Vector Models](../tutorials/vector-models.qmd), [Contextual Embeddings](../tutorials/contextual-embeddings.qmd))
+- Good for: Semantic similarity, meaning in context
+- **Pilot use**: Test if semantic clustering reveals patterns; requires moderate corpus size
+- **Mini Labs 9, 11**: word2vec, sentence transformers, similarity
+
+**Multi-Dimensional Analysis** ([Tutorial: MDA](../tutorials/multi-dimensional-analysis.qmd))
+- Good for: Identifying register dimensions, functional variation
+- **Pilot use**: *Risky for CBE #3* with < 30 texts; test feature extraction pipeline instead
+- **Mini Lab 10**: Factor analysis, dimension interpretation
+
+**Classification/Authorship** ([Tutorial: Classification](../tutorials/classification-federalist-papers.qmd))
+- Good for: Genre prediction, authorship attribution, stylistics
+- **Pilot use**: Test if features distinguish categories before building full classifier
+- **Mini Lab 12**: Random Forest, feature importance
+
+### Supporting Concepts
+
+**Clustering** ([Tutorial: Clustering](../tutorials/cluster-analysis.qmd))
+- Hierarchical clustering for exploratory grouping
+- K-means for thematic discovery
+- **Pilot use**: See if texts naturally cluster by hypothesized categories
+
+**Correlation and Multi-Collinearity** ([Tutorial: Correlations](../tutorials/correlations.qmd))
+- Understanding feature relationships
+- Feature selection for classification/regression
+- **Pilot use**: Check which features co-occur before MDA or classification
+
+**ANOVA and R²** ([Tutorial: ANOVA](../tutorials/anova-and-r-squared.qmd))
+- Testing if groups differ on dimensions
+- Quantifying variance explained
+- **Pilot use**: Validate that extracted dimensions distinguish your categories
+
+### Choosing Your Method(s)
+
+**Decision tree for CBE #3:**
+
+```
+Do you have clear categories to compare?
+├─ YES → Keyness (quick) or Classification (if testing pipeline)
+└─ NO → Do you expect temporal patterns?
+    ├─ YES → Time Series or Frequency over time
+    └─ NO → Do you want to discover themes?
+        ├─ YES → Topic Modeling (if n > 50) or Clustering
+        └─ NO → Do you want semantic relationships?
+            ├─ YES → Vector Models or Embeddings
+            └─ NO → Start with basic Frequency/Distributions
+```
+
+::: {.callout-tip}
+## Start Simple, Add Complexity
+Even if your final project will use MDA or Topic Modeling, consider starting CBE #3 with:
+1. **Corpus exploration** (distributions, word counts)
+2. **Basic comparison** (keyness if two groups, frequency if one)
+3. **One targeted method** (the one most central to your final project)
+
+This ensures you learn something even if the advanced method doesn't work perfectly.
+:::
+
+## Part 3: Data Collection and Processing
+
+### Finding and Preparing Your Data
+
+**Data sources** (see [Data Resources](../resources/data.qmd)):
+
+- **Project Gutenberg**: Historical literature (out of copyright)
+- **Archive.org**: Digitized texts, speeches, periodicals
+- **Corpora**: Brown, inaugural addresses, MICUSP (academic writing)
+- **Web scraping**: News articles, blogs, social media (with ethical considerations)
+- **Custom collection**: Interviews, student writing, archival materials
+
+**Processing pipeline checklist:**
+
+1. **Load data** into polars DataFrame
+   ```python
+   import polars as pl
+   corpus = pl.DataFrame({
+       'doc_id': [...],
+       'text': [...],
+       'metadata': [...]  # genre, date, author, etc.
+   })
+   ```
+
+2. **Clean text** (if needed)
+   - Remove headers/footers (Project Gutenberg boilerplate)
+   - Handle encoding issues
+   - See [Corpus Basics tutorial](../tutorials/corpus-basics.qmd)
+
+3. **Annotate** (if using spaCy/pybiber)
+   ```python
+   import spacy
+   nlp = spacy.load("en_core_web_sm")
+   # See Mini Lab 8, spaCy tutorial
+   ```
+
+4. **Create document-feature matrix**
+   - Word counts, POS tags, DocuScope categories, or Biber features
+   - See relevant tutorial for your chosen method
+
+::: {.callout-warning}
+## Start Small, Verify Quality
+Process 2-3 texts first, manually inspect output:
+- Do POS tags look correct?
+- Are sentences segmented properly?
+- Is metadata aligned with text?
+
+Catching errors early saves hours of debugging later.
+:::
+
+### Documenting Your Pipeline
+
+**In your Methods section**, explain:
+
+1. **Data source**: "We collected 15 Victorian novels from Project Gutenberg (1850-1900)"
+2. **Selection criteria**: "We selected novels by women authors with > 50,000 words"
+3. **Processing steps**: "Texts were parsed with spaCy en_core_web_sm, extracting POS tags and dependency relations"
+4. **Feature extraction**: "We computed normalized frequencies for 67 Biber features using pybiber v0.5"
+5. **Quality checks**: "We manually verified POS tagging accuracy on 3 sample texts"
+
+**Why documentation matters**: If something doesn't work, you (and your team) can trace where it went wrong.
+
+## Part 4: Exploratory Analysis and Iteration
+
+### Embrace the Pilot Mindset
+
+**CBE #3 is not about perfection**—it's about **learning what works**:
+
+✅ "We tried clustering 10 novels, but they didn't group by author as expected. Might need more texts or different features."  
+✅ "Keyness revealed that Author A uses significantly more abstract nouns—worth investigating with MDA in final project."  
+✅ "Processing 10 texts took 2 hours. Scaling to 500 will require parallelization."
+
+❌ "We got perfect results and everything worked flawlessly." (Suspiciously polished for a pilot)
+
+### Iteration Examples
+
+**Iteration 1: Initial hypothesis fails**
+- **Tried**: Topic modeling 30 blog posts
+- **Result**: Incoherent topics (too few documents)
+- **Pivot**: Switched to keyness comparison (political blogs vs. personal blogs)—worked better
+- **Learning**: Small corpus → simpler methods
+
+**Iteration 2: Data quality issues**
+- **Tried**: Sentiment analysis on scraped tweets
+- **Result**: Many non-English tweets corrupted results
+- **Pivot**: Added language detection, filtered to English only
+- **Learning**: Always validate data quality assumptions
+
+**Iteration 3: Pipeline too slow**
+- **Tried**: Processing 50 novels through spaCy + pybiber
+- **Result**: Took 6 hours (not scalable to 500)
+- **Pivot**: Tested `n_process=4` (parallel), reduced to 1.5 hours
+- **Learning**: Test computational requirements early
+
+::: {.callout-note}
+## Document What Didn't Work
+Your Discussion section should honestly report:
+- What you tried that failed
+- Why you think it failed
+- What you learned
+- How you'd adjust for the final project
+
+Failed experiments teach more than successful ones.
+:::
+
+### Generating Provisional Findings
+
+**Even with a small pilot, you can learn something:**
+
+**From 15 texts** (too small for topic modeling):
+- ✅ Keyness shows distinctive vocabulary
+- ✅ Frequency distributions reveal stylistic differences
+- ✅ Correlation analysis shows which features co-occur
+- ❌ Topic modeling (too few documents)
+- ❌ MDA (underpowered)
+
+**From 30 texts** (borderline for complex methods):
+- ✅ Clustering might work (exploratory)
+- ✅ Sentiment trends visible
+- ✅ Classification possible (if 15+ per class)
+- ⚠️ Topic modeling (risky, check coherence)
+- ⚠️ MDA (check KMO, Bartlett's test)
+
+**From 50+ texts** (most methods viable):
+- ✅ Topic modeling
+- ✅ MDA (if features are appropriate)
+- ✅ Robust classification
+- ✅ Vector models (if corpus is cohesive)
+
+## Part 5: From Pilot to Final Project
+
+### Using CBE #3 to Refine Your Research Question
+
+**Before CBE #3**: "I want to analyze gender differences in 19th-century novels"  
+**After CBE #3**: "Pilot showed female authors use more emotion words (keyness LR > 0.6). Final project will test if this holds across 200 novels using MDA to identify broader stylistic dimensions beyond single features."
+
+**How the pilot refines the question:**
+
+1. **Validates basic premise** (yes, gender differences exist in this corpus)
+2. **Identifies specific patterns** (emotion words, not just abstract "style")
+3. **Suggests appropriate methods** (MDA better than simple frequency for multidimensional patterns)
+4. **Scopes the project** (200 novels feasible, 1000 not necessary)
+
+### Translating Pilot Findings to Final Project Plan
+
+**In your CBE #3 Discussion, sketch the path forward:**
+
+**Example 1: Scaling up**
+> "Our pilot analyzed 20 news articles (10 print, 10 online) using keyness. We found online news uses 40% more interactive language (questions, second-person pronouns). For the final project, we'll expand to 200 articles (100 per medium) and use MDA to test if 'interactive vs. informational' forms a coherent dimension beyond these individual features. We'll also add a temporal component (2000, 2010, 2020) to see if convergence is occurring."
+
+**Example 2: Pivoting method**
+> "We attempted topic modeling on 30 congressional speeches but topics were incoherent (perplexity = 850, coherence = 0.32). For the final project, we'll collect 150 speeches and use clustering + keyness instead: cluster speeches by similarity, then identify distinctive vocabulary for each cluster. This better suits our corpus size and provides more interpretable results."
+
+**Example 3: Refining focus**
+> "We extracted 67 Biber features for 15 academic papers across 3 disciplines. Factor analysis failed (KMO = 0.51, insufficient correlations). Examining individual features, we noticed 'nominalizations' and 'passives' alone distinguish STEM from humanities (LR > 0.5). Final project will focus on these 10 key features with targeted analysis (ANOVA, regression) rather than full MDA, using 100 papers per discipline."
+
+### Technical Lessons Learned
+
+**Document in your Discussion:**
+
+**Data collection:**
+- "Scraping took longer than expected due to rate limits—build in buffer time"
+- "10% of texts had encoding errors—add validation step"
+- "Metadata was inconsistent—need standardized schema"
+
+**Processing:**
+- "spaCy sentence segmentation failed on dialog—consider custom rules"
+- "pybiber dropped 12 features due to low correlation—expected, not problematic"
+- "Processing 30 texts took 45 minutes—final 200 will take ~5 hours (acceptable)"
+
+**Analysis:**
+- "Topic coherence improved when we increased n_topics from 5 to 8"
+- "Clustering worked better with TF-IDF than raw counts"
+- "Dimension 1 explained 35% variance—strong enough to pursue"
+
+::: {.callout-tip}
+## Think of CBE #3 as a Feasibility Study
+Your Discussion should answer:
+- **Is this project doable?** (data accessible, methods viable)
+- **Is it interesting?** (patterns exist, not just noise)
+- **What adjustments are needed?** (more data, different method, refined question)
+- **What's the timeline?** (realistic estimate based on pilot)
+:::
+
+## Part 6: Writing the Report
+
+### Structuring CBE #3 for Maximum Learning
+
+**Introduction** (1-2 paragraphs):
+- **Research question**: What do you want to explore?
+- **Rationale**: Why is this interesting/important?
+- **Pilot scope**: What are you testing in CBE #3 specifically?
+
+**Example**:
+> We investigate whether computational metaphor identification can distinguish academic from popular science writing. Prior work suggests experts use more abstract metaphors (Lakoff & Johnson, 1980), but computational validation is limited. This pilot tests whether spaCy's dependency parsing can reliably extract metaphor candidates, using 10 texts (5 academic, 5 popular) to assess feasibility before scaling to 200 texts for the final project.
+
+---
+
+**Data** (1 paragraph + table):
+- **Source**: Where did data come from?
+- **Selection**: How did you choose texts?
+- **Composition**: Table showing corpus breakdown
+
+**Example**:
+> We collected 15 Victorian novels from Project Gutenberg, selecting 5 each by Austen, Brontë, and Eliot to test author differentiation. Table 1 shows composition by author and decade. All novels exceeded 100,000 tokens.
+
+---
+
+**Methods** (1-2 paragraphs):
+- **Processing pipeline**: spaCy → feature extraction
+- **Features/Analysis**: Which features, which statistical tests
+- **Tools**: Polars, pybiber, sklearn, etc.
+
+**Example**:
+> Texts were parsed with spaCy en_core_web_sm. We extracted 67 Biber features using pybiber v0.5, normalized per 1,000 words. Due to small sample size (n=15), we used keyness analysis (log-likelihood, effect sizes) to compare authors rather than MDA, which requires 30+ texts for stable factors.
+
+---
+
+**Results** (1-2 paragraphs + 1-2 visualizations):
+- **What did you find?** (report numbers, cite tables/figures)
+- **No interpretation yet**—save for Discussion
+
+**Example**:
+> Figure 1 shows the 10 linguistic features with largest effect sizes distinguishing Austen from Brontë (LR > 0.4). Austen uses significantly more first-person pronouns (5.2 vs. 3.1 per 100 tokens, LR = 0.52, p < 0.001) and present tense verbs (8.7 vs. 6.1, LR = 0.48, p < 0.001). Brontë shows higher rates of past tense (12.3 vs. 9.4, LR = 0.44, p < 0.01).
+
+---
+
+**Discussion** (2-3 paragraphs—the heart of CBE #3):
+
+1. **Interpretation of pilot findings**:
+   - What might these patterns mean?
+   - Provisional explanations (it's okay to speculate)
+
+2. **Limitations and lessons learned**:
+   - What didn't work as expected?
+   - Technical challenges encountered
+   - What would you do differently?
+
+3. **Path to final project**:
+   - How will you scale up?
+   - What adjustments to methods/questions?
+   - What additional analyses will you add?
+
+**Example** (combining all three):
+> The pilot revealed that Austen's high use of first-person pronouns and present tense likely reflects her narrative style—free indirect discourse bringing readers into characters' immediate consciousness (Moretti, 2013). Brontë's past-tense dominance suggests more traditional retrospective narration. However, our sample of 5 novels per author is too small to confidently generalize. For the final project, we'll expand to 50 novels across 10 Victorian authors and use Multi-Dimensional Analysis to test if "narrative immediacy" (pronouns + present tense) forms a coherent dimension distinguishing authors beyond these individual features. We'll also add temporal metadata to test if narrative style evolved across the century. Technically, we learned that pybiber processing is efficient (15 novels in 20 minutes), but we need to manually verify proper noun vs. common noun distinctions, as spaCy occasionally misclassifies character names.
+
+---
+
+**Conclusion** (optional for CBE, but useful):
+- Brief summary of pilot outcomes
+- Reaffirm feasibility and next steps
+
+---
+
+**Acknowledgments**:
+- Generative AI use (if any—be specific)
+- Team member contributions
+- Data sources
+
+### Tables and Figures
+
+**Minimum required:**
+
+1. **Table 1: Corpus composition** (from Mini Lab 5 approach)
+2. **Figure 1: Main result visualization** (keyness plot, frequency comparison, etc.)
+
+**Optional additions:**
+
+- Table 2: Descriptive statistics (means, SDs by group)
+- Figure 2: Secondary finding (correlation heatmap, cluster dendrogram, etc.)
+
+::: {.callout-tip}
+## Quality Over Quantity
+Two well-explained visualizations > five poorly labeled ones.
+
+Each figure/table should:
+- Have a descriptive caption
+- Be referenced in text
+- Add substantive information (not decorative)
+:::
+
+### Citations and Bibliography
+
+**Minimum citations:**
+
+- **Methods**: Cite software packages (spaCy, polars, pybiber)
+- **Theory**: 1-2 sources establishing context (prior research, linguistic theory)
+- **Data**: If using published corpus, cite it
+
+**Finding relevant citations:**
+
+- **Tutorials**: Check "Further Reading" sections for foundational sources
+- **Packages**: Most have citation guidance (e.g., pybiber documentation)
+- **Google Scholar**: Search your topic + "corpus linguistics" or "computational text analysis"
+
+**BibTeX from course materials:**
+```bibtex
+@article{biber1988variation,
+  title={Variation across speech and writing},
+  author={Biber, Douglas},
+  year={1988},
+  publisher={Cambridge University Press}
+}
+```
+
+## Part 7: Team Collaboration Strategies
+
+### Dividing Pilot Study Work
+
+**Week 1: Setup and data collection**
+- **Manager**: Creates Overleaf project, assigns roles
+- **Data collector**: Gathers texts, creates corpus DataFrame
+- **Technical lead**: Tests processing pipeline on 2-3 sample texts
+
+**Week 2: Analysis and writing**
+- **Analyst 1**: Runs main analysis, generates tables/figures
+- **Analyst 2**: Runs secondary analysis or validates results
+- **Writer 1**: Drafts Introduction and Methods
+- **Writer 2**: Drafts Results and Discussion
+
+**Week 3: Revision and finalization**
+- **Everyone**: Reviews complete draft, adds comments
+- **Manager**: Integrates revisions, ensures coherence
+- **All**: Final proofreading and compilation
+
+::: {.callout-note}
+## Pair Programming for Pilots
+Consider working in pairs for technical components:
+- One person writes code, other reviews in real-time
+- Switch roles every 30 minutes
+- Catches errors early, shares knowledge
+:::
+
+### Managing Iteration and Pivots
+
+**If your initial plan isn't working:**
+
+1. **Team meeting** (virtual or in-person): What's the problem?
+2. **Quick brainstorm** (15 minutes): What are alternatives?
+3. **Decision**: Pick one pivot, commit for 24 hours
+4. **Reassess**: Did the pivot work?
+
+**Example pivot:**
+- **Original plan**: Topic modeling 30 speeches
+- **Problem**: Topics incoherent (perplexity too high)
+- **Pivot**: Switch to clustering + keyness
+- **Decision point**: 24 hours later, check if clusters are interpretable
+- **Outcome**: Clusters work, proceed with this method
+
+**Document the pivot in your Discussion**—it's valuable learning, not failure.
+
+## Part 8: From CBE #3 to Final Project Proposal
+
+### Using CBE #3 to Write Your Proposal
+
+Your final project proposal should build directly on CBE #3 findings:
+
+**Research Question** (refined):
+- **Before CBE #3**: "I want to study gender in novels"
+- **After CBE #3**: "Building on pilot findings that female authors use 40% more emotion words (LR = 0.58), I will test if this pattern holds across 200 Victorian novels and whether it correlates with critical reception."
+
+**Methods** (validated):
+- **Before**: "I'll probably use topic modeling or something"
+- **After**: "Pilot showed MDA is computationally feasible (30 novels in 45 minutes) and reveals interpretable dimensions. I'll use MDA with 67 Biber features, validated by pilot's successful extraction and preliminary factor structure (KMO = 0.72)."
+
+**Feasibility** (demonstrated):
+- **Before**: "I assume I can find the data somewhere"
+- **After**: "Pilot confirmed Project Gutenberg has sufficient texts (identified 250 candidate novels). Processing pipeline tested and working. Estimated timeline: data collection (2 weeks), processing (3 days), analysis (1 week)."
+
+**Expected Outcomes** (grounded):
+- **Before**: "I expect to find differences"
+- **After**: "Pilot suggested Dimension 1 (emotional vs. restrained) will distinguish female from male authors (η² ≈ 0.25 in pilot). Full project will test this with adequate power (200 novels) and add temporal analysis (1800-1900) to see if gender patterns evolved."
+
+### Timeline for Final Project
+
+**Based on CBE #3 pilot lessons:**
+
+**Week 1-2: Data collection** (adjusted based on pilot challenges)
+**Week 3: Processing** (using validated pipeline from pilot)
+**Week 4: Analysis** (main method tested in pilot, plus extensions)
+**Week 5: Writing** (structure similar to CBE #3, but more polished)
+**Week 6: Revision and finalization**
+
+::: {.callout-tip}
+## Build Buffer Time
+If pilot processing took 2 hours for 30 texts, estimate 20 hours for 300 texts (not 20 hours exactly—add 25% buffer for unexpected issues).
+
+If pilot analysis revealed data quality problems in 10% of texts, expect 10% of full corpus will need manual cleaning.
+:::
+
+## Reflection Questions
+
+After completing CBE #3, consider:
+
+1. **Feasibility**: Is your final project viable given what you learned? Do you need to adjust scope or methods?
+
+2. **Surprises**: What did you learn from the pilot that you didn't expect? (Data quality issues? Patterns stronger/weaker than anticipated?)
+
+3. **Methods**: Did your chosen analytical method work well for your research question? Would a different approach be better?
+
+4. **Iteration**: How many times did you pivot or adjust your approach? What did each iteration teach you?
+
+5. **Collaboration**: How did team dynamics shape the pilot? What worked well? What needs adjustment for the final project?
+
+6. **Timeline**: How accurate were your time estimates? (Data collection, processing, analysis) What will you adjust for the final project?
+
+7. **Findings**: Even if preliminary, did the pilot reveal anything interesting enough to pursue further?
+
+## Final Project Preview: What's Next?
+
+**After CBE #3, you should have:**
+
+✅ A tested data collection and processing pipeline  
+✅ Preliminary findings suggesting your research question is viable  
+✅ Realistic understanding of computational requirements  
+✅ Identified technical challenges and solutions  
+✅ Refined research question based on empirical evidence  
+✅ Clear plan for scaling up to full project
+
+**Your final project will:**
+
+- Expand corpus to sufficient size (based on method requirements)
+- Add depth to analysis (secondary methods, validation, robustness checks)
+- Produce polished visualizations and tables
+- Provide thorough interpretation grounded in theory
+- Demonstrate scholarly rigor in methods and reporting
+
+**CBE #3 is your safety net**—better to discover problems with 30 texts than 300 texts.
+
+## Works Cited
+

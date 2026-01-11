@@ -1,0 +1,539 @@
+# Statistical Reporting Guide {.unnumbered}
+
+This guide provides quick-reference formatting for reporting statistical results in your writing. Follow these conventions to ensure clarity, professionalism, and reproducibility.
+
+## General Principles
+
+### What to Include
+
+**Every statistical claim should include:**
+
+1. **Descriptive statistics**: Means (M), standard deviations (SD), counts (n)
+2. **Test statistic**: The specific value (t, F, χ², LL, etc.)
+3. **Effect size**: Magnitude of difference (d, η², LL effect size, etc.)
+4. **Significance**: p-value or confidence interval
+5. **Interpretation**: What it means in plain language
+
+**Example**:
+> Biology papers used significantly more passive constructions (M = 12.3 per 1,000 words, SD = 3.1) than English papers (M = 7.8, SD = 2.4), t(158) = 8.2, p < 0.001, d = 1.62. This large effect suggests passive voice is a core feature of STEM scientific writing.
+
+### What NOT to Do
+
+❌ **Screenshots of code or output**: Never include screenshots from Jupyter notebooks or Colab  
+❌ **Raw Python output**: Don't paste unformatted print statements  
+❌ **Tables without context**: Every table needs a caption and in-text reference  
+❌ **Figures without interpretation**: Explain what readers should notice  
+❌ **P-values alone**: Always include descriptive statistics and effect sizes
+
+## Formatting Numbers
+
+### Decimal Places
+
+- **Means and SDs**: 1-2 decimal places (M = 12.3, SD = 3.14)
+- **Proportions and percentages**: 1 decimal place (23.4%)
+- **Test statistics**: 2 decimal places (t = 3.45, F = 12.67)
+- **P-values**: 3 decimal places (p = 0.003) or p < 0.001, p > 0.05
+- **Effect sizes**: 2 decimal places (d = 0.68, η² = 0.14)
+
+### Italics
+
+Italicize statistical symbols in text:
+
+- *M*, *SD*, *n* (descriptive statistics)
+- *t*, *F*, *χ²*, *r*, *z* (test statistics)
+- *p*, *d*, *η²*, *R²* (significance and effect sizes)
+- *df* (degrees of freedom)
+
+**Example**: "*M* = 45.2, *SD* = 12.3, *n* = 80"
+
+### Reporting Exact vs. Threshold P-values
+
+- **p ≥ 0.001**: Report exact value: *p* = 0.023, *p* = 0.187
+- **p < 0.001**: Use threshold: *p* < 0.001
+- **p > 0.05**: Report as *p* = 0.12 or *p* > 0.05 (not "ns" or "n.s.")
+
+## Method-Specific Reporting
+
+### Keyness (Log-Likelihood)
+
+**What to report:**
+- Log-likelihood value (LL)
+- Effect size (LL effect size or normalized frequency difference)
+- Direction of difference
+- Word frequencies in both corpora
+
+**Template**:
+> The word "cells" was significantly more frequent in Biology papers (45.2 per 1,000 words) than English papers (2.1 per 1,000 words), LL = 156.3, *p* < 0.001, effect size = 1.2 (large).
+
+**In a table** (from Mini Lab 4):
+```
+| Word      | Biology freq | English freq | LL    | p      | Effect |
+|-----------|--------------|--------------|-------|--------|--------|
+| cells     | 45.2         | 2.1          | 156.3 | <.001  | 1.2    |
+| suggests  | 3.4          | 12.8         | 89.4  | <.001  | 0.8    |
+```
+
+**Effect size interpretation**:
+- < 0.2: Negligible
+- 0.2-0.4: Small
+- 0.4-0.6: Medium
+- > 0.6: Large
+
+### T-tests
+
+**Independent samples t-test** (comparing two groups):
+
+> Biology papers (M = 12.3, SD = 3.1) used significantly more passive voice than English papers (M = 7.8, SD = 2.4), t(158) = 8.2, p < 0.001, d = 1.62.
+
+**Components**:
+- t(*df*) = value
+- Degrees of freedom in parentheses
+- Cohen's *d* for effect size
+
+**Cohen's d interpretation**:
+- 0.2: Small
+- 0.5: Medium
+- 0.8: Large
+
+### ANOVA (One-Way)
+
+**What to report:**
+- F-statistic with degrees of freedom
+- Eta-squared (η²) or partial eta-squared
+- Post-hoc test results (if significant)
+
+**Template**:
+> A one-way ANOVA revealed significant differences in nominal density across disciplines, F(2, 237) = 45.3, p < 0.001, η² = 0.28. Post-hoc Tukey HSD tests showed Biology (M = 34.2, SD = 8.1) differed significantly from both English (M = 22.3, SD = 6.4, p < 0.001) and Psychology (M = 28.1, SD = 7.2, p = 0.002), while English and Psychology did not differ significantly (p = 0.15).
+
+**Eta-squared interpretation** (from [ANOVA tutorial](../tutorials/anova-and-r-squared.qmd)):
+- 0.01: Small
+- 0.06: Medium
+- 0.14: Large
+
+**ANOVA table format**:
+```
+| Source    | SS      | df  | MS     | F     | p      | η²   |
+|-----------|---------|-----|--------|-------|--------|------|
+| Between   | 2450.3  | 2   | 1225.2 | 45.3  | <.001  | 0.28 |
+| Within    | 6402.1  | 237 | 27.0   |       |        |      |
+| Total     | 8852.4  | 239 |        |       |        |      |
+```
+
+### Correlation
+
+**What to report:**
+- Correlation coefficient (*r*, *ρ*, *τ*)
+- Sample size
+- P-value
+- Direction and strength
+
+**Template**:
+> First-person pronoun frequency correlated negatively with nominal density, r(158) = -0.52, p < 0.001, indicating that more personal writing tends to use fewer nominalizations.
+
+**Pearson's r interpretation**:
+- 0.10-0.29: Small/weak
+- 0.30-0.49: Medium/moderate
+- 0.50+: Large/strong
+
+**Correlation matrix** (don't report full matrix in text—use figure/table):
+```python
+# Create correlation heatmap (from correlation tutorial)
+# Export as figure, not raw output
+```
+
+### Regression (Linear)
+
+**What to report:**
+- R² (variance explained)
+- F-statistic for overall model
+- β coefficients for predictors
+- Standard errors and p-values
+
+**Template**:
+> Linear regression showed that first-person pronouns and hedging significantly predicted disciplinary category, R² = 0.34, F(2, 157) = 40.3, p < 0.001. First-person pronouns were a significant predictor (β = 0.45, SE = 0.08, p < 0.001), as was hedging (β = 0.28, SE = 0.10, p = 0.006).
+
+**Regression table**:
+```
+| Predictor           | β     | SE   | t     | p     | 95% CI        |
+|---------------------|-------|------|-------|-------|---------------|
+| First-person (I/we) | 0.45  | 0.08 | 5.63  | <.001 | [0.29, 0.61]  |
+| Hedging             | 0.28  | 0.10 | 2.80  | .006  | [0.08, 0.48]  |
+```
+
+### Classification (Machine Learning)
+
+**What to report:**
+- Accuracy (overall and per-class)
+- Precision, recall, F1-score
+- Confusion matrix
+- Cross-validation details
+- Feature importance (top 5-10 features)
+
+**Template**:
+> Random Forest classification distinguished Biology from English papers with 87% accuracy (10-fold cross-validation). Precision was 0.89 for Biology and 0.85 for English; recall was 0.85 for Biology and 0.89 for English (Table 2). The most important features were passive voice frequency (importance = 0.23), nominal density (0.18), and first-person pronouns (0.15).
+
+**Classification report** (from Mini Lab 12):
+```
+| Class    | Precision | Recall | F1-score | Support |
+|----------|-----------|--------|----------|---------|
+| Biology  | 0.89      | 0.85   | 0.87     | 80      |
+| English  | 0.85      | 0.89   | 0.87     | 80      |
+| Accuracy |           |        | 0.87     | 160     |
+```
+
+**Confusion matrix** (visualize, don't paste numbers):
+- Create heatmap with seaborn
+- Label axes clearly
+- Include caption
+
+### Topic Modeling
+
+**What to report:**
+- Number of topics
+- Coherence score
+- Perplexity (optional)
+- Top words per topic (5-10 words)
+- Interpretation of each topic
+
+**Template**:
+> LDA with 8 topics achieved a coherence score of 0.52 (acceptable) and perplexity of 245. Topic 3 ("cellular processes") was characterized by *cells, protein, DNA, membrane, enzyme, receptor* and appeared in 34% of Biology papers but only 2% of English papers.
+
+**Topic table**:
+```
+| Topic | Label              | Top Words                                      | % Bio | % Eng |
+|-------|--------------------|------------------------------------------------|-------|-------|
+| 1     | Cellular processes | cells, protein, DNA, membrane, enzyme          | 34%   | 2%    |
+| 2     | Literary analysis  | text, reader, theme, narrative, character      | 3%    | 41%   |
+```
+
+### Clustering
+
+**What to report:**
+- Clustering method (hierarchical, k-means)
+- Number of clusters
+- Validation metric (silhouette score, dendrogram scree)
+- Cluster composition
+- Interpretation
+
+**Template**:
+> Hierarchical clustering with Ward's linkage identified 5 clusters (silhouette score = 0.42). Cluster 1 (n = 42) consisted primarily of Biology lab reports (88% of cluster), characterized by high nominal density and low first-person usage. Cluster 2 (n = 38) contained predominantly English argumentative essays (76%), with high first-person and hedging frequencies.
+
+**Dendrogram**: Include figure, not code output
+
+**Cluster composition table**:
+```
+| Cluster | n  | Primary Discipline | Key Features                          |
+|---------|----|--------------------|---------------------------------------|
+| 1       | 42 | Biology (88%)      | High nominal density, low 1st person  |
+| 2       | 38 | English (76%)      | High 1st person, high hedging         |
+```
+
+### Multi-Dimensional Analysis (MDA)
+
+**What to report:**
+- Number of dimensions extracted
+- Variance explained per dimension
+- Factor loadings (top features per dimension)
+- Dimension interpretation
+- How texts score on dimensions
+
+**Template**:
+> Factor analysis of 67 Biber features extracted 3 dimensions explaining 58% of variance. Dimension 1 ("Informational density," 31% variance) loaded positively on nominalizations (0.82), attributive adjectives (0.76), and prepositions (0.71). Biology papers scored significantly higher on this dimension (M = 1.8, SD = 0.6) than English papers (M = -1.2, SD = 0.8), F(1, 158) = 89.3, p < 0.001, η² = 0.36.
+
+**Factor loadings table** (top 5-7 features per dimension):
+```
+| Feature                  | Dim 1  | Dim 2  | Dim 3  |
+|--------------------------|--------|--------|--------|
+| Nominalizations          | 0.82   | -0.12  | 0.23   |
+| Attributive adjectives   | 0.76   | 0.08   | -0.15  |
+| First-person pronouns    | -0.14  | 0.88   | 0.22   |
+| Hedging                  | -0.23  | 0.79   | -0.18  |
+```
+
+**Dimension scores visualization**: Biplot or boxplots by discipline
+
+### Sentiment Analysis
+
+**What to report:**
+- Sentiment method/lexicon (NRC, VADER, syuzhet)
+- Overall sentiment scores
+- Differences between groups (if comparing)
+- Temporal patterns (if time series)
+
+**Template**:
+> Using the NRC emotion lexicon, tragic novels showed significantly higher negative emotion word density (M = 8.2 per 100 words, SD = 2.1) than comedic novels (M = 4.3, SD = 1.6), t(78) = 9.8, p < 0.001, d = 2.12. Positive emotion words did not differ significantly between genres, t(78) = 1.2, p = 0.23.
+
+**Syuzhet arc** (narrative arcs):
+> DCT transformation revealed distinct narrative shapes: comedies showed the classic "rags to riches" arc (negative start, positive end), while tragedies showed inverted arcs (positive start, negative end). Figure 3 shows normalized emotional arcs for both genres.
+
+**Sentiment over time**: Include line plot, not raw numbers
+
+## Tables and Figures
+
+### Table Formatting
+
+**Every table must have:**
+
+1. **Number and caption** above the table
+2. **Clear column headers** with units
+3. **In-text reference** ("Table 1 shows...")
+4. **Appropriate precision** (don't over-report decimals)
+5. **Notes** (below table) for abbreviations or statistical notation
+
+**Example**:
+```
+Table 1
+Descriptive Statistics for Linguistic Features by Discipline
+
+| Feature              | Biology        | English        |
+|                      | M (SD)         | M (SD)         |
+|----------------------|----------------|----------------|
+| Passive voice        | 12.3 (3.1)     | 7.8 (2.4)      |
+| Nominal density      | 34.2 (8.1)     | 22.3 (6.4)     |
+| First-person pronouns| 5.6 (2.3)      | 8.2 (3.0)      |
+
+Note. M = mean; SD = standard deviation. All values are 
+frequencies per 1,000 words. N = 80 per discipline.
+```
+
+**Creating tables in Python**:
+```python
+from great_tables import GT
+
+# Create professional table (from Mini Lab 5)
+# Export as LaTeX for Overleaf
+table.as_latex()  # Not screenshot!
+```
+
+**LaTeX table formatting** (for Overleaf):
+
+The same table in LaTeX syntax:
+```latex
+\begin{table}[h]
+\centering
+\caption{Descriptive Statistics for Linguistic Features by Discipline}
+\label{tab:descriptives}
+\begin{tabular}{lcc}
+\toprule
+Feature & Biology & English \\
+        & \textit{M} (\textit{SD}) & \textit{M} (\textit{SD}) \\
+\midrule
+Passive voice        & 12.3 (3.1) & 7.8 (2.4) \\
+Nominal density      & 34.2 (8.1) & 22.3 (6.4) \\
+First-person pronouns & 5.6 (2.3) & 8.2 (3.0) \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item \textit{Note}. \textit{M} = mean; \textit{SD} = standard deviation. 
+All values are frequencies per 1,000 words. \textit{N} = 80 per discipline.
+\end{tablenotes}
+\end{table}
+```
+
+**Key LaTeX table commands**:
+- `\toprule`, `\midrule`, `\bottomrule`: Professional horizontal lines (requires `booktabs` package)
+- `\centering`: Centers the table
+- `\caption{}`: Table title (appears above table)
+- `\label{}`: For cross-referencing in text (e.g., `\ref{tab:descriptives}`)
+- `{lcc}`: Column alignment (left, center, center)
+- `\textit{}`: Italics for statistical symbols
+- `&`: Column separator
+- `\\`: Row separator
+
+**Best practice**: Use `great_tables` in Python to generate LaTeX code, then paste into Overleaf. This ensures consistency and saves manual formatting time.
+
+### Figure Formatting
+
+**Every figure must have:**
+
+1. **Number and caption** below the figure
+2. **Clear axis labels** with units (e.g., "Frequency per 1,000 words")
+3. **Legend** (if multiple groups/categories)
+4. **Legible font** (minimum 12pt)
+5. **Professional styling** (seaborn theme, not default matplotlib)
+6. **In-text reference** ("Figure 1 shows...")
+
+**Bad caption**: "Keyness plot"  
+**Good caption**: "Figure 1. Keyness of Top 20 Words Distinguishing Biology and English Papers. Positive log-likelihood values (blue) indicate Biology-frequent words; negative values (orange) indicate English-frequent words. All LL > 0.4 (medium-to-large effect), *p* < 0.001."
+
+**Figure types by purpose**:
+
+| Purpose | Recommended Plot |
+|---------|------------------|
+| Compare group means | Bar plot, boxplot, violin plot |
+| Show distribution | Histogram, density plot |
+| Correlation | Scatterplot with regression line |
+| Time trend | Line plot, area plot |
+| Keyness | Horizontal bar plot (pos/neg) |
+| Clustering | Dendrogram, PCA scatter |
+| Classification | Confusion matrix heatmap |
+| Topic composition | Stacked bar, heatmap |
+| Factor loadings | Horizontal bar plot |
+| Sentiment arc | Line plot with smoothing |
+
+**Creating publication-quality figures**:
+```python
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Set style
+sns.set_style("whitegrid")
+sns.set_context("paper", font_scale=1.2)
+
+# Create plot
+fig, ax = plt.subplots(figsize=(8, 6))
+# ... your plot code ...
+
+# Clear labels with units
+ax.set_xlabel("Discipline", fontsize=12)
+ax.set_ylabel("Frequency per 1,000 words", fontsize=12)
+ax.set_title("Passive Voice by Discipline", fontsize=14)
+
+# Save high-resolution
+plt.savefig("passive_voice.png", dpi=300, bbox_inches='tight')
+```
+
+**Never**:
+- Screenshot your Jupyter/Colab output
+- Include code cells in your report
+- Paste matplotlib's default ugly plots
+- Forget axis labels or legends
+- Use pie charts (almost always a bad choice)
+
+## Inline vs. Parenthetical Reporting
+
+### Inline (sentence structure includes statistics)
+
+> Biology papers used significantly more passive constructions (*M* = 12.3) than English papers (*M* = 7.8), *t*(158) = 8.2, *p* < 0.001.
+
+### Parenthetical (statistics supplementary)
+
+> Biology papers used significantly more passive constructions than English papers (*M*s = 12.3 vs. 7.8, *t*(158) = 8.2, *p* < 0.001, *d* = 1.62).
+
+**Both are acceptable**—choose based on what flows better in your sentence.
+
+## Common Mistakes to Avoid
+
+### ❌ Reporting Only P-values
+
+**Bad**: "The difference was significant (*p* < 0.05)."  
+**Good**: "Biology papers used significantly more passive voice (*M* = 12.3, *SD* = 3.1) than English papers (*M* = 7.8, *SD* = 2.4), *t*(158) = 8.2, *p* < 0.001, *d* = 1.62."
+
+**Why**: P-values alone don't tell readers the magnitude or practical importance of differences.
+
+### ❌ Over-Precise Reporting
+
+**Bad**: "Mean = 12.3456789, SD = 3.14159265"  
+**Good**: "M = 12.3, SD = 3.1"
+
+**Why**: False precision implies unrealistic measurement accuracy.
+
+### ❌ Inconsistent Decimal Places
+
+**Bad**: "*M* = 12, *SD* = 3.142, *t* = 8.234567"  
+**Good**: "*M* = 12.0, *SD* = 3.1, *t* = 8.23"
+
+### ❌ Forgetting Units
+
+**Bad**: "Biology papers had more passive voice (12.3)"  
+**Good**: "Biology papers had more passive voice (12.3 per 1,000 words)"
+
+### ❌ Screenshots of Code or Output
+
+**Never do this**:
+- Screenshot of Jupyter cell output
+- Screenshot of Python print statements
+- Screenshot of DataFrame.head()
+- Raw copy-paste from console
+
+**Instead**:
+- Create professional tables with great_tables
+- Create styled visualizations with seaborn
+- Export figures as high-res PNG/PDF
+- Format numbers in prose
+
+### ❌ Tables/Figures Without Context
+
+**Bad**: Just inserting Figure 1 with no mention in text  
+**Good**: "Figure 1 shows that passive voice distinguishes disciplines, with Biology using 58% more passive constructions than English."
+
+## Quick Reference: Common Statistical Symbols
+
+| Symbol | Meaning | Example |
+|--------|---------|---------|
+| *M* | Mean | *M* = 12.3 |
+| *SD* | Standard deviation | *SD* = 3.1 |
+| *SE* | Standard error | *SE* = 0.4 |
+| *n* | Sample size (subset) | *n* = 80 |
+| *N* | Total sample size | *N* = 160 |
+| *t* | t-statistic | *t*(158) = 8.2 |
+| *F* | F-statistic (ANOVA) | *F*(2, 237) = 45.3 |
+| *χ²* | Chi-square | *χ²*(3) = 12.4 |
+| *r* | Pearson correlation | *r* = 0.52 |
+| *ρ* | Spearman correlation | *ρ* = 0.48 |
+| *p* | Probability value | *p* < 0.001 |
+| *d* | Cohen's d (effect size) | *d* = 1.62 |
+| *η²* | Eta-squared (effect size) | *η²* = 0.28 |
+| *R²* | R-squared (variance explained) | *R²* = 0.34 |
+| *β* | Beta coefficient (regression) | *β* = 0.45 |
+| LL | Log-likelihood (keyness) | LL = 156.3 |
+| *df* | Degrees of freedom | *df* = 158 |
+| CI | Confidence interval | 95% CI [0.29, 0.61] |
+
+## Software and Data Citations
+
+**Always cite** the tools and data you used:
+
+**Software**:
+> Statistical analyses were performed in Python 3.11 using polars 0.19 (Vink, 2023), spaCy 3.7 (Honnibal et al., 2020), pybiber 0.1.5 (Brown, 2024), scikit-learn 1.3 (Pedregosa et al., 2011), and great_tables 0.8 (Mock, 2024).
+
+**Data**:
+> We analyzed the Michigan Corpus of Upper-level Student Papers (MICUSP; Römer & O'Donnell, 2011), available at [https://elicorpora.info/](https://elicorpora.info/).
+
+**Get citation info**:
+```python
+# Most packages provide citation guidance
+import spacy
+# Check package documentation for citation
+```
+
+## Final Checklist
+
+Before submitting your report, verify:
+
+✅ **All statistics include**:
+- Descriptive statistics (*M*, *SD*, *n*)
+- Test statistics with *df* where applicable
+- Effect sizes (*d*, *η²*, etc.)
+- P-values
+- Interpretation in plain language
+
+✅ **All tables include**:
+- Number and descriptive caption
+- Clear headers with units
+- In-text reference
+- Appropriate precision (1-2 decimals)
+
+✅ **All figures include**:
+- Number and descriptive caption
+- Axis labels with units
+- Legend (if multiple groups)
+- Professional styling (no screenshots!)
+- In-text reference
+
+✅ **No screenshots of**:
+- Jupyter/Colab cells
+- Python console output
+- Raw DataFrames
+- Matplotlib default plots
+
+✅ **Citations for**:
+- Software packages
+- Data sources
+- Statistical tests
+- Prior research
+
+---
+
+**Remember**: The goal is **clear communication** of your findings. Statistics should support your argument, not overwhelm it. When in doubt, ask: "Can a reader understand this number without referring to my code?"

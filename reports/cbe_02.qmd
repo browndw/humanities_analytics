@@ -1,0 +1,364 @@
+# Coffee Break Experiment #2: From Results to Research {.unnumbered}
+
+This assignment is designed as a **quick, exploratory exercise**—not a polished final paper. The goal is to practice moving from computational results to provisional interpretations, learning the workflow of collaborative academic writing with Overleaf.
+
+::: {.callout-important}
+## This is a Coffee Break Experiment
+You have limited time, so focus on:
+- **Finding something interesting** in your data
+- **Forming a provisional interpretation** (even if incomplete)
+- **Sketching what you'd do next** if this were a full project
+
+Don't get stuck perfecting details. Sketch, explore, and move forward.
+:::
+
+::: {.callout-note}
+## Template Access
+**Read-only template**: <https://www.overleaf.com/read/sfhmdxyqftzf#ad72b5>
+
+Your team manager will make a copy of this template and share it with team members.
+:::
+
+## Part 1: Getting Started with Overleaf
+
+### Understanding the Template Structure
+
+The Coffee Break Experiment template provides a basic academic paper structure. Here's what you need to know:
+
+**Main Files:**
+
+- `main.tex` - The primary document (this is where you write)
+- `main.bib` - Bibliography database
+- `tables/` - Put your table files here
+- `figures/` - Put your images here
+
+**Essential LaTeX Commands:**
+
+1. **Sections**: `\section{Title}` creates a new section
+2. **References**: `Table~\ref{tbl:composition}` links to your table
+3. **Citations**: `\cite{authorYEAR}` cites a source
+4. **Including files**: `\input{tables/filename}` brings in a table
+
+::: {.callout-tip}
+## Don't Worry About LaTeX Perfection
+If something doesn't compile perfectly, focus on getting your ideas down. You can fix formatting later (or leave it imperfect for this exploratory exercise).
+:::
+
+::: {.callout-tip}
+## Collaborative Editing
+Multiple team members can edit simultaneously in Overleaf. You'll see each other's cursors in real-time. Use the **comment feature** (add comment icon) to discuss changes without editing the text directly.
+:::
+
+### Setting Up Your Team Report
+
+**Step-by-Step Setup:**
+
+1. **Manager creates the project**:
+   - Click "Copy Project" on the template
+   - Rename: "CBE 2: [Your Topic]" (e.g., "CBE 2: ChatGPT vs Human Academic Writing")
+
+2. **Share with team**:
+   - Click "Share" button (top right)
+   - Add team members' email addresses
+   - Set permissions to "Can Edit"
+
+3. **Customize the front matter**:
+   - Update `\title{CBE Title}` with your actual title
+   - Replace `Author One`, `Author Two` with your names
+   - Update department affiliations if needed
+
+4. **Create your first file**:
+   - Go to `tables/` folder
+   - Click three dots → New File
+   - Name it descriptively: `hape_composition.tex`
+
+## Part 2: Integrating Results from Mini Lab 5
+
+### Adding Your Corpus Composition Table
+
+From Mini Lab 5, you generated LaTeX code using `great_tables`. Here's how to integrate it:
+
+**In your Colab notebook:**
+```python
+# This generates LaTeX code
+(
+    GT(pl.concat([mini_total, grand_summary_row]))
+    .fmt_integer(columns=pl.exclude("Author"))
+).as_latex()
+```
+
+**Steps to add the table:**
+
+1. **Copy the LaTeX output** from the notebook cell
+2. **Paste into new table file** (`tables/hape_composition.tex`)
+3. **Add caption and label**:
+   ```latex
+   \begin{table}[!t]
+   \caption{Composition of the HAP-E mini corpus by author type.}
+   \label{tbl:hape-composition}
+   % ...rest of your table code...
+   \end{table}
+   ```
+
+4. **Reference in main.tex**:
+   - Find the Data section
+   - Replace `\input{tables/corpus_composition}` with `\input{tables/hape_composition}`
+   - Update the reference: `Table~\ref{tbl:hape-composition} shows...`
+
+::: {.callout-warning}
+## Common LaTeX Table Issues
+- **Overfull boxes**: If your table is too wide, the compiler will warn you. Consider reducing font size with `\footnotesize` before `\begin{tabular}`
+- **Column alignment**: `l` = left, `r` = right, `c` = center
+- **Special characters**: Use `\%` for percent signs, `\_` for underscores
+:::
+
+### Adding Your Visualization
+
+**Preparing your figure:**
+
+1. **Save from Colab** with appropriate filename:
+   ```python
+   fig.savefig('gpt_vs_human_keyness.png', 
+               bbox_inches='tight', 
+               dpi=300)  # High resolution for publication
+   ```
+
+2. **Download from Google Drive**
+
+3. **Upload to Overleaf**:
+   - Navigate to `figures/` folder
+   - Click "Upload" icon
+   - Select your PNG file
+
+4. **Add to document**:
+   ```latex
+   \begin{figure}[!t]
+       \centering
+       \includegraphics[width=0.8\textwidth]{figures/gpt_vs_human_keyness.png}
+       \caption{DocuScope categories showing highest effect sizes 
+       (LR > 0.5) distinguishing ChatGPT-generated text from 
+       human-written text in the HAP-E corpus.}
+       \label{fig:keyness}
+   \end{figure}
+   ```
+
+5. **Reference the figure**: `As shown in Figure~\ref{fig:keyness}, the Positive category...`
+
+## Part 3: From Data to Interpretation
+
+### Writing the Results Section
+
+The Results section **reports what you found**—keep it brief and descriptive:
+
+**What to include:**
+
+1. **Direct description of patterns**:
+   - "ChatGPT-generated texts used Positive language 5.2 times per 100 tokens compared to 3.1 in human texts (LR = 0.67, LL = 423.5, p < 0.001)"
+   - Report actual numbers from your tables
+   - Include effect sizes (LR) and significance (LL, p-values)
+
+2. **Reference your visualizations**:
+   - "Figure 1 shows the five DocuScope categories with the largest effect sizes..."
+   - Guide readers through what they're seeing
+
+3. **Avoid interpretation** (save that for Discussion):
+   - ❌ "This suggests ChatGPT is overly optimistic"
+   - ✅ "ChatGPT texts contain 67% more Positive language"
+
+**Quick example** (yours doesn't need to be this polished):
+
+> We analyzed 150 texts from the HAP-E corpus (see Table 1). Figure 2 shows the five DocuScope categories that most strongly distinguish ChatGPT from human writing (LR > 0.5). The Positive category shows the largest difference: ChatGPT uses it 5.2 times per 100 tokens versus 3.1 in human texts (LR = 0.67, p < 0.001).
+
+### Developing Your Discussion
+
+This is the **exploratory heart** of the CBE. The Discussion is where you:
+- **Speculate** about what the patterns might mean
+- **Propose** provisional explanations (even if you can't fully test them)
+- **Sketch** what you'd investigate next
+
+::: {.callout-important}
+## Think Out Loud
+Don't worry about having a complete argument. Coffee break experiments are about **exploration**:
+- What caught your attention in the data?
+- What might explain it?
+- What questions does it raise?
+- If you had more time, what would you do next?
+:::
+
+**Quick framework for provisional interpretation:**
+
+1. **What did you notice?**
+   - Look at your KWIC concordances—what patterns jumped out?
+   - Example: "resilience," "opportunity," "beneficial" cluster together
+
+2. **Why might this be happening?**
+   - Brainstorm possibilities (training data? instruction-following? genre conventions?)
+   - You don't need definitive answers—provisional explanations are fine
+
+3. **What would you do next?**
+   - If this were a full project, what would you investigate?
+   - More data? Different comparisons? Qualitative analysis?
+
+4. **What didn't work?**
+   - It's okay if your initial approach didn't pan out
+   - Explain what you tried and why it didn't reveal what you expected
+
+**Example Discussion paragraph** (exploratory tone):
+
+> What caught our attention was how often ChatGPT uses words like "resilience," "opportunity," and "beneficial"—always in optimistic contexts. Looking at the concordances, ChatGPT seems to avoid hedging or acknowledging limitations, which is common in human academic writing. Why? Maybe it's trained on motivational content, or maybe when you prompt it to "explain" something, it defaults to positive framing. We're not sure, but it makes us wonder about using AI for academic writing—students might need to consciously add critical perspective. If we had more time, we'd compare different prompts ("critique" vs. "explain") to see if instruction affects tone.
+
+### Sketching Your Exploratory Path
+
+Your CBE should tell a story of **discovery**, not present a finished argument:
+
+**Introduction** → What made you curious?  
+**Data** → What did you look at?  
+**Methods** → What did you try?  
+**Results** → What did you find?  
+**Discussion** → What might it mean? What's next?
+
+**Example discovery path:**
+
+- **Curiosity**: We wondered if AI writing sounds different from human writing
+- **Data**: Used HAP-E corpus to compare
+- **Method**: Tried keyness analysis to find distinctive features
+- **Finding**: ChatGPT uses way more "Positive" language
+- **Speculation**: Maybe it's too optimistic? Lacks critical stance?
+- **Next steps**: Would test different prompts, look at other AI models, read more about training data
+
+::: {.callout-tip}
+## Embrace the Provisional
+It's okay to say:
+- "We're not sure, but..."  
+- "This might suggest..."  
+- "If we had more time, we'd..."  
+- "This didn't work as expected because..."
+
+CBEs are about the **process of exploration**, not the final answer.
+:::
+
+## Part 4: Citation and Academic Integrity
+
+### Adding Sources to Your Bibliography
+
+The template includes `main.bib` with sample citations. Add your own sources:
+
+**BibTeX format:**
+```bibtex
+@article{uniquekey2024,
+  title={Article Title},
+  author={Last, First and Last, First},
+  journal={Journal Name},
+  volume={10},
+  number={2},
+  pages={100--125},
+  year={2024},
+  publisher={Publisher Name}
+}
+```
+
+**Finding BibTeX citations:**
+
+- Google Scholar: Click "Cite" → "BibTeX"
+- Zotero: Right-click item → Export → BibTeX
+
+**Citing in text:**
+
+- `\cite{uniquekey2024}` → "(Last, 2024)"
+- `\citet{uniquekey2024}` → "Last (2024)" (with natbib package)
+
+### Using Generative AI Responsibly
+
+The template includes an Acknowledgments section for disclosing AI use. Be specific:
+
+**Acceptable disclosure:**
+> "We used ChatGPT-4 (OpenAI) to generate initial drafts of the Introduction and Methods sections, which we then substantially revised for accuracy and clarity. We also used it to suggest alternative phrasings for complex statistical descriptions in the Results section. We found it helpful for overcoming initial drafting inertia, but the AI-generated prose often lacked discipline-specific precision and required significant editing."
+
+**What to disclose:**
+
+- Which AI tool(s) you used (name and version)
+- What specific tasks (drafting, revising, paraphrasing)
+- How you modified the output
+- Your evaluation of its usefulness
+
+## Part 5: Team Workflow and Collaboration
+
+### Division of Labor
+
+Assign clear responsibilities:
+
+**Manager**: 
+- Creates and shares project
+- Manages final compilation
+- Ensures all sections connect
+
+**Data Analyst**:
+- Runs Mini Lab 5 analyses
+- Generates tables and figures
+- Writes Methods section
+
+**Writer 1**:
+- Introduction and Data sections
+- Bibliography management
+
+**Writer 2**:
+- Results and Discussion sections
+- Caption writing
+
+::: {.callout-note}
+## Everyone Reviews Everything
+Even with assigned sections, all team members should read and comment on the complete draft. Fresh eyes catch inconsistencies and unclear explanations.
+:::
+
+### Overleaf Collaboration Features
+
+**Track Changes:**
+- Review → Track Changes → On
+- All edits appear highlighted
+- Accept/reject individual changes
+
+**Comments:**
+- Highlight text → Comment icon
+- Use for questions, suggestions, citations to add
+
+**Chat:**
+- Bottom left icon
+- For quick coordination
+- Not preserved in final document
+
+**Version History:**
+- Clock icon (top right)
+- See all changes over time
+- Revert to earlier versions if needed
+
+### Quick Checklist
+
+Before submitting (don't obsess over perfection):
+
+- [ ] Names and title updated
+- [ ] Your table and figure are included
+- [ ] Placeholder "Lorem ipsum" text replaced with your writing
+- [ ] PDF compiles and downloads
+- [ ] All team members have read it
+
+::: {.callout-note}
+## Good Enough Is Good Enough
+If a table is slightly too wide, or you have a citation warning, or your figure caption could be better—that's fine. Focus your limited time on **thinking through your interpretation**, not perfecting LaTeX formatting.
+:::
+
+## Reflection Questions
+
+After completing CBE #2, consider:
+
+1. **Discovery**: What surprised you most in your data? Did your initial expectations match what you found?
+
+2. **Interpretation**: How did you move from "ChatGPT uses more Positive language" to "this might mean X"? What made that leap difficult or easy?
+
+3. **Next steps**: If you had another week, what would you investigate next? What questions remain unanswered?
+
+4. **Limitations**: What didn't work as planned? What would you change about your approach?
+
+5. **Collaborative exploration**: How did working as a team help (or hinder) the exploratory process? Did you generate ideas together or divide and conquer?
+
+## Works Cited
+

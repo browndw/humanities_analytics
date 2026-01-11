@@ -1,0 +1,418 @@
+# Coffee Break Experiment #1: From Curiosity to Visualization {.unnumbered}
+
+Your first coffee break experiment is a **low-stakes exploration**: find something interesting in language data, visualize it, and share it with the class. This is about curiosity and quick discovery—not perfection.
+
+::: {.callout-important}
+## This is a Coffee Break Experiment
+You have limited time to:
+- **Browse** a corpus and notice something curious
+- **Grab** some data that might reveal a pattern
+- **Sketch** a visualization that shows what you found
+- **Share** it on one slide
+
+Don't overthink it. Pick something that catches your eye and run with it.
+:::
+
+## The Assignment
+
+**What you'll create**: One slide with a visualization and a claim
+
+**Where to explore**: [BYU English Language Corpora](https://www.english-corpora.org/)
+
+**Where to share**: [Class Google Slides](https://docs.google.com/presentation/d/YOUR_LINK_HERE) (add your slide to the deck)
+
+**Key requirement**: Include your name somewhere on the slide!
+
+## Part 1: Finding Something Interesting
+
+### Browsing the BYU Corpora
+
+The BYU corpora give you access to massive language datasets. Here are some options:
+
+**Corpus of Contemporary American English (COCA)**:
+- 1 billion words (1990-2019)
+- Multiple genres: spoken, fiction, magazines, newspapers, academic
+- Good for: tracking recent changes, comparing genres
+
+**Corpus of Historical American English (COHA)**:
+- 400+ million words (1820s-2000s)
+- Good for: tracking change over time, historical patterns
+
+**Google Books Ngram Viewer**:
+- Massive corpus across centuries
+- Good for: quick exploration, long-term trends
+
+::: {.callout-tip}
+## Start with Curiosity, Not a Hypothesis
+Don't feel like you need a research question. Instead, ask:
+- "I wonder if people use X differently than Y?"
+- "Has anyone noticed how often Z appears in news vs. fiction?"
+- "What happened to that old-fashioned word W?"
+
+Explore first, explain later.
+:::
+
+### Exploration Strategies
+
+**Follow your interests:**
+- Love science fiction? Compare "alien" vs "robot" over time
+- Into politics? Track "democracy" vs "freedom" across decades
+- Language nerd? Compare "literally" usage across genres
+
+**Look for patterns:**
+- **Change over time**: Is a word increasing or declining?
+- **Genre differences**: Does a word appear more in spoken vs. academic texts?
+- **Collocations**: What words appear near your target word?
+- **Variants**: "email" vs "e-mail," "OK" vs "okay"
+
+**Quick tips for the BYU interface:**
+
+1. **Search**: Type a word in the search box
+2. **Chart**: Click "Chart" to see frequency over time
+3. **Compare**: Use the comparison feature for multiple words
+4. **Download**: Export data as CSV for plotting
+
+::: {.callout-note}
+## You Don't Need Big Claims
+Good CBE findings:
+- "Huh, 'literally' spiked in the 2010s"
+- "Interesting—'email' overtook 'e-mail' around 2005"
+- "'Robot' appears way more in fiction than academic writing"
+
+These observations are enough!
+:::
+
+## Part 2: Creating Your Visualization
+
+### The Assertion-Evidence Model
+
+Your slide should have **two parts**:
+
+1. **Assertion** (headline): A clear claim about what you found
+2. **Evidence** (visualization): A graph that supports the claim
+
+**Watch this explanation** (from 4:45): <https://youtu.be/kbdO7adBRFE?t=280>
+
+**Examples of assertion headlines:**
+
+✅ **Good** (specific claim):
+- "'Literally' has tripled in frequency since 2000"
+- "'E-mail' gave way to 'email' in the mid-2000s"
+- "Fiction uses 'suddenly' 5× more than academic writing"
+
+❌ **Too vague**:
+- "Word frequency over time"
+- "Interesting patterns in COCA"
+- "Language change"
+
+### Choosing Your Plot Type
+
+Match your plot to your data:
+
+**Time series** (change over time):
+- **Line chart**: Shows trends clearly
+- Use when: tracking a word across decades
+
+**Comparison** (differences between categories):
+- **Bar chart**: Compares discrete categories
+- Use when: comparing genres, word variants, or short time periods
+
+**Relationship** (correlation between variables):
+- **Scatter plot**: Shows if two things co-vary
+- Use when: exploring if two words rise/fall together
+
+::: {.callout-warning}
+## Plot Types to Avoid for Beginners
+- **Pie charts**: Hard to compare precisely
+- **3D charts**: Distort perception
+- **Dual-axis charts**: Confusing and easily misleading
+
+Stick with simple line or bar charts for this exercise.
+:::
+
+### Design Principles: Less is More
+
+Follow these quick rules for clear visualizations:
+
+**1. Clear labels**
+- **Axes**: What are you measuring? Include units (e.g., "Frequency per million words")
+- **Title/Assertion**: Your claim goes here, not "Figure 1"
+- **Legend**: If comparing multiple items, label them clearly
+
+**2. Reduce non-data ink**
+- Remove unnecessary gridlines
+- Eliminate chart borders if they don't add information
+- Use minimal colors (2-3 max)
+
+**3. Make it readable**
+- Large enough font (18pt minimum for presentation slides)
+- High contrast (dark text on light background or vice versa)
+- Don't crowd the slide—white space is good
+
+**Design resource**: <https://stat545.com/effective-graphs.html>
+
+### Getting Your Data Ready
+
+::: {.callout-warning}
+## Don't Use Screen Grabs!
+Never take a screenshot of BYU corpus output and paste it into your slide. This creates a blurry, unprofessional image that can't be edited.
+
+Always work with the actual data to create your own chart.
+:::
+
+**Copying data from BYU corpora:**
+
+When you copy frequency data from BYU corpus results, it often includes hidden hyperlinks that will cause problems in Excel or Google Sheets.
+
+**Solution 1: Paste into text editor first**
+1. Copy data from BYU corpus
+2. Paste into Notepad (Windows) or TextEdit (Mac)
+3. Copy again from text editor
+4. Now paste into Excel/Sheets—links removed!
+
+**Solution 2: Use Paste Special**
+1. Copy data from BYU corpus
+2. In Excel/Sheets: Edit → Paste Special → Values only (or Ctrl/Cmd + Shift + V)
+3. This pastes just the text, not the links
+
+### Creating Your Plot
+
+**Using Google Sheets** (recommended for beginners):
+
+1. **Enter your data**: Type or paste (see tips above about removing links)
+   ```
+   Year    Frequency
+   1990    2.3
+   2000    3.1
+   2010    5.2
+   2020    6.8
+   ```
+
+2. **Select your data**: Highlight both columns including headers
+
+3. **Insert chart**: Insert → Chart
+
+4. **Choose chart type**: 
+   - Chart editor → Setup → Chart type
+   - Pick Line chart or Column chart
+
+5. **Clean up the default design** (this is important!):
+   - **Chart editor → Customize tab**
+   - **Chart style**: Uncheck "Border color" (removes box around chart)
+   - **Chart & axis titles**: 
+     - Chart title: Enter your assertion (e.g., "'Literally' has tripled since 2000")
+     - Horizontal axis: Enter what X represents (e.g., "Year")
+     - Vertical axis: Enter what Y represents with units (e.g., "Frequency per million words")
+   - **Gridlines**: 
+     - Major gridlines → Uncheck (or set to light gray if you need them)
+   - **Legend**: 
+     - If only one line/bar, uncheck "Legend" entirely (unnecessary clutter)
+   - **Series**: 
+     - Increase line thickness (2-3pt) or make bars wider for better visibility
+
+6. **Copy to Google Slides**: 
+   - Click the three dots (⋮) on chart → Copy chart
+   - In Google Slides: Ctrl/Cmd + V
+   - When prompted, choose "Link to spreadsheet" or "Paste unlinked" (unlinked is fine for CBE)
+
+::: {.callout-tip}
+## Google Sheets Default Designs Need Help
+The default chart has too much clutter:
+- ❌ Heavy gridlines that compete with your data
+- ❌ Unnecessary border box
+- ❌ Legend when you only have one data series
+- ❌ Thin lines that are hard to see
+
+Spend 2 minutes cleaning these up—it makes a huge difference!
+:::
+
+**Using Excel**:
+
+1. **Enter your data**: Type or paste (use Paste Special → Values if copying from BYU)
+
+2. **Select data**: Highlight both columns
+
+3. **Insert chart**: Insert tab → Chart type (Line or Column)
+
+4. **Clean up the design**:
+   - **Remove gridlines**: Click chart → Plus icon (+) → Gridlines → Uncheck
+   - **Remove border**: Click chart border → Delete or Format → Border → No line
+   - **Add axis titles**: Plus icon (+) → Axis Titles → Check Primary Horizontal and Primary Vertical
+     - Click each title to edit the text
+   - **Remove legend** (if only one series): Plus icon (+) → Legend → Uncheck
+   - **Make lines thicker**: 
+     - Click the line → Format Data Series → Line → Width (increase to 2-3pt)
+   - **Chart title**: Click "Chart Title" and type your assertion
+
+5. **Copy to Google Slides**:
+   - Right-click chart → Copy
+   - In Google Slides → Paste
+
+::: {.callout-note}
+## Why Remove Gridlines and Borders?
+Every element that isn't your actual data is "non-data ink." Gridlines, borders, and heavy axis lines compete for attention with your main message. Your eye should go straight to the line or bars—everything else should fade into the background.
+
+Compare:
+- **Default Excel chart**: Heavy grid, border, thick axes, small data
+- **Cleaned chart**: Just the data line, simple axes, clear labels
+
+The second one is easier to read and more professional.
+:::
+
+**Using Python** (if you're comfortable):
+
+```python
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Your data
+years = [1990, 2000, 2010, 2020]
+frequency = [2.3, 3.1, 5.2, 6.8]
+
+# Create plot
+plt.figure(figsize=(8, 5))
+plt.plot(years, frequency, marker='o', linewidth=2)
+plt.xlabel('Year', fontsize=14)
+plt.ylabel('Frequency per million words', fontsize=14)
+plt.title("'Literally' has tripled since 2000", fontsize=16, weight='bold')
+plt.grid(False)
+plt.savefig('literally_trend.png', dpi=300, bbox_inches='tight')
+```
+
+::: {.callout-tip}
+## Good Enough Is Good Enough
+Your first visualization doesn't need to be perfect:
+- Colors not quite right? That's okay
+- Legend slightly off? Don't worry about it
+- Wish the line was thicker? Move on
+
+Focus on: **clear assertion + clean visualization that supports it**
+:::
+
+## Part 3: Building Your Slide
+
+### Slide Layout
+
+**Top half**: Your assertion (headline)
+- Font: 36-44pt, bold
+- Keep it to one line if possible (two max)
+
+**Bottom half**: Your visualization
+- Make it large—fill most of the space
+- Leave some white space around edges
+
+**Corner**: Your name
+- Font: 18-24pt
+- Top right or bottom right corner
+
+**Optional**: Brief note about data source
+- Font: 14pt
+- Bottom of slide: "Data: COCA 1990-2020"
+
+### Example Slide Structure
+
+```
+┌─────────────────────────────────────────────────┐
+│ 'Literally' has tripled in frequency since 2000│
+│                                                  │
+│         [LARGE LINE CHART HERE]                  │
+│                                                  │
+│                                                  │
+│ Data: COCA 1990-2020              Your Name     │
+└─────────────────────────────────────────────────┘
+```
+
+### Adding Your Slide to the Deck
+
+1. **Open the shared Google Slides**: [Class presentation link]
+2. **Add a new slide**: 
+   - Go to the end of the deck
+   - Slide → New Slide (or Ctrl/Cmd + M)
+3. **Choose blank layout**: Right-click → Apply Layout → Blank
+4. **Add your assertion**: Insert → Text Box
+5. **Add your visualization**: 
+   - From Excel: Copy chart → Paste
+   - From file: Insert → Image → Upload from computer
+6. **Add your name**: Insert → Text Box → Type your name
+7. **Check it**: Present mode to see how it looks full-screen
+
+::: {.callout-note}
+## Presenting Your Slide
+Be ready to say in ~30 seconds:
+- "I noticed X in the BYU corpus"
+- "The chart shows Y pattern"
+- "I think this might mean Z" (or "I'm not sure what it means yet!")
+
+The goal is to share what you found and hear what others discovered.
+:::
+
+## Part 4: From Visualization to Interpretation
+
+### What Did You Find?
+
+After creating your visualization, reflect:
+
+**Describe the pattern:**
+- What does the visualization show?
+- Is there an increase, decrease, or difference?
+- How big is the change or difference?
+
+**Speculate about why:**
+- What might explain this pattern?
+- Cultural shifts? Technology? Genre conventions?
+- Don't worry about being certain—brainstorm possibilities
+
+**Wonder what's next:**
+- What would you look at if you had more time?
+- Other words to compare? Different time periods? More genres?
+
+::: {.callout-important}
+## Embrace "I Don't Know"
+It's completely fine if you:
+- Found something weird and don't know why
+- Can't explain the pattern
+- Have more questions than answers
+
+CBEs are about **exploration**, not having all the answers. Share what puzzles you!
+:::
+
+### Example Reflection
+
+> **What I found**: "Email" overtook "e-mail" around 2005  
+> **Why it might matter**: Shows how technology terms stabilize—the hyphen disappeared as email became commonplace  
+> **What I'd do next**: Check when other tech terms lost hyphens (e-commerce? e-book?)  
+> **What puzzles me**: Why 2005 specifically? Was there an influential style guide change?
+
+## Reflection Questions
+
+After completing CBE #1:
+
+1. **Discovery**: What surprised you most when exploring the corpus? Did you find what you expected?
+
+2. **Visualization**: What was hardest about creating the chart—the technical steps, design decisions, or deciding what to show?
+
+3. **Communication**: Does your assertion + visualization combination tell a clear story? What would make it clearer?
+
+4. **Curiosity**: What new questions emerged from this exploration? Where would you go next?
+
+5. **Tool comfort**: How comfortable did you feel with the BYU interface and Excel/plotting tools? What would help you improve?
+
+## Quick Reference Checklist
+
+Before adding your slide to the deck:
+
+- [ ] Assertion headline is clear and specific
+- [ ] Visualization supports the assertion
+- [ ] Axes are labeled with units
+- [ ] Chart is simple and readable (minimal clutter)
+- [ ] Your name appears on the slide
+- [ ] Slide looks good in present/full-screen mode
+- [ ] You can explain your finding in 30 seconds
+
+::: {.callout-tip}
+## Remember: Coffee Break = Quick & Interesting
+This exercise should take an hour or two, not days. Pick something that catches your eye, make a clear chart, share it. The goal is **practice**, not perfection.
+:::
+
+## Works Cited
+

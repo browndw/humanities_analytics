@@ -1,0 +1,807 @@
+
+# Final Project: Independent Corpus Analysis {.unnumbered}
+
+Much of the class will be devoted to helping you design and execute a research project of your choosing. For this assignment, you will analyze a corpus of texts using some combination of quantitative and qualitative analysis. The balance of those and the specific computational methods that you apply will depend on the research questions that you are interested in pursuing. As a methods class, we will be paying particularly close attention to the **intentionality of your analytical choices** and your ability to communicate those intentions in your reporting. 
+
+**Length**: Undergraduates 10-12 pages; Graduate students 15-20 pages  
+**Data**: Undergraduates may use provided datasets; Graduate students develop their own  
+**Scholarship**: Graduate students expected to have more robust theoretical grounding reflected in thorough literature review
+
+::: {.callout-note}
+## Building on Coffee Break Experiment #3
+Most students will build directly from their CBE #3 pilot study—expanding the corpus, refining methods, and developing more polished analysis. You can continue using your CBE #3 Overleaf project, expanding it into the final report.
+
+If you're starting fresh (not building from CBE #3), use the same Overleaf template: <https://www.overleaf.com/read/sfhmdxyqftzf#ad72b5>
+:::
+
+## Overview: From Pilot to Publication-Quality
+
+The final project represents the culmination of your work this semester. Unlike the exploratory Coffee Break Experiments, this project should demonstrate:
+
+✅ **Scholarly rigor**: Grounded in relevant literature, theoretically motivated  
+✅ **Methodological sophistication**: Appropriate methods for your question, validated by pilot  
+✅ **Sufficient scale**: Corpus size adequate for chosen methods (informed by CBE #3)  
+✅ **Polished presentation**: Publication-quality visualizations, clear writing, professional formatting  
+✅ **Critical reflection**: Honest assessment of limitations, implications, future directions
+
+### Key Differences: CBE #3 vs. Final Project
+
+| Aspect | CBE #3 (Pilot) | Final Project |
+|--------|----------------|---------------|
+| **Corpus size** | Minimum viable (10-50 texts) | Sufficient for method (100-500+ texts) |
+| **Analysis depth** | Single method, exploratory | Multiple complementary methods |
+| **Literature** | 1-2 citations for context | 10-15+ sources (grad students more) |
+| **Visualization** | 1-2 quick plots | 3-5 polished, publication-ready figures |
+| **Interpretation** | Provisional, speculative | Grounded, nuanced, caveated |
+| **Tone** | "We tried this and..." | "Our findings suggest..." |
+| **Polish** | Good enough is good enough | Professional, submission-ready |
+
+## Part 1: Scaling Up from CBE #3
+
+### Using Your Pilot to Inform the Final Project
+
+If you completed CBE #3, you have a **blueprint** for the final project. Here's how to leverage it:
+
+**1. Expand corpus to sufficient size**
+
+Your pilot tested feasibility with a small sample. Now scale to the corpus size your method requires:
+
+- **CBE #3**: 20 texts (10 per genre) tested keyness
+- **Final**: 200 texts (100 per genre) for robust statistical power, add classification to validate keyness patterns
+
+**2. Add complementary methods**
+
+Pilot typically used **one** analytical approach. Final project might use **multiple** methods that triangulate:
+
+- **CBE #3**: Keyness identified distinctive vocabulary
+- **Final**: Add (1) classification to test predictive power of key features, (2) collocations to examine how keywords are used contextually, (3) time series if temporal dimension exists
+
+**3. Deepen theoretical grounding**
+
+Pilot had minimal literature review. Final project needs **scholarly context**:
+
+- **CBE #3**: "Prior work suggests genre differences exist"
+- **Final**: 2-3 paragraph literature review citing 10+ sources establishing theoretical framework, gaps in knowledge, how your study contributes
+
+**4. Polish everything**
+
+Pilot had quick visualizations and provisional prose. Final project needs **publication quality**:
+
+- **CBE #3**: Default matplotlib plot with minimal labels
+- **Final**: Seaborn/plotly styled figure with informative title, axis labels with units, legend, caption explaining key takeaway, referenced in text
+
+### Common Scaling Paths
+
+**Path 1: Exploratory → Confirmatory**
+
+- **Pilot**: Explored 30 speeches with keyness, noticed temporal patterns
+- **Final**: Collected 200 speeches, formalized hypotheses based on pilot patterns, tested with time series + ANOVA
+
+**Path 2: Single Method → Multi-Method**
+
+- **Pilot**: Topic modeling 50 news articles
+- **Final**: 300 articles, added keyness (validate topics distinguish genres), time series (track topic prevalence), classification (test topic-genre association)
+
+**Path 3: Subsample → Full Corpus**
+
+- **Pilot**: Tested processing pipeline on 10 novels
+- **Final**: Scaled to 200 novels, added MDA beyond basic features tested in pilot
+
+**Path 4: Method Pivot (if pilot revealed issues)**
+
+- **Pilot**: Attempted MDA with 20 texts (KMO too low, factors unstable)
+- **Final**: Collected 120 texts (sufficient for MDA), OR pivoted to clustering + keyness (if corpus expansion not feasible)
+
+### What If You're Not Building from CBE #3?
+
+If starting fresh:
+
+1. **Define research question** using framework from [Part 2](#part-2-research-questions-and-literature) below
+2. **Choose appropriate methods** using decision tree from CBE #3 guide
+3. **Collect sufficient data** from the start (don't pilot at this stage—just proceed to full scale)
+4. **Budget extra time** since you won't have pilot lessons to draw on
+
+## Part 2: Research Questions and Literature
+
+### Crafting a Strong Research Question
+
+**Strong research questions** for computational text analysis are:
+
+✅ **Specific**: "How do emotion words differ between academic and popular science writing?" (not "What are differences in writing styles?")  
+✅ **Testable**: Can be addressed with corpus methods + available data  
+✅ **Motivated**: Builds on prior scholarship or addresses practical problem  
+✅ **Scoped**: Answerable in 10-20 pages with your corpus size
+
+::: {.callout-note}
+## Using Course Methods
+All examples in this guide use methods covered in tutorials and mini labs (keyness, sentiment, topic modeling, MDA, classification, etc.). You can build an excellent final project entirely from course materials—extensions beyond what we've covered are welcome but not expected.
+:::
+
+**Question development process:**
+
+1. **Broad interest**: "I'm interested in academic writing differences"
+2. **Narrowing**: "Specifically, how STEM and humanities writing differ stylistically"
+3. **Testable form**: "Do Biology and English papers differ in linguistic complexity and personal engagement?"
+4. **Further scoped**: "Testing complexity and stance differences in MICUSP corpus (80 Biology vs 80 English papers) using Biber features and pronoun analysis"
+
+### Literature Review: Building Scholarly Context
+
+Your introduction should establish **why your question matters** through engagement with prior work.
+
+**Undergraduate literature review** (1-2 pages, 8-12 sources):
+
+- **Background**: What do we know about this phenomenon? (2-3 sources)
+- **Gap**: What's missing or underexplored? (1-2 sources)
+- **Methods**: How have others studied this computationally? (2-3 sources)
+- **Your contribution**: How does your project address the gap?
+
+**Graduate literature review** (3-4 pages, 15-25 sources):
+
+- **Theoretical framework**: What theories explain this phenomenon? (4-6 sources)
+- **Empirical findings**: What have prior studies found? (5-8 sources)
+- **Methodological approaches**: Evolution of computational methods in this area (3-5 sources)
+- **Synthesis**: How your study extends, challenges, or complements prior work
+
+**Finding relevant literature:**
+
+- **Start with course readings**: Many tutorials include "Further Reading" sections
+- **Google Scholar**: Search "corpus linguistics + [your topic]" or "computational text analysis + [your topic]"
+- **Follow citations**: Read abstracts, note which sources are cited repeatedly
+- **Recent work**: Prioritize last 5-10 years, but include foundational sources
+
+**Organizing literature:**
+
+**By theme** (best for most projects):
+```
+Introduction
+  - Theme 1: Disciplinary writing differences (Hyland 2004, Biber 2006)
+  - Theme 2: Register variation in academic writing (Gray 2015, Hardy 2018)
+  - Theme 3: Computational approaches to style (Lee 2020, Brown 2022)
+  - Your study: Combines themes 1-3 with larger corpus than prior work
+```
+
+**Chronologically** (if showing evolution):
+```
+Introduction
+  - Early approaches: Manual coding (Smith 1995, Jones 2000)
+  - Computational turn: Automated detection (Lee 2010, Brown 2015)
+  - Recent advances: Neural models (Davis 2022, Wilson 2023)
+  - Your study: Applies recent methods to understudied corpus
+```
+
+### Hypothesis Development (Optional but Recommended)
+
+Based on literature and/or pilot findings, you may formulate **explicit hypotheses**:
+
+**Example**:
+> Based on prior work showing that humanities writing uses more interpretive and personal stance (Hyland, 2005) while STEM writing prioritizes objectivity and information density (Biber, 2006), we hypothesize that:
+> - **H1**: English papers contain more first-person pronouns and hedging features than Biology papers
+> - **H2**: Personal pronoun frequency correlates negatively with nominal density (measured by Biber features)
+
+Hypotheses guide analysis and make interpretation clearer (confirmed/disconfirmed/partially supported).
+
+## Part 3: Methods—Demonstrating Intentionality
+
+The rubric emphasizes **analytical intentionality**: why you chose specific methods, what alternatives you considered, how your choices connect to your research question.
+
+### Corpus Design and Description
+
+**Data section checklist:**
+
+✅ **Source**: Where did texts come from? (Project Gutenberg, web scraping, institutional corpus, etc.)  
+✅ **Selection criteria**: How did you choose texts? (time period, author demographics, genre, length thresholds)  
+✅ **Size and composition**: How many texts? What categories? (present in clear table)  
+✅ **Preprocessing**: What cleaning steps? (removed headers, handled encoding, segmented)  
+✅ **Justification**: Why is this corpus appropriate for your question?
+
+**Example**:
+> We collected 160 final-year student papers from the Michigan Corpus of Upper-level Student Papers (MICUSP; Römer & O'Donnell, 2011). We selected 80 Biology papers and 80 English papers, all receiving grades of A or A-. We excluded papers shorter than 2,000 words (n=12 removed) to ensure sufficient linguistic features for analysis. Table 1 shows distribution by paper type and discipline. This corpus is appropriate because MICUSP represents successful student writing at the same institutional level, allowing controlled comparison of disciplinary conventions without confounding variables of student ability or institutional context (Hardy & Römer, 2013).
+
+**Table 1: Corpus Composition**
+```python
+# Use great_tables (from Mini Lab 5) to create professional table
+import polars as pl
+from great_tables import GT
+
+corpus_summary = pl.DataFrame({
+    'Paper_Type': ['Argumentative Essay', 'Research Paper', 'Response Paper', 'Report'],
+    'Biology': [25, 30, 15, 10],
+    'English': [30, 20, 25, 5],
+    'Total': [55, 50, 40, 15]
+})
+
+(GT(corpus_summary)
+ .tab_header(title="MICUSP Papers by Type and Discipline")
+ .fmt_number(columns=['Biology', 'English', 'Total'], decimals=0)
+ .as_latex())  # Export to Overleaf
+```
+
+### Methods Section: Explaining Your Analytical Choices
+
+This is where **intentionality** is most crucial. For each method, explain:
+
+1. **What**: Which analysis did you perform?
+2. **Why**: Why is this appropriate for your question?
+3. **How**: What specific implementation? (tools, parameters, validation)
+4. **Alternatives**: What other methods did you consider? Why not those?
+
+**Template for each method:**
+
+#### Method 1: Keyness Analysis
+
+**What**: We computed log-likelihood keyness (Rayson & Garside, 2000) comparing Biology vs. English papers.
+
+**Why**: Keyness identifies words that distinguish corpora, directly addressing our question about disciplinary linguistic differences. Log-likelihood accounts for corpus size balance (80 vs. 80 papers) and provides effect sizes interpretable across studies.
+
+**How**: Using spaCy tokenization and custom keyness function (from Mini Lab 4), we:
+- Computed word frequencies per corpus
+- Calculated log-likelihood for each word
+- Applied Bonferroni correction (α = 0.05/10,000 words)
+- Filtered for effect size > 0.2 (small-to-medium effect)
+
+**Alternatives considered**: We considered TF-IDF, but keyness provides statistical significance testing and is standard in corpus linguistics (Gabrielatos, 2018), making results comparable to prior work on disciplinary variation (Hyland, 2008).
+
+---
+
+**Repeat this structure for each method** (2-3 methods typical for undergrads, 3-5 for grad students).
+
+### Connecting Methods to Research Questions
+
+**Explicitly link** each analysis to your research question:
+
+> **RQ1**: Do Biology and English papers differ in personal stance markers?  
+> → **Method**: Frequency analysis of first-person pronouns and hedging devices  
+> → **Validation**: T-test and effect size (Cohen's d) for frequency differences
+
+> **RQ2**: Do disciplines differ on Biber's dimensions of academic writing?  
+> → **Method**: Multi-dimensional analysis using pybiber (67 features → factor analysis)  
+> → **Visualization**: Figure 2 showing disciplines plotted on Dimensions 1-2
+
+> **RQ3**: Can linguistic features predict discipline?  
+> → **Method**: Random Forest classification with 10-fold cross-validation  
+> → **Interpretation**: Feature importance analysis showing which features best distinguish disciplines
+
+This structure shows reviewers (instructor, peers) that every analytical choice serves your research goals.
+
+### Addressing Caveats and Limitations Proactively
+
+The rubric rewards **noting problems and their potential effects**. Address limitations in Methods (technical) and Discussion (interpretive).
+
+**Methods limitations** (acknowledge technical constraints):
+
+- **Grade-level restriction**: "Our corpus includes only A/A- papers, representing successful student writing. Linguistic patterns may differ in lower-achieving papers, limiting generalizability to all student writing (Hardy, 2013)."
+
+- **Corpus coverage**: "Our corpus includes only two disciplines (Biology and English). Findings may not generalize to all STEM vs. humanities writing—disciplines like Psychology or History may show hybrid patterns (Hyland, 2004)."
+
+- **Genre variation**: "MICUSP includes multiple paper types (essays, reports, research papers). Observed disciplinary differences may partly reflect genre distribution differences between Biology and English (see Discussion)."
+
+**Why this matters**: Demonstrates critical thinking, prevents reviewers from seeing these as oversights.
+
+## Part 4: Results—Presenting Findings Clearly
+
+### Organizing Results for Maximum Clarity
+
+**Results section structure** (report findings without interpretation):
+
+1. **Primary findings**: Main patterns addressing RQ1
+2. **Secondary findings**: Additional patterns addressing RQ2-3
+3. **Robustness checks**: Validation that findings are stable (if applicable)
+
+**Each finding should include:**
+
+- **Quantitative summary**: Specific numbers (means, effect sizes, p-values)
+- **Figure reference**: "Figure 1 shows..."
+- **Descriptive caption**: What readers should notice
+- **No interpretation yet**: Save "why" for Discussion
+
+### Creating Publication-Quality Visualizations
+
+**Figure checklist** (from rubric):
+
+✅ **Clear and simple**: One main point per figure, not cluttered  
+✅ **Legible**: Font size readable (12pt minimum for labels)  
+✅ **Attractive**: Professional styling (seaborn themes, consistent colors)  
+✅ **Axes labeled**: Include units ("Frequency per 1,000 words")  
+✅ **Legend**: If multiple groups/categories  
+✅ **Caption**: Descriptive (not just "Keyness plot"), explains key takeaway  
+✅ **Well-chosen type**: Bar for comparisons, line for trends, scatter for relationships, etc.
+
+**Example caption**:
+> **Figure 1. Keyness of Top 20 Words Distinguishing Democratic and Republican Speeches**. Positive log-likelihood values (blue) indicate words more frequent in Democratic speeches; negative values (red) indicate Republican-frequent words. Effect sizes (bars) show magnitude of difference. Words like "healthcare" and "equality" are Democratic markers, while "freedom" and "defense" are Republican markers (all LL > 0.4, *p* < 0.001).
+
+**Common visualization types:**
+
+| Research Goal | Visualization | Tutorial Reference |
+|--------------|---------------|-------------------|
+| Compare groups | Keyness plot, boxplots, grouped bars | [Keyness](../tutorials/keyness.qmd) |
+| Show trends | Line plots, change-point plots | [Time Series](../tutorials/time-series.qmd) |
+| Relationships | Scatterplots, correlation heatmaps | [Correlation](../tutorials/correlation-analysis.qmd) |
+| Distributions | Histograms, density plots | [Frequency](../tutorials/frequency-and-distributions.qmd) |
+| Clustering | Dendrograms, PCA scatter | [Clustering](../tutorials/cluster-analysis.qmd) |
+| Classification | Confusion matrix, ROC curves | Mini Lab 12 |
+| Topic composition | Stacked bars, heatmaps | Mini Lab 9 |
+
+### Writing Results Prose
+
+**Good results prose** is:
+
+- **Specific**: "English papers used 45% more first-person pronouns (M = 8.2 per 1,000 words) than Biology papers (M = 5.6), t(158) = 4.3, *p* < 0.001, d = 0.68"
+- **Referenced**: "Figure 1 shows the disciplinary comparison..."
+- **Ordered logically**: Primary findings first, secondary next
+- **Descriptive not interpretive**: Report *what* you found, not *why*
+
+**Example paragraph**:
+> Keyness analysis revealed significant disciplinary differences in vocabulary (Figure 1). The top 20 keywords included 13 Biology-frequent and 7 English-frequent terms (all LL > 0.4). Biology papers overused technical terminology: "cells" (LL = 1.5, 4.2× more frequent), "protein" (LL = 1.3, 3.8× more frequent), and "hypothesis" (LL = 0.9, 2.6× more frequent). English papers overused interpretive and evaluative language: "suggests" (LL = 1.1, 3.2× more frequent), "reader" (LL = 0.8, 2.4× more frequent), and "theme" (LL = 0.6, 2.1× more frequent). Effect sizes ranged from 0.4 (small-medium) to 1.5 (large).
+
+Notice: Numbers, figure reference, no speculation about *why* these patterns exist (that's Discussion).
+
+## Part 5: Discussion—Interpreting Findings
+
+### Moving from Results to Interpretation
+
+**Discussion should:**
+
+1. **Restate main findings** (briefly, 1-2 sentences)
+2. **Interpret patterns** (what do they mean?)
+3. **Connect to literature** (align with or challenge prior work?)
+4. **Address limitations** (what can't you conclude?)
+5. **Suggest implications** (so what? what's next?)
+
+**Example structure**:
+
+#### Finding 1: Disciplinary Vocabulary Differences
+
+**Restatement**: "Biology papers showed 60% higher frequency of technical terminology and passive constructions, while English papers emphasized interpretive and evaluative language with more first-person stance markers."
+
+**Interpretation**: "This aligns with Hyland's (2005) framework for disciplinary epistemology, wherein STEM fields prioritize empirical objectivity and replicability, while humanities prioritize interpretive authority and argumentation. The prominence of technical nouns and passive voice in Biology reflects the 'rhetoric of objectivity' (Bazerman, 1988), while English's use of 'suggests,' 'argues,' and first-person pronouns reflects the 'rhetoric of interpretation' (Geisler, 1994)."
+
+**Literature connection**: "Our findings corroborate Biber's (2006) multi-dimensional analysis of academic writing, extending the STEM/humanities divide to undergraduate student writing. However, our effect sizes (LL = 0.4-1.5) are comparable to Biber's professional academic writing, suggesting disciplinary socialization occurs early in undergraduate education."
+
+**Limitation**: "We cannot determine whether differences reflect genuine epistemological commitments or strategic genre performance. Interview data with students about their writing choices would clarify this (future work)."
+
+**Implication**: "Disciplinary linguistic differences may create challenges for interdisciplinary writing (Carter, 2007), suggesting writing instruction should make disciplinary conventions explicit rather than assuming transferability."
+
+### Addressing the Rubric Criteria
+
+**"Caveats and problems are noted and their potential effect on results explained"**
+
+Be **proactive** about limitations:
+
+**Data limitations:**
+- "Our corpus includes only A/A- papers from one institution (University of Michigan), which may not represent typical undergraduate writing. Effect sizes might differ at other institutions or achievement levels."
+- "We analyzed only two disciplines, but disciplinary writing exists on a continuum. Psychology or Linguistics might show intermediate patterns between Biology and English (see Hardy, 2013)."
+
+**Method limitations:**
+- "Pybiber features were developed on professional academic writing and may not fully capture undergraduate writing patterns. However, prior validation studies (Biber, 2006) suggest features transfer across proficiency levels."
+- "K-means clustering requires pre-specifying cluster number. We chose k=5 based on silhouette score, but alternative k values might reveal different thematic structures."
+
+**Interpretation limitations:**
+- "We infer disciplinary epistemologies from language patterns, but cannot confirm student awareness of these conventions. Differences may be tacit rather than conscious (Prior, 1998)."
+
+**Effect on results:**
+- "Grade-level limitation suggests **generalizability is narrow**—findings apply to successful student writing, not all undergraduate writing."
+- "Two-discipline design suggests **disciplinary differences may be maximized**—broader sampling (4-6 disciplines) would show more nuanced variation."
+
+### Balancing Confidence and Humility
+
+**Too confident**: "Our results prove Biology is more objective than English."  
+**Appropriately caveated**: "Our results suggest Biology writing employs more objectivity markers (passive voice, nominalizations), consistent with STEM epistemological norms prioritizing empirical replicability (Bazerman, 1988). However, linguistic objectivity ≠ epistemic objectivity—both disciplines make knowledge claims, but through different rhetorical strategies."
+
+**Too hedged**: "We can't really say anything definitive about disciplinary differences."  
+**Appropriately confident**: "Disciplinary vocabulary differences were robust (large effect sizes, consistent with prior research), strongly suggesting distinct rhetorical conventions grounded in epistemological commitments (Hyland, 2004)."
+
+## Part 6: Argument Organization and Flow
+
+The rubric emphasizes **effective organization** and **reduced interpretive burden**. Help readers follow your logic.
+
+### Signposting and Transitions
+
+**Introduce each section** with a roadmap:
+
+> "The next section presents three sets of findings. First, we report keyness analysis identifying partisan vocabulary differences (RQ1). Second, we examine temporal trends in these differences (RQ2). Third, we test whether keywords predict speech ideology using classification (RQ3)."
+
+**Transition between sections**:
+
+> "Having established that partisan differences exist (keyness), we now examine whether these differences have changed over time."
+
+> "Results showed clear vocabulary distinctions. We next interpret these patterns in light of moral foundations theory."
+
+### Connecting Figures to Narrative
+
+**Poor connection**:
+> "Figure 1 shows keyness. Democratic speeches use different words."
+
+**Strong connection**:
+> "Figure 1 reveals stark partisan vocabulary differences. The 20 most distinctive words cluster into two thematic categories: Democratic speeches emphasize social welfare (healthcare, education, equality), while Republican speeches emphasize security and economics (freedom, defense, tax). This pattern suggests parties activate distinct moral frames (Lakoff, 2002), a point we return to in the Discussion."
+
+**In caption, reinforce the point**:
+> **Figure 1. Partisan Vocabulary Differences in State of the Union Addresses (1900-2020).** Democratic-frequent words (blue bars) cluster around social welfare themes, while Republican-frequent words (red bars) emphasize security and economics. Effect sizes (log-likelihood > 0.4) indicate substantively meaningful differences beyond statistical significance.
+
+### Reducing Interpretive Burden
+
+**High interpretive burden** (reader must infer connections):
+> "We used keyness. Table 1 shows corpus composition. Figure 2 shows results. We also did time series."
+
+**Low interpretive burden** (explicit connections):
+> "To test whether partisan rhetoric differs (RQ1), we computed keyness comparing Democratic and Republican speeches (see Table 1 for corpus composition). Figure 2 shows that Democratic speeches overuse social welfare vocabulary while Republican speeches overuse security vocabulary (all LL > 0.4, *p* < 0.001). This confirms our hypothesis that parties employ distinct moral frames. We next examine whether this difference has changed over time (RQ2), using time series analysis (Figure 3)."
+
+## Part 7: Professional Polish
+
+### Writing Style
+
+**Concise, appropriate to audience**:
+
+- **Academic readers**: Assume familiarity with basic corpus methods, but explain technical choices
+- **Active voice** (when appropriate): "We computed keyness" (not "Keyness was computed")
+- **Precise language**: "35% more frequent" (not "a lot more")
+- **Avoid jargon**: Define technical terms on first use
+
+**Example**:
+> We computed **log-likelihood (LL)**, a statistical measure comparing word frequencies between corpora that accounts for corpus size differences (Rayson & Garside, 2000). LL values > 3.84 indicate significant differences (*p* < 0.05); values > 0.4 are considered medium effect sizes.
+
+### Formatting and Legibility
+
+**Overleaf formatting checklist**:
+
+✅ **Consistent headings**: Use `\section{}`, `\subsection{}`, `\subsubsection{}`  
+✅ **Figure placement**: After first mention in text (use `\begin{figure}[h]` for "here")  
+✅ **Table formatting**: Use `\toprule`, `\midrule`, `\bottomrule` for professional look  
+✅ **Citations**: BibTeX format, consistent style (APA, MLA, Chicago)  
+✅ **Page numbers**: Include  
+✅ **Line spacing**: 1.5 or double (check assignment requirements)  
+✅ **Margins**: 1-inch all sides
+
+**LaTeX tips** (from CBE #2):
+
+```latex
+% Figure with caption
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/keyness_plot.png}
+    \caption{Partisan Vocabulary Differences (1900-2020)}
+    \label{fig:keyness}
+\end{figure}
+
+% Reference in text
+Figure~\ref{fig:keyness} shows...
+
+% Table with great_tables output
+\input{tables/corpus_composition.tex}
+
+% Citation
+Prior work has shown... \citep{Wilson2019}
+```
+
+### Citations and References
+
+**All sources must be cited**:
+
+- **Theories**: "Moral foundations theory (Haidt, 2012) posits..."
+- **Prior findings**: "Wilson (2019) found partisan differences in campaign speeches..."
+- **Methods**: "Log-likelihood keyness (Rayson & Garside, 2000)..."
+- **Software**: "We used spaCy 3.5 \citep{spacy2}, polars \citep{polars}, and scikit-learn \citep{sklearn}"
+- **Data**: "State of the Union addresses from the American Presidency Project (Peters & Woolley, 2023)"
+
+**AI disclosure** (if applicable):
+
+> **Acknowledgments**: We used ChatGPT-4 (OpenAI, 2023) to debug spaCy dependency parsing code (lines 45-67 in `process_corpus.py`). All conceptual work, analysis design, and interpretation are our own. We verified AI-generated code for correctness before use.
+
+## Part 8: Methodological Showcases
+
+Here are common project archetypes with recommended method combinations:
+
+### Archetype 1: Genre/Register Differentiation
+
+**Question**: How does academic writing differ from journalistic writing?
+
+**Methods**:
+1. **Keyness** (identify distinctive vocabulary)
+2. **MDA** (pybiber 67 features → factor analysis → dimensions)
+3. **ANOVA** (test if dimensions distinguish genres, compute η²)
+4. **Visualization**: Biplot showing genres in 2D dimension space
+
+**Tutorials**: [Keyness](../tutorials/keyness.qmd), [MDA](../tutorials/multi-dimensional-analysis.qmd), [ANOVA](../tutorials/anova-and-r-squared.qmd)
+
+---
+
+### Archetype 2: Temporal Change
+
+**Question**: How has scientific writing evolved (1900-2020)?
+
+**Methods**:
+1. **Time series** (track features over time: complexity, hedging, first-person)
+2. **Change-point detection** (identify moments of shift)
+3. **Regression** (test if trends are significant)
+4. **Clustering** (VNC to identify periodization)
+
+**Tutorials**: [Time Series](../tutorials/time-series.qmd), [Clustering](../tutorials/cluster-analysis.qmd)
+
+---
+
+### Archetype 3: Authorship/Stylometry
+
+**Question**: Can we distinguish Author A from Author B?
+
+**Methods**:
+1. **Frequency** (compare function word rates, POS distributions)
+2. **Keyness** (most distinctive features per author)
+3. **Classification** (Random Forest with cross-validation)
+4. **Feature importance** (which features best predict authorship?)
+
+**Tutorials**: [Frequency](../tutorials/frequency-and-distributions.qmd), Mini Lab 12
+
+---
+
+### Archetype 4: Thematic Discovery
+
+**Question**: What themes emerge in 500 blog posts?
+
+**Methods**:
+1. **Topic modeling** (LDA for thematic structure)
+2. **Coherence** (validate topic quality)
+3. **Keyness** (validate topics distinguish by metadata: author, date, etc.)
+4. **Time series** (track topic prevalence over time)
+
+**Tutorials**: Mini Lab 9, [Time Series](../tutorials/time-series.qmd)
+
+---
+
+### Archetype 5: Narrative/Sentiment
+
+**Question**: Do tragic novels have different emotional arcs than comedies?
+
+**Methods**:
+1. **Sentiment analysis** (syuzhet, NRC lexicon)
+2. **Clustering** (group novels by arc shape)
+3. **Comparison** (test if clusters align with genre labels)
+4. **Visualization**: Emotional arcs superimposed by genre
+
+**Tutorials**: [Sentiment/Syuzhet](../tutorials/sentiment-and-syuzhet.qmd), Mini Labs 1, 11-12
+
+---
+
+### Archetype 6: Semantic Relationships
+
+**Question**: How does meaning of "freedom" vary by political context?
+
+**Methods**:
+1. **Word2vec** (train embeddings on political corpus)
+2. **Nearest neighbors** (find words similar to "freedom" in different subcorpora)
+3. **Vector arithmetic** (semantic shifts: freedom[2020] - freedom[1960])
+4. **Visualization**: t-SNE plot showing semantic space
+
+**Tutorials**: [Vector Models](../tutorials/vector-models.qmd), Mini Lab 9
+
+---
+
+::: {.callout-tip}
+## Extending Beyond Course Methods
+While all examples above use methods covered in tutorials and mini labs, you're welcome to explore additional techniques (e.g., metaphor detection, neural models, network analysis) if you have the background or interest. However, **this is not expected**—successful projects can be built entirely from course materials. If extending, budget extra time for learning and troubleshooting.
+:::
+
+## Part 9: Final Checklist
+
+Before submission, verify you have:
+
+### Content Completeness
+
+✅ **Introduction** (2-3 pages):
+- Research question clearly stated
+- Literature review (undergrad: 8-12 sources; grad: 15-25 sources)
+- Theoretical framework
+- Hypotheses (if applicable)
+
+✅ **Data** (1-2 pages):
+- Source and selection criteria explained
+- Corpus composition table (by relevant categories)
+- Preprocessing steps documented
+- Justification for corpus appropriateness
+
+✅ **Methods** (2-3 pages):
+- Each method explained: what, why, how, alternatives
+- Explicit connection to research questions
+- Technical details (tools, parameters, validation)
+- Caveats and limitations noted
+
+✅ **Results** (2-4 pages):
+- Findings organized logically (primary → secondary)
+- Specific quantitative summaries (means, effect sizes, p-values)
+- 3-5 figures with descriptive captions
+- All figures referenced in text
+- No interpretation (save for Discussion)
+
+✅ **Discussion** (2-4 pages):
+- Interpretation of findings
+- Connection to literature (confirm/challenge prior work)
+- Limitations and their effects on conclusions
+- Implications and future directions
+
+✅ **Conclusion** (1 page):
+- Summary of main findings
+- Broader significance
+- Limitations restated briefly
+- Next steps for research
+
+✅ **References**:
+- All sources cited in text appear in bibliography
+- Consistent citation style
+- Software, data, and AI tools cited (if used)
+
+### Methodological Rigor
+
+✅ **Analytical intentionality demonstrated**: Clear rationale for each method choice  
+✅ **Alternatives considered**: Explained why other methods were not chosen  
+✅ **Sufficient scale**: Corpus size matches method requirements (see CBE #3 guide)  
+✅ **Validation**: Results checked for robustness (cross-validation, multiple metrics, etc.)  
+✅ **Caveats proactive**: Limitations acknowledged with potential effects explained
+
+### Presentation Quality
+
+✅ **Figures**:
+- Clear, simple, legible, attractive
+- Axes labeled with units
+- Legends included
+- Well-chosen types for intended points
+- Descriptive captions
+
+✅ **Tables**:
+- Professional formatting
+- Clear headers
+- Referenced in text
+
+✅ **Writing**:
+- Concise, appropriate style
+- Transitions between sections
+- Low interpretive burden (explicit connections)
+- Proofread (no typos, grammar errors)
+
+✅ **Formatting**:
+- Consistent heading levels
+- Page numbers
+- Proper margins and spacing
+- Professional appearance
+
+### Collaboration (if team project)
+
+✅ **Division of labor documented**: Who did what?  
+✅ **All members contributed**: Evidence in Overleaf version history  
+✅ **Integrated coherently**: Single authorial voice, not patchwork
+
+## Part 10: From Final Project to Future Work
+
+The best final projects **don't end with the semester**—they become:
+
+- **Conference presentations**: Many undergraduate conferences accept computational text analysis projects
+- **Publications**: Strong projects can be expanded into journal submissions (grad students especially)
+- **Portfolio pieces**: Demonstrate technical and analytical skills to employers/graduate programs
+- **Springboards**: Foundation for thesis, dissertation, or future research
+
+**If you want to continue this work**, consider:
+
+1. **Expand corpus**: Scale from 200 to 2,000 texts for more robust findings
+2. **Add methods**: Incorporate techniques not covered in class (network analysis, neural models, multilingual)
+3. **Deepen theory**: Engage more extensively with disciplinary literature
+4. **Collaborate**: Co-author with faculty or peers from other departments
+5. **Present**: Submit to conferences (DH, ICAME, Corpus Linguistics)
+
+**Your final project is not the end—it's the beginning** of computational text analysis as part of your scholarly toolkit.
+
+--- 
+
+Final Project Rubric:
+
+ Chosen analysis is clearly connected to substantive question
+	
+20 to >18.0 pts Excellent
+18 to >15.0 pts Satisfactory
+15 to >0 pts Satisfactory
+	
+20 pts
+Text clearly explains why this analysis was chosen over alternatives
+	
+20 to >18.0 pts Excellent
+18 to >15.0 pts Satisfactory
+15 to >0 pts Satisfactory
+	
+20 pts
+Caveats and problems are noted and their potential effect on results explained
+	
+20 to >18.0 pts Excellent
+18 to >15.0 pts Satisfactory
+15 to >0 pts Satisfactory
+	
+20 pts
+The Report's argument is effectively organized. Data and their interpretation are presented in an appropriate order and connected explicitly with transitions or signaling. The most effective Reports reduce the interpretive burden on the reader.
+	
+20 to >18.0 pts Excellent
+18 to >15.0 pts Satisfactory
+15 to >0 pts Satisfactory
+	
+20 pts
+Introduction sets out questions to be answered and their importance
+	
+10 to >9.0 pts Excellent
+9 to >7.5 pts Satisfactory
+7.5 to >0 pts Satisfactory
+	
+10 pts
+The source of the data is described and its relevance to the problem summarized. Corpus data is presented and summarized in a clear table broken out into relevant categories.
+	
+10 to >9.0 pts Excellent
+9 to >7.5 pts Satisfactory
+7.5 to >0 pts Satisfactory
+	
+10 pts
+Connection between figures and narrative is clear from text and caption
+	
+10 to >9.0 pts Excellent
+9 to >7.5 pts Satisfactory
+7.5 to >0 pts Satisfactory
+	
+10 pts
+Figures are clear, simple, legible, and attractive
+	
+10 to >9.0 pts Excellent
+9 to >7.5 pts Satisfactory
+7.5 to >0 pts Satisfactory
+	
+10 pts
+All legends and axes are clearly labeled, including units
+	
+10 to >9.0 pts Excellent
+9 to >7.5 pts Satisfactory
+7.5 to >0 pts Satisfactory
+	
+10 pts
+Types of figures are well-chosen, illustrating the intended points clearly
+	
+10 to >9.0 pts Excellent
+9 to >7.5 pts Satisfactory
+7.5 to >0 pts Satisfactory
+	
+10 pts
+Figures are used whenever the text needs them
+	
+10 to >9.0 pts Excellent
+9 to >7.5 pts Satisfactory
+7.5 to >0 pts Satisfactory
+	
+10 pts
+Summarizes conclusions presented in report
+	
+10 to >9.0 pts Excellent
+9 to >7.5 pts Satisfactory
+7.5 to >0 pts Satisfactory
+	
+10 pts
+Conclusion notes any limitations on conclusions and what could be done to address these
+	
+10 to >9.0 pts Excellent
+9 to >7.5 pts Satisfactory
+7.5 to >0 pts Satisfactory
+	
+10 pts
+Has a concise style that is appropriate to the audience
+	
+10 to >9.0 pts Excellent
+9 to >7.5 pts Satisfactory
+7.5 to >0 pts Satisfactory
+	
+10 pts
+Formatting is clear and legible
+	
+10 to >9.0 pts Excellent
+9 to >7.5 pts Satisfactory
+7.5 to >0 pts Satisfactory
+	
+10 pts
+References are clearly given to information from outside sources; quotations clearly mark any verbatim text from
+	
+10 to >9.0 pts Excellent
+9 to >7.5 pts Satisfactory
+7.5 to >0 pts Satisfactory
+	
+10 pts
+
+## Works Cited
+
