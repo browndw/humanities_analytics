@@ -215,7 +215,7 @@ NPMI ranges from -1 (words never co-occur) to +1 (words always co-occur), making
 
 - **Conventional threshold**: Many researchers use **PMI > 3** as a rule of thumb for "strong" collocations (meaning words co-occur 8× more than expected, since $2^3 = 8$). For NPMI, values above 0.2-0.3 often indicate meaningful association, but these are conventions, not statistical cutoffs.
 
-- **Alternative methods exist**: PMI treats words as discrete symbols. For semantic similarity and paradigmatic relations (words that could substitute for each other), consider **vector embeddings** with cosine similarity (see [Vector Models](vector-models.qmd)). Different questions require different tools.
+- **Alternative methods exist**: PMI treats words as discrete symbols. For semantic similarity and paradigmatic relations (words that could substitute for each other), consider **vector embeddings** with cosine similarity (see [Vector Models](spacy-basics.qmd)). Different questions require different tools.
 :::
 
 ## Collocation Analysis with docuscospacy
