@@ -105,7 +105,7 @@ Italicize statistical symbols in text:
 **Template**:
 > A one-way ANOVA revealed significant differences in nominal density across disciplines, F(2, 237) = 45.3, p < 0.001, η² = 0.28. Post-hoc Tukey HSD tests showed Biology (M = 34.2, SD = 8.1) differed significantly from both English (M = 22.3, SD = 6.4, p < 0.001) and Psychology (M = 28.1, SD = 7.2, p = 0.002), while English and Psychology did not differ significantly (p = 0.15).
 
-**Eta-squared interpretation** (from [ANOVA tutorial](../tutorials/anova-and-r-squared.qmd)):
+**Eta-squared interpretation** (from [ANOVA tutorial](../tutorials/categorical-variables.qmd)):
 - 0.01: Small
 - 0.06: Medium
 - 0.14: Large
