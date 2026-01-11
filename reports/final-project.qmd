@@ -315,7 +315,7 @@ The rubric rewards **noting problems and their potential effects**. Address limi
 |--------------|---------------|-------------------|
 | Compare groups | Keyness plot, boxplots, grouped bars | [Keyness](../tutorials/keyness.qmd) |
 | Show trends | Line plots, change-point plots | [Time Series](../tutorials/time-series.qmd) |
-| Relationships | Scatterplots, correlation heatmaps | [Correlation](../tutorials/correlation-analysis.qmd) |
+| Relationships | Scatterplots, correlation heatmaps | [Correlation](../tutorials/correlations.qmd) |
 | Distributions | Histograms, density plots | [Frequency](../tutorials/frequency-and-distributions.qmd) |
 | Clustering | Dendrograms, PCA scatter | [Clustering](../tutorials/cluster-analysis.qmd) |
 | Classification | Confusion matrix, ROC curves | Mini Lab 12 |
@@ -500,7 +500,7 @@ Here are common project archetypes with recommended method combinations:
 3. **ANOVA** (test if dimensions distinguish genres, compute η²)
 4. **Visualization**: Biplot showing genres in 2D dimension space
 
-**Tutorials**: [Keyness](../tutorials/keyness.qmd), [MDA](../tutorials/multi-dimensional-analysis.qmd), [ANOVA](../tutorials/anova-and-r-squared.qmd)
+**Tutorials**: [Keyness](../tutorials/keyness.qmd), [MDA](../tutorials/multi-dimensional-analysis.qmd), [ANOVA](../tutorials/categorical-variables.qmd)
 
 ---
 
@@ -570,7 +570,7 @@ Here are common project archetypes with recommended method combinations:
 3. **Vector arithmetic** (semantic shifts: freedom[2020] - freedom[1960])
 4. **Visualization**: t-SNE plot showing semantic space
 
-**Tutorials**: [Vector Models](../tutorials/vector-models.qmd), Mini Lab 9
+**Tutorials**: [Vector Models](../tutorials/spacy-basics.qmd), Mini Lab 9
 
 ---
 
