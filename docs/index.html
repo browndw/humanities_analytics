@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.557">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="David Brown">
+
+<title>Methods in Humanities Analytics</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./tutorials/sentiment-and-syuzhet.html" rel="next">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./images/text_analysis.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Methods in Humanities Analytics</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/browndw/humanities_analytics" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Welcome</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorials/sentiment-and-syuzhet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Texts, Algorithms, and Black-Boxes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorials/corpus-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Corpus Basics: Tokenization and Processing Pipelines</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorials/spacy-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NLP Processing with spaCy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorials/frequency-and-distributions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Distributions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Core Methods</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorials/keyness.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Keyness</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorials/collocations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Collocations and N-grams</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorials/time-series.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Time Series Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorials/topic-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Topic Modeling</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Advanced Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorials/categorical-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">ANOVA and R²: Comparing Groups and Explaining Variance</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorials/cluster-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Clustering Methods</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorials/correlations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Correlation and Multi-Collinearity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorials/multi-dimensional-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Multi-Dimensional Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorials/contextual-embeddings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Contextual Embeddings and Transformers</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorials/classification-federalist-papers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Classification &amp; Authorship Attribution</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Reports</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./reports/cbe_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #1: From Curiosity to Visualization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./reports/cbe_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #2: From Results to Research</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./reports/cbe_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #3: Final Project Pilot Study</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./reports/final-project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Final Project: Independent Corpus Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./reports/statistical-reporting-guide.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Statistical Reporting Guide</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Course Resources</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorials/using-colab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Using Google Colab</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./resources/packages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Python Packages for This Course</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./resources/data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Course Data Resources</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome</a>
+  <ul class="collapse">
+  <li><a href="#course-philosophy" id="toc-course-philosophy" class="nav-link" data-scroll-target="#course-philosophy">Course Philosophy</a>
+  <ul class="collapse">
+  <li><a href="#python-as-a-research-tool" id="toc-python-as-a-research-tool" class="nav-link" data-scroll-target="#python-as-a-research-tool">Python as a Research Tool</a></li>
+  <li><a href="#computational-reasoning-code-memorization" id="toc-computational-reasoning-code-memorization" class="nav-link" data-scroll-target="#computational-reasoning-code-memorization">Computational Reasoning &gt; Code Memorization</a></li>
+  </ul></li>
+  <li><a href="#how-this-site-works" id="toc-how-this-site-works" class="nav-link" data-scroll-target="#how-this-site-works">How This Site Works</a>
+  <ul class="collapse">
+  <li><a href="#tutorials-read-learn" id="toc-tutorials-read-learn" class="nav-link" data-scroll-target="#tutorials-read-learn">📚 Tutorials (Read &amp; Learn)</a></li>
+  <li><a href="#hands-on-labs-do-experiment" id="toc-hands-on-labs-do-experiment" class="nav-link" data-scroll-target="#hands-on-labs-do-experiment">🔬 Hands-On Labs (Do &amp; Experiment)</a></li>
+  <li><a href="#course-resources" id="toc-course-resources" class="nav-link" data-scroll-target="#course-resources">📦 Course Resources</a></li>
+  </ul></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">Getting Started</a>
+  <ul class="collapse">
+  <li><a href="#what-you-need" id="toc-what-you-need" class="nav-link" data-scroll-target="#what-you-need">What You Need</a></li>
+  <li><a href="#your-first-steps" id="toc-your-first-steps" class="nav-link" data-scroll-target="#your-first-steps">Your First Steps</a></li>
+  </ul></li>
+  <li><a href="#course-structure" id="toc-course-structure" class="nav-link" data-scroll-target="#course-structure">Course Structure</a>
+  <ul class="collapse">
+  <li><a href="#progression-through-topics" id="toc-progression-through-topics" class="nav-link" data-scroll-target="#progression-through-topics">Progression Through Topics</a></li>
+  <li><a href="#tutorial-lab-pairs" id="toc-tutorial-lab-pairs" class="nav-link" data-scroll-target="#tutorial-lab-pairs">Tutorial + Lab Pairs</a></li>
+  </ul></li>
+  <li><a href="#python-packages-for-this-course" id="toc-python-packages-for-this-course" class="nav-link" data-scroll-target="#python-packages-for-this-course">Python Packages for This Course</a>
+  <ul class="collapse">
+  <li><a href="#primary-packages" id="toc-primary-packages" class="nav-link" data-scroll-target="#primary-packages">Primary Packages</a></li>
+  <li><a href="#supporting-libraries" id="toc-supporting-libraries" class="nav-link" data-scroll-target="#supporting-libraries">Supporting Libraries</a></li>
+  </ul></li>
+  <li><a href="#about-the-data" id="toc-about-the-data" class="nav-link" data-scroll-target="#about-the-data">About the Data</a></li>
+  <li><a href="#computational-ethics-critical-thinking" id="toc-computational-ethics-critical-thinking" class="nav-link" data-scroll-target="#computational-ethics-critical-thinking">Computational Ethics &amp; Critical Thinking</a></li>
+  <li><a href="#getting-help" id="toc-getting-help" class="nav-link" data-scroll-target="#getting-help">Getting Help</a></li>
+  <li><a href="#acknowledgments" id="toc-acknowledgments" class="nav-link" data-scroll-target="#acknowledgments">Acknowledgments</a></li>
+  <li><a href="#lets-begin" id="toc-lets-begin" class="nav-link" data-scroll-target="#lets-begin">Let’s Begin</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/browndw/humanities_analytics/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Methods in Humanities Analytics</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>David Brown </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="welcome" class="level1 unnumbered">
+<h1 class="unnumbered">Welcome</h1>
+<p>Welcome to <strong>Methods in Humanities Analytics</strong>, a course designed for upper-level undergraduate and graduate students interested in computational approaches to analyzing texts. This course emphasizes <strong>computational reasoning</strong> and <strong>flexible, adaptable research tools</strong> over rote programming or mathematical formulas.</p>
+<section id="course-philosophy" class="level2">
+<h2 class="anchored" data-anchor-id="course-philosophy">Course Philosophy</h2>
+<section id="python-as-a-research-tool" class="level3">
+<h3 class="anchored" data-anchor-id="python-as-a-research-tool">Python as a Research Tool</h3>
+<p>This course uses <strong>Python in Google Colab</strong> as the primary computing environment. This approach serves two audiences:</p>
+<p><strong>For students with coding experience:</strong></p>
+<ul>
+<li>Build on your introductory Python knowledge</li>
+<li>Learn specialized packages for text analysis</li>
+<li>Adapt code examples for your own research projects</li>
+<li>Develop custom analytical workflows</li>
+</ul>
+<p><strong>For students without coding experience:</strong></p>
+<ul>
+<li>Simply <strong>run each code cell</strong> to generate results</li>
+<li>Focus on interpreting output and understanding concepts</li>
+<li>Export tables and visualizations to Google Sheets or Drive<br>
+</li>
+<li>Use computational tools without being limited by pre-built interfaces</li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The Goal
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The goal is not to make you expert programmers. The goal is to give you <strong>access to flexible analytical tools</strong> that you can use to explore questions you find compelling, without being constrained by someone else’s user interface.</p>
+</div>
+</div>
+</section>
+<section id="computational-reasoning-code-memorization" class="level3">
+<h3 class="anchored" data-anchor-id="computational-reasoning-code-memorization">Computational Reasoning &gt; Code Memorization</h3>
+<p>You don’t need to understand every line of code or every mathematical formula. What matters is:</p>
+<ul>
+<li><strong>Understanding what methods do</strong> (conceptually)</li>
+<li><strong>Knowing when to use them</strong> (methodologically)</li>
+<li><strong>Interpreting results critically</strong> (analytically)</li>
+<li><strong>Making informed choices</strong> about approaches</li>
+</ul>
+</section>
+</section>
+<section id="how-this-site-works" class="level2">
+<h2 class="anchored" data-anchor-id="how-this-site-works">How This Site Works</h2>
+<p>This documentation is organized into distinct sections, each serving a different purpose:</p>
+<section id="tutorials-read-learn" class="level3">
+<h3 class="anchored" data-anchor-id="tutorials-read-learn">📚 Tutorials (Read &amp; Learn)</h3>
+<p>Comprehensive, conceptual explanations of text analysis methods. These are <strong>readable documentation</strong> with code examples you can reference, but not interactive notebooks. They cover:</p>
+<ul>
+<li><strong>Foundations:</strong> Basic concepts like sentiment analysis, corpus processing, and pipelines</li>
+<li><strong>Core Methods:</strong> Frequency analysis, keyness, collocations, time series</li>
+<li><strong>Advanced Analysis:</strong> Categorical variables, clustering, correlations, multidimensional analysis, vector models</li>
+<li><strong>Applications:</strong> Real-world case studies like the Federalist Papers classification</li>
+</ul>
+</section>
+<section id="hands-on-labs-do-experiment" class="level3">
+<h3 class="anchored" data-anchor-id="hands-on-labs-do-experiment">🔬 Hands-On Labs (Do &amp; Experiment)</h3>
+<p>Interactive Jupyter notebooks designed to run in <strong>Google Colab</strong>. Each lab:</p>
+<ul>
+<li>Opens directly in Colab with one click</li>
+<li>Includes all necessary setup and data loading</li>
+<li>Guides you through practical analytical tasks</li>
+<li>Can be adapted for your own projects</li>
+</ul>
+<p>See the <a href="#hands-on-labs">Hands-On Labs</a> section for the complete list with “Open in Colab” buttons.</p>
+</section>
+<section id="course-resources" class="level3">
+<h3 class="anchored" data-anchor-id="course-resources">📦 Course Resources</h3>
+<p>Documentation for the specialized Python packages used throughout the course, plus guides for accessing course datasets. No need to read this upfront—refer to it as needed.</p>
+</section>
+</section>
+<section id="getting-started" class="level2">
+<h2 class="anchored" data-anchor-id="getting-started">Getting Started</h2>
+<section id="what-you-need" class="level3">
+<h3 class="anchored" data-anchor-id="what-you-need">What You Need</h3>
+<p><strong>Required:</strong></p>
+<ul>
+<li>A Google account (for Colab access)</li>
+<li>An internet connection</li>
+<li>A curious mind and interesting research questions</li>
+</ul>
+<p><strong>Not Required:</strong></p>
+<ul>
+<li>Python installation on your computer</li>
+<li>Prior programming experience</li>
+<li>Advanced mathematics background</li>
+<li>Expensive software or computing resources</li>
+</ul>
+</section>
+<section id="your-first-steps" class="level3">
+<h3 class="anchored" data-anchor-id="your-first-steps">Your First Steps</h3>
+<ol type="1">
+<li><strong>Browse the Tutorials</strong> to understand conceptual foundations</li>
+<li><strong>Open Lab 1 in Colab</strong> to see how the environment works</li>
+<li><strong>Run all cells</strong> (Runtime → Run all) to see the full analysis</li>
+<li><strong>Explore the output</strong> and try modifying a parameter</li>
+<li><strong>Save a copy</strong> to your Google Drive for future reference</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning by Doing
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Don’t try to understand everything at once. Run the code, look at the results, and gradually build understanding through repeated exposure. Computational literacy develops over time.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="course-structure" class="level2">
+<h2 class="anchored" data-anchor-id="course-structure">Course Structure</h2>
+<section id="progression-through-topics" class="level3">
+<h3 class="anchored" data-anchor-id="progression-through-topics">Progression Through Topics</h3>
+<p>The course follows a carefully designed progression:</p>
+<ol type="1">
+<li><strong>Start with the familiar</strong> (sentiment in narratives)</li>
+<li><strong>Build fundamental skills</strong> (tokenization, frequencies)</li>
+<li><strong>Add statistical methods</strong> (keyness, distributions)</li>
+<li><strong>Introduce advanced techniques</strong> (clustering, dimensions, vectors)</li>
+<li><strong>Apply to real problems</strong> (classification, genre analysis)</li>
+</ol>
+</section>
+<section id="tutorial-lab-pairs" class="level3">
+<h3 class="anchored" data-anchor-id="tutorial-lab-pairs">Tutorial + Lab Pairs</h3>
+<p>Most topics have both:</p>
+<ul>
+<li>A <strong>tutorial</strong> explaining concepts and theory</li>
+<li>A <strong>mini lab</strong> providing hands-on practice</li>
+</ul>
+<p>Read the tutorial to understand <em>why</em> and <em>how</em>, then do the lab to see it in action.</p>
+</section>
+</section>
+<section id="python-packages-for-this-course" class="level2">
+<h2 class="anchored" data-anchor-id="python-packages-for-this-course">Python Packages for This Course</h2>
+<p>We use specialized packages designed for humanities text analysis:</p>
+<section id="primary-packages" class="level3">
+<h3 class="anchored" data-anchor-id="primary-packages">Primary Packages</h3>
+<ul>
+<li><strong><a href="https://docuscospacy.readthedocs.org">docuscospacy</a></strong> - Rhetorical and functional tagging using DocuScope</li>
+<li><strong><a href="https://browndw.github.io/pybiber">pybiber</a></strong> - Multi-dimensional analysis of text registers</li>
+<li><strong><a href="https://browndw.github.io/moodswing">moodswing</a></strong> - Sentiment trajectory analysis for narratives</li>
+<li><strong><a href="https://github.com/browndw/google_ngrams">google_ngrams</a></strong> - Diachronic analysis with Google Books data</li>
+</ul>
+</section>
+<section id="supporting-libraries" class="level3">
+<h3 class="anchored" data-anchor-id="supporting-libraries">Supporting Libraries</h3>
+<ul>
+<li><strong>spaCy</strong> - NLP processing (POS tagging, parsing, NER)</li>
+<li><strong>Polars</strong> - Fast data manipulation (alternative to pandas)</li>
+<li><strong>matplotlib</strong> - Visualization and plotting</li>
+<li><strong>great_tables</strong> - Publication-ready table formatting</li>
+</ul>
+<p>See <a href="#python-packages-for-this-course">Python Packages</a> for detailed documentation.</p>
+</section>
+</section>
+<section id="about-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="about-the-data">About the Data</h2>
+<p>All course data is hosted in this repository and accessible via direct URLs—no downloads required. Datasets include:</p>
+<ul>
+<li>Sample corpora (MICUSP, Brown, inaugural addresses)</li>
+<li>Classic literary texts (Pride and Prejudice, Madame Bovary, etc.)</li>
+<li>Pre-processed word lists and frequency tables</li>
+<li>Metadata for register and genre analysis</li>
+</ul>
+<p>See <a href="#course-data-resources">Course Data Resources</a> for the complete catalog.</p>
+</section>
+<section id="computational-ethics-critical-thinking" class="level2">
+<h2 class="anchored" data-anchor-id="computational-ethics-critical-thinking">Computational Ethics &amp; Critical Thinking</h2>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Methods are Tools, Not Truth
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Every computational method makes assumptions, has limitations, and can be misused. Throughout this course, we emphasize:</p>
+<ul>
+<li><strong>Critical interpretation</strong> - Question your results</li>
+<li><strong>Method transparency</strong> - Document your choices</li>
+<li><strong>Reproducibility</strong> - Share your code and data</li>
+<li><strong>Ethical awareness</strong> - Consider impacts and biases</li>
+</ul>
+</div>
+</div>
+<p>Computational text analysis is powerful, but it’s not magic. It augments human interpretation; it doesn’t replace it.</p>
+</section>
+<section id="getting-help" class="level2">
+<h2 class="anchored" data-anchor-id="getting-help">Getting Help</h2>
+<p>When you’re stuck or confused:</p>
+<ol type="1">
+<li><strong>Read the error message</strong> - Often tells you exactly what’s wrong</li>
+<li><strong>Check the tutorials</strong> - Conceptual background and examples</li>
+<li><strong>Review the relevant lab</strong> - See working code in action</li>
+<li><strong>Consult package docs</strong> - Detailed API references</li>
+<li><strong>Ask questions</strong> - Use course discussion boards or office hours</li>
+<li><strong>Search online</strong> - Stack Overflow, documentation, forums</li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+A Note on AI Assistants
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Tools like ChatGPT can help explain concepts or debug code, but:</p>
+<ul>
+<li>They sometimes provide incorrect information</li>
+<li>They can’t replace understanding of methods</li>
+<li>Copy-pasting without comprehension is a missed learning opportunity</li>
+<li>Understanding <em>why</em> code works matters for adapting it to your needs</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="acknowledgments" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgments">Acknowledgments</h2>
+<p>This course and these materials build on decades of research in:</p>
+<ul>
+<li>Corpus linguistics (Biber, Conrad, Reppen, Gries, and many others)</li>
+<li>Digital humanities (Jockers, Moretti, Underwood, Rhody, and many others)<br>
+</li>
+<li>Computational linguistics (Jurafsky, Manning, Bird, and many others)</li>
+<li>Rhetoric and composition (Kaufer, Ishizaki, Geisler, and many others)</li>
+</ul>
+<p>The Python packages were developed with support from Carnegie Mellon University and the broader open-source community.</p>
+</section>
+<section id="lets-begin" class="level2">
+<h2 class="anchored" data-anchor-id="lets-begin">Let’s Begin</h2>
+<p>Ready to start? Head to the <a href="#foundations">Foundations</a> section to begin with sentiment analysis, or jump directly to <a href="#hands-on-labs">Hands-On Labs</a> to start experimenting in Colab.</p>
+<p>Remember: <strong>You don’t need to be a programmer to do computational text analysis.</strong> You just need curiosity, patience, and a willingness to experiment.</p>
+<hr>
+<p><strong>Course:</strong> Methods in Humanities Analytics (76-380/780)<br>
+<strong>Institution:</strong> Carnegie Mellon University<br>
+<strong>Instructor:</strong> David Brown<br>
+<strong>Repository:</strong> <a href="https://github.com/browndw/humanities_analytics">github.com/browndw/humanities_analytics</a></p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./tutorials/sentiment-and-syuzhet.html" class="pagination-link" aria-label="Texts, Algorithms, and Black-Boxes">
+        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Texts, Algorithms, and Black-Boxes</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/browndw/humanities_analytics/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

@@ -1,0 +1,2950 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.557">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Methods in Humanities Analytics - 6&nbsp; Collocations and N-grams</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../tutorials/time-series.html" rel="next">
+<link href="../tutorials/keyness.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../images/text_analysis.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Methods in Humanities Analytics</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/browndw/humanities_analytics" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorials/keyness.html">Core Methods</a></li><li class="breadcrumb-item"><a href="../tutorials/collocations.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Collocations and N-grams</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/sentiment-and-syuzhet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Texts, Algorithms, and Black-Boxes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/corpus-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Corpus Basics: Tokenization and Processing Pipelines</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/spacy-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NLP Processing with spaCy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/frequency-and-distributions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Distributions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Core Methods</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/keyness.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Keyness</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/collocations.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Collocations and N-grams</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/time-series.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Time Series Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/topic-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Topic Modeling</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Advanced Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/categorical-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">ANOVA and R²: Comparing Groups and Explaining Variance</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/cluster-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Clustering Methods</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/correlations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Correlation and Multi-Collinearity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/multi-dimensional-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Multi-Dimensional Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/contextual-embeddings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Contextual Embeddings and Transformers</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/classification-federalist-papers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Classification &amp; Authorship Attribution</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Reports</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #1: From Curiosity to Visualization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #2: From Results to Research</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #3: Final Project Pilot Study</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/final-project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Final Project: Independent Corpus Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/statistical-reporting-guide.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Statistical Reporting Guide</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Course Resources</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/using-colab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Using Google Colab</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../resources/packages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Python Packages for This Course</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../resources/data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Course Data Resources</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">6.1</span> Introduction</a></li>
+  <li><a href="#understanding-collocation" id="toc-understanding-collocation" class="nav-link" data-scroll-target="#understanding-collocation"><span class="header-section-number">6.2</span> Understanding Collocation</a>
+  <ul class="collapse">
+  <li><a href="#what-makes-words-collocate" id="toc-what-makes-words-collocate" class="nav-link" data-scroll-target="#what-makes-words-collocate"><span class="header-section-number">6.2.1</span> What Makes Words Collocate?</a></li>
+  <li><a href="#core-concepts" id="toc-core-concepts" class="nav-link" data-scroll-target="#core-concepts"><span class="header-section-number">6.2.2</span> Core Concepts</a></li>
+  <li><a href="#the-mathematics-mutual-information" id="toc-the-mathematics-mutual-information" class="nav-link" data-scroll-target="#the-mathematics-mutual-information"><span class="header-section-number">6.2.3</span> The Mathematics: Mutual Information</a></li>
+  </ul></li>
+  <li><a href="#collocation-analysis-with-docuscospacy" id="toc-collocation-analysis-with-docuscospacy" class="nav-link" data-scroll-target="#collocation-analysis-with-docuscospacy"><span class="header-section-number">6.3</span> Collocation Analysis with docuscospacy</a>
+  <ul class="collapse">
+  <li><a href="#basic-workflow" id="toc-basic-workflow" class="nav-link" data-scroll-target="#basic-workflow"><span class="header-section-number">6.3.1</span> Basic Workflow</a></li>
+  <li><a href="#generating-a-collocation-table" id="toc-generating-a-collocation-table" class="nav-link" data-scroll-target="#generating-a-collocation-table"><span class="header-section-number">6.3.2</span> Generating a Collocation Table</a></li>
+  <li><a href="#filtering-and-exploration" id="toc-filtering-and-exploration" class="nav-link" data-scroll-target="#filtering-and-exploration"><span class="header-section-number">6.3.3</span> Filtering and Exploration</a></li>
+  <li><a href="#comparative-analysis" id="toc-comparative-analysis" class="nav-link" data-scroll-target="#comparative-analysis"><span class="header-section-number">6.3.4</span> Comparative Analysis</a></li>
+  </ul></li>
+  <li><a href="#n-gram-clusters-fixed-sequences" id="toc-n-gram-clusters-fixed-sequences" class="nav-link" data-scroll-target="#n-gram-clusters-fixed-sequences"><span class="header-section-number">6.4</span> N-gram Clusters: Fixed Sequences</a>
+  <ul class="collapse">
+  <li><a href="#grams-with-me-in-final-position" id="toc-grams-with-me-in-final-position" class="nav-link" data-scroll-target="#grams-with-me-in-final-position"><span class="header-section-number">6.4.1</span> 2-grams with “me” in Final Position</a></li>
+  <li><a href="#filtering-clusters-by-pattern" id="toc-filtering-clusters-by-pattern" class="nav-link" data-scroll-target="#filtering-clusters-by-pattern"><span class="header-section-number">6.4.2</span> Filtering Clusters by Pattern</a></li>
+  <li><a href="#grams-complex-patterns" id="toc-grams-complex-patterns" class="nav-link" data-scroll-target="#grams-complex-patterns"><span class="header-section-number">6.4.3</span> 3-grams: Complex Patterns</a></li>
+  </ul></li>
+  <li><a href="#computational-reasoning-from-patterns-to-insights" id="toc-computational-reasoning-from-patterns-to-insights" class="nav-link" data-scroll-target="#computational-reasoning-from-patterns-to-insights"><span class="header-section-number">6.5</span> Computational Reasoning: From Patterns to Insights</a>
+  <ul class="collapse">
+  <li><a href="#research-workflow" id="toc-research-workflow" class="nav-link" data-scroll-target="#research-workflow"><span class="header-section-number">6.5.1</span> Research Workflow</a></li>
+  <li><a href="#case-study-narrative-agency-in-twilight" id="toc-case-study-narrative-agency-in-twilight" class="nav-link" data-scroll-target="#case-study-narrative-agency-in-twilight"><span class="header-section-number">6.5.2</span> Case Study: Narrative Agency in Twilight</a></li>
+  <li><a href="#visualization-comparing-collocational-profiles" id="toc-visualization-comparing-collocational-profiles" class="nav-link" data-scroll-target="#visualization-comparing-collocational-profiles"><span class="header-section-number">6.5.3</span> Visualization: Comparing Collocational Profiles</a></li>
+  </ul></li>
+  <li><a href="#when-to-use-collocation-analysis" id="toc-when-to-use-collocation-analysis" class="nav-link" data-scroll-target="#when-to-use-collocation-analysis"><span class="header-section-number">6.6</span> When to Use Collocation Analysis</a></li>
+  <li><a href="#common-pitfalls" id="toc-common-pitfalls" class="nav-link" data-scroll-target="#common-pitfalls"><span class="header-section-number">6.7</span> Common Pitfalls</a></li>
+  <li><a href="#what-to-do-after-finding-collocations" id="toc-what-to-do-after-finding-collocations" class="nav-link" data-scroll-target="#what-to-do-after-finding-collocations"><span class="header-section-number">6.8</span> What to Do After Finding Collocations</a>
+  <ul class="collapse">
+  <li><a href="#concordancing-for-context" id="toc-concordancing-for-context" class="nav-link" data-scroll-target="#concordancing-for-context"><span class="header-section-number">6.8.1</span> 1. Concordancing for Context</a></li>
+  <li><a href="#expand-to-related-words" id="toc-expand-to-related-words" class="nav-link" data-scroll-target="#expand-to-related-words"><span class="header-section-number">6.8.2</span> 2. Expand to Related Words</a></li>
+  <li><a href="#compare-across-subcorpora" id="toc-compare-across-subcorpora" class="nav-link" data-scroll-target="#compare-across-subcorpora"><span class="header-section-number">6.8.3</span> 3. Compare Across Subcorpora</a></li>
+  <li><a href="#network-analysis" id="toc-network-analysis" class="nav-link" data-scroll-target="#network-analysis"><span class="header-section-number">6.8.4</span> 4. Network Analysis</a></li>
+  <li><a href="#qualitative-deep-dive" id="toc-qualitative-deep-dive" class="nav-link" data-scroll-target="#qualitative-deep-dive"><span class="header-section-number">6.8.5</span> 5. Qualitative Deep Dive</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">6.9</span> Conclusion</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">6.10</span> Further Reading</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/browndw/humanities_analytics/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorials/keyness.html">Core Methods</a></li><li class="breadcrumb-item"><a href="../tutorials/collocations.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Collocations and N-grams</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Collocations and N-grams</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><a target="_blank" href="https://colab.research.google.com/github/browndw/humanities_analytics/blob/main/mini_labs/Mini_Lab_06_Collocations.ipynb"> <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"> </a></p>
+<section id="introduction" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">6.1</span> Introduction</h2>
+<p>While frequency analysis tells us which words appear often, <strong>collocations</strong> reveal which words appear <em>together</em>. Collocation analysis identifies words that attract each other—lexical partnerships that shape meaning, construct genre conventions, and reveal stylistic patterns invisible to single-word analysis.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Why Collocations Matter
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Consider “strong coffee” vs.&nbsp;“powerful coffee”—both adjectives mean roughly the same thing, but only one sounds natural. This is collocation: some word combinations occur far more often than chance would predict. Studying these patterns reveals:</p>
+<ul>
+<li><strong>Semantic prosody</strong>: Words carry emotional colorings from their frequent partners (“rancid” almost always modifies negative things)</li>
+<li><strong>Register and genre</strong>: Academic writing has different collocational patterns than fiction</li>
+<li><strong>Character and narrative</strong>: How a character is described through their collocates</li>
+<li><strong>Formulaic language</strong>: Phraseological patterns that structure discourse</li>
+</ul>
+</div>
+</div>
+<p>This tutorial covers:</p>
+<ol type="1">
+<li><strong>Collocational analysis</strong>: Finding words that co-occur within a span</li>
+<li><strong>Association measures</strong>: Different ways to quantify word attraction (PMI, NPMI, t-score)</li>
+<li><strong>N-gram clusters</strong>: Fixed multi-word sequences anchored by a node word</li>
+<li><strong>Computational reasoning</strong>: Moving from collocational patterns to linguistic interpretation</li>
+</ol>
+</section>
+<section id="understanding-collocation" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="understanding-collocation"><span class="header-section-number">6.2</span> Understanding Collocation</h2>
+<section id="what-makes-words-collocate" class="level3" data-number="6.2.1">
+<h3 data-number="6.2.1" class="anchored" data-anchor-id="what-makes-words-collocate"><span class="header-section-number">6.2.1</span> What Makes Words Collocate?</h3>
+<p>Two words collocate when they appear together <strong>more often than we’d expect by chance</strong>. The key question is: given the frequency of word A and word B in a corpus, how often would they co-occur if placement were random? When the observed frequency exceeds this expected frequency, we have a collocation.</p>
+<p><strong>The fundamental insight</strong>: Collocation is not about frequency alone—it’s about <strong>attraction</strong>. “The” and “of” appear together frequently simply because they’re both extremely common words. But “strong coffee” appears together more often than the individual frequencies of “strong” and “coffee” would predict. That’s collocation.</p>
+</section>
+<section id="core-concepts" class="level3" data-number="6.2.2">
+<h3 data-number="6.2.2" class="anchored" data-anchor-id="core-concepts"><span class="header-section-number">6.2.2</span> Core Concepts</h3>
+<p><strong>1. The Node Word</strong></p>
+<p>The <strong>node word</strong> is your target—the word you want to investigate. In the phrase “strong coffee,” if we’re studying “coffee,” that’s our node. Everything else is analyzed in relation to this anchor point.</p>
+<ul>
+<li>Node selection drives your research question: “How is this concept described?” “What verbs does this character perform?”</li>
+<li>Nodes can be single words (“love”) or lemmas (grouping “love,” “loves,” “loved,” “loving”)</li>
+<li>Choose nodes strategically: content words (nouns, verbs, adjectives) reveal more than function words</li>
+</ul>
+<p><strong>2. The Span or Window</strong></p>
+<p>The <strong>span</strong> (or <strong>window</strong>) defines how far from the node to look for collocates. A span of 4-4 means 4 words to the left and 4 to the right of the node.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Why Does Window Size Matter?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Different linguistic relationships require different windows:</p>
+<ul>
+<li><strong>Narrow windows (1-2 words)</strong>: Capture grammatical collocations
+<ul>
+<li>Prepositions after verbs: “depend on,” “arrive at”</li>
+<li>Adjective-noun pairs: “strong coffee,” “heavy rain”</li>
+</ul></li>
+<li><strong>Medium windows (4-5 words)</strong>: Capture semantic associations
+<ul>
+<li>Typical academic default</li>
+<li>Balances precision with context</li>
+</ul></li>
+<li><strong>Wide windows (8+ words)</strong>: Capture thematic co-occurrence
+<ul>
+<li>Words appearing in the same general context</li>
+<li>Risk including unrelated words</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<p>The span creates a <strong>virtual document</strong> around each instance of your node word. If “coffee” appears 100 times in your corpus with a 4-4 span, you’re analyzing 100 nine-word snippets (4 before + node + 4 after).</p>
+<p><strong>Note on directionality</strong>: Most collocation tools (including <code>coll_table()</code>) treat left and right context symmetrically—a word 2 positions to the left counts the same as 2 positions to the right. This is usually appropriate for semantic associations, but grammatical relationships often show strong directional preferences. When direction matters (like verb-preposition pairs), use <code>clusters_by_token()</code> to specify exact positions.</p>
+<p><strong>3. Observed vs.&nbsp;Expected Frequency</strong></p>
+<p>This is the heart of collocation analysis. Consider:</p>
+<ul>
+<li>Corpus size: 1 million words</li>
+<li>“The” appears 70,000 times (7% of corpus)</li>
+<li>“Coffee” appears 500 times (0.05% of corpus)</li>
+<li>Span: 4-4 window = 9 words total</li>
+</ul>
+<p><strong>Expected co-occurrence</strong>: If words were placed randomly, how often would “the” appear in coffee’s window?</p>
+<ul>
+<li>500 instances of “coffee” × 9-word window = 4,500 word positions</li>
+<li>7% of words are “the” → we expect ~315 instances of “the” near “coffee”</li>
+</ul>
+<p><strong>Observed co-occurrence</strong>: Count how many times “the” actually appears near “coffee” in your corpus.</p>
+<p><strong>Collocation occurs when</strong>: Observed &gt;&gt; Expected (or Observed &lt;&lt; Expected for negative collocation)</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The Frequency Trap
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A common mistake: assuming frequent co-occurrence means collocation.</p>
+<p><strong>Scenario</strong>: In a novel, “he” appears 3,000 times and “the” appears 5,000 times. You find “he the” appearing 200 times together.</p>
+<ul>
+<li><strong>Naive interpretation</strong>: 200 is a lot! They must collocate.</li>
+<li><strong>Correct interpretation</strong>: Given their individual frequencies, we’d expect ~1,500 co-occurrences by chance. Actually appearing 200 times means they <strong>avoid</strong> each other—negative collocation!</li>
+</ul>
+<p>This is why we need association measures like MI or NPMI—they account for baseline frequency.</p>
+</div>
+</div>
+<p><strong>4. Association Strength vs.&nbsp;Frequency</strong></p>
+<p><strong>Association measures</strong> (MI, NPMI, t-score, log-likelihood) quantify the strength of attraction between words, correcting for their individual frequencies.</p>
+<p>Two dimensions to consider:</p>
+<ol type="1">
+<li><strong>Strength of association</strong>: How reliably do these words co-occur? (MI/NPMI)</li>
+<li><strong>Frequency of co-occurrence</strong>: How many times do we observe this pattern? (raw count)</li>
+</ol>
+<p>Both matter:</p>
+<ul>
+<li>High MI + low frequency = strong but rare pairing (possibly idiosyncratic)</li>
+<li>High MI + high frequency = robust, substantive collocation ✓</li>
+<li>Low MI + high frequency = words appearing together by chance (both just common)</li>
+</ul>
+<p><strong>Components of collocation analysis:</strong></p>
+<ul>
+<li><strong>Node word</strong>: The target word you’re interested in (your anchor point)</li>
+<li><strong>Span/Window</strong>: How many words to the left and right to search (commonly 4-4, 5-5, or 2-2)</li>
+<li><strong>Collocate</strong>: A word that appears within the span more often than expected by chance</li>
+<li><strong>Association measure</strong>: The statistic quantifying strength of attraction (MI, NPMI, etc.)</li>
+<li><strong>Observed frequency</strong>: Actual count of co-occurrences in your data</li>
+<li><strong>Expected frequency</strong>: Predicted count if words appeared independently</li>
+</ul>
+</section>
+<section id="the-mathematics-mutual-information" class="level3" data-number="6.2.3">
+<h3 data-number="6.2.3" class="anchored" data-anchor-id="the-mathematics-mutual-information"><span class="header-section-number">6.2.3</span> The Mathematics: Mutual Information</h3>
+<p>The most common association measure is <strong>Pointwise Mutual Information (PMI)</strong>:</p>
+<p><span class="math display">\[
+\text{PMI} = \log_2 \frac{P(w_1, w_2)}{P(w_1) \times P(w_2)}
+\]</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(P(w_1, w_2)\)</span> = observed probability of words appearing together in the span</li>
+<li><span class="math inline">\(P(w_1)\)</span> = probability of word 1 in the corpus<br>
+</li>
+<li><span class="math inline">\(P(w_2)\)</span> = probability of word 2 in the corpus</li>
+</ul>
+<p><strong>Intuition</strong>: If two words appear together purely by chance, the fraction equals 1 and <span class="math inline">\(\log_2(1) = 0\)</span>. Higher PMI means stronger attraction.</p>
+<p><strong>Worked Example:</strong></p>
+<p>Imagine a 10,000-word corpus with a 2-2 window (5 words total per span):</p>
+<ul>
+<li>“coffee” appears 50 times (node word)</li>
+<li>“strong” appears 40 times total in the corpus</li>
+<li>“strong” appears 15 times in coffee’s window (within 2 words before/after “coffee”)</li>
+</ul>
+<p><strong>Step 1: Calculate probabilities</strong></p>
+<ul>
+<li><span class="math inline">\(P(\text{strong}) = 40/10000 = 0.004\)</span></li>
+<li>50 instances of “coffee” × 5-word window = 250 word positions in coffee’s spans</li>
+<li><span class="math inline">\(P(\text{strong, coffee}) = 15/250 = 0.06\)</span></li>
+</ul>
+<p><strong>Step 2: Expected co-occurrence</strong></p>
+<p>If placement were random: <span class="math inline">\(P(\text{strong}) \times P(\text{coffee's spans}) = 0.004 \times 250 = 1\)</span> instance</p>
+<p><strong>Step 3: PMI calculation</strong></p>
+<p><span class="math display">\[\text{PMI} = \log_2 \frac{0.06}{0.004} = \log_2(15) = 3.9\]</span></p>
+<p><strong>Interpretation</strong>: We observed “strong” near “coffee” <strong>15 times more often</strong> than chance would predict. That’s a collocation!</p>
+<p>Compare this to a non-collocation:</p>
+<ul>
+<li>“the” appears 700 times in the corpus<br>
+</li>
+<li>“the” appears 8 times in coffee’s window</li>
+<li>Expected: <span class="math inline">\(700/10000 \times 250 = 17.5\)</span> times</li>
+<li>Observed: 8 times</li>
+<li>PMI = <span class="math inline">\(\log_2(8/17.5) = -1.1\)</span> (negative = avoidance!)</li>
+</ul>
+<p><strong>The problem</strong>: PMI is biased toward rare words. Two words that appear together once each will have high PMI even though one co-occurrence isn’t meaningful.</p>
+<p><strong>The solution</strong>: Use <strong>Normalized PMI (NPMI)</strong>:</p>
+<p><span class="math display">\[
+\text{NPMI} = \frac{\text{PMI}}{-\log_2 P(w_1, w_2)}
+\]</span></p>
+<p>NPMI ranges from -1 (words never co-occur) to +1 (words always co-occur), making scores comparable across different frequency ranges. This normalization prevents rare words from dominating your results.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Interpreting PMI: What You Need to Know
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>PMI is extremely sensitive to rare occurrences.</strong> Even with NPMI normalization, two words that appear together just once or twice can show high association scores. This is mathematically correct (they <em>do</em> co-occur at a high rate relative to their individual frequencies), but may not be linguistically meaningful.</p>
+<p><strong>Two common approaches:</strong></p>
+<ol type="1">
+<li><p><strong>Filter by minimum frequency thresholds</strong>: Only analyze collocates that appear at least N times (e.g., 5 or 10). Some researchers find this practical and necessary; others argue it’s arbitrary and may hide interesting rare phenomena.</p></li>
+<li><p><strong>Report both association strength AND raw frequency</strong>: Present NPMI scores alongside co-occurrence counts so readers can judge for themselves.</p></li>
+</ol>
+<p><strong>Important limitations:</strong></p>
+<ul>
+<li><p><strong>PMI has no p-value</strong>: It’s not a statistical hypothesis test. There’s no significance level, no confidence interval. PMI quantifies association strength, not statistical reliability.</p></li>
+<li><p><strong>Conventional threshold</strong>: Many researchers use <strong>PMI &gt; 3</strong> as a rule of thumb for “strong” collocations (meaning words co-occur 8× more than expected, since <span class="math inline">\(2^3 = 8\)</span>). For NPMI, values above 0.2-0.3 often indicate meaningful association, but these are conventions, not statistical cutoffs.</p></li>
+<li><p><strong>Alternative methods exist</strong>: PMI treats words as discrete symbols. For semantic similarity and paradigmatic relations (words that could substitute for each other), consider <strong>vector embeddings</strong> with cosine similarity (see <a href="../tutorials/spacy-basics.html">Vector Models</a>). Different questions require different tools.</p></li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="collocation-analysis-with-docuscospacy" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="collocation-analysis-with-docuscospacy"><span class="header-section-number">6.3</span> Collocation Analysis with docuscospacy</h2>
+<section id="basic-workflow" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="basic-workflow"><span class="header-section-number">6.3.1</span> Basic Workflow</h3>
+<p>We’ll analyze <em>Twilight</em> by Stephenie Meyer, exploring how different characters and concepts are described through their collocates.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Connecting to Mini Lab 6
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><a href="../mini_labs/Mini_Lab_06_Collocations.ipynb">Mini Lab 6: Collocations</a> provides hands-on practice with these methods using Google Colab. The mini lab walks through uploading your own data, generating collocation tables, and exporting results for further analysis.</p>
+</div>
+</div>
+<p><strong>Load and prepare data:</strong></p>
+<div id="fa347205" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Already loaded at top</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>twilight_tokens.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 6)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">doc_id</th>
+<th data-quarto-table-cell-role="th">token</th>
+<th data-quarto-table-cell-role="th">pos_tag</th>
+<th data-quarto-table-cell-role="th">ds_tag</th>
+<th data-quarto-table-cell-role="th">pos_id</th>
+<th data-quarto-table-cell-role="th">ds_id</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>u32</th>
+<th>u32</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"Meyer_Twilight.txt"</td>
+<td>"Preface "</td>
+<td>"NN1"</td>
+<td>"InformationPlace"</td>
+<td>595242</td>
+<td>477529</td>
+</tr>
+<tr class="even">
+<td>"Meyer_Twilight.txt"</td>
+<td>"I"</td>
+<td>"PPIS1"</td>
+<td>"FirstPerson"</td>
+<td>595243</td>
+<td>477530</td>
+</tr>
+<tr class="odd">
+<td>"Meyer_Twilight.txt"</td>
+<td>"'d "</td>
+<td>"VM"</td>
+<td>"FirstPerson"</td>
+<td>595244</td>
+<td>477530</td>
+</tr>
+<tr class="even">
+<td>"Meyer_Twilight.txt"</td>
+<td>"never "</td>
+<td>"RR"</td>
+<td>"ForceStressed"</td>
+<td>595245</td>
+<td>477531</td>
+</tr>
+<tr class="odd">
+<td>"Meyer_Twilight.txt"</td>
+<td>"given "</td>
+<td>"VVN"</td>
+<td>"ForceStressed"</td>
+<td>595246</td>
+<td>477531</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="generating-a-collocation-table" class="level3" data-number="6.3.2">
+<h3 data-number="6.3.2" class="anchored" data-anchor-id="generating-a-collocation-table"><span class="header-section-number">6.3.2</span> Generating a Collocation Table</h3>
+<p>The <code>coll_table()</code> function finds words that collocate with a node word:</p>
+<div id="6a395bb2" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find collocates of "me" (narrator Bella)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>me_collocates <span class="op">=</span> ds.coll_table(twilight_tokens, node_word<span class="op">=</span><span class="st">'me'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>me_collocates.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (10, 5)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Token</th>
+<th data-quarto-table-cell-role="th">Tag</th>
+<th data-quarto-table-cell-role="th">Freq Span</th>
+<th data-quarto-table-cell-role="th">Freq Total</th>
+<th data-quarto-table-cell-role="th">MI</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>u32</th>
+<th>u32</th>
+<th>f64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"trust"</td>
+<td>"VV0"</td>
+<td>10</td>
+<td>8</td>
+<td>0.487659</td>
+</tr>
+<tr class="even">
+<td>"he"</td>
+<td>"PPHS1"</td>
+<td>482</td>
+<td>2784</td>
+<td>0.471936</td>
+</tr>
+<tr class="odd">
+<td>"tell"</td>
+<td>"VV0"</td>
+<td>23</td>
+<td>34</td>
+<td>0.463423</td>
+</tr>
+<tr class="even">
+<td>"astonished"</td>
+<td>"VVN"</td>
+<td>2</td>
+<td>1</td>
+<td>0.459082</td>
+</tr>
+<tr class="odd">
+<td>"coherent"</td>
+<td>"JJ"</td>
+<td>2</td>
+<td>1</td>
+<td>0.459082</td>
+</tr>
+<tr class="even">
+<td>"frightening"</td>
+<td>"VVG"</td>
+<td>2</td>
+<td>1</td>
+<td>0.459082</td>
+</tr>
+<tr class="odd">
+<td>"insistent"</td>
+<td>"JJ"</td>
+<td>2</td>
+<td>1</td>
+<td>0.459082</td>
+</tr>
+<tr class="even">
+<td>"oath"</td>
+<td>"NN1"</td>
+<td>2</td>
+<td>1</td>
+<td>0.459082</td>
+</tr>
+<tr class="odd">
+<td>"offending"</td>
+<td>"VVG"</td>
+<td>2</td>
+<td>1</td>
+<td>0.459082</td>
+</tr>
+<tr class="even">
+<td>"paranoia"</td>
+<td>"NP1"</td>
+<td>2</td>
+<td>1</td>
+<td>0.459082</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><strong>Understanding the output:</strong></p>
+<ul>
+<li><code>Token</code>: The collocating word</li>
+<li><code>Tag</code>: Part-of-speech tag</li>
+<li><code>Freq Span</code>: Times this word appears within the span around “me”</li>
+<li><code>Freq Total</code>: Total times this word appears in the corpus</li>
+<li><code>MI</code>: Normalized PMI score (default)</li>
+</ul>
+</section>
+<section id="filtering-and-exploration" class="level3" data-number="6.3.3">
+<h3 data-number="6.3.3" class="anchored" data-anchor-id="filtering-and-exploration"><span class="header-section-number">6.3.3</span> Filtering and Exploration</h3>
+<p>Raw collocation tables are overwhelming. Strategic filtering reveals patterns:</p>
+<p><strong>Filter by part of speech—nouns near “me”:</strong></p>
+<div id="a04b5392" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>me_collocates.<span class="bu">filter</span>(pl.col(<span class="st">"Tag"</span>).<span class="bu">str</span>.starts_with(<span class="st">"NN"</span>)).head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (10, 5)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Token</th>
+<th data-quarto-table-cell-role="th">Tag</th>
+<th data-quarto-table-cell-role="th">Freq Span</th>
+<th data-quarto-table-cell-role="th">Freq Total</th>
+<th data-quarto-table-cell-role="th">MI</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>u32</th>
+<th>u32</th>
+<th>f64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"oath"</td>
+<td>"NN1"</td>
+<td>2</td>
+<td>1</td>
+<td>0.459082</td>
+</tr>
+<tr class="even">
+<td>"jump"</td>
+<td>"NN1"</td>
+<td>5</td>
+<td>4</td>
+<td>0.454196</td>
+</tr>
+<tr class="odd">
+<td>"think"</td>
+<td>"NN1"</td>
+<td>3</td>
+<td>2</td>
+<td>0.449514</td>
+</tr>
+<tr class="even">
+<td>"english"</td>
+<td>"NN1"</td>
+<td>7</td>
+<td>9</td>
+<td>0.421259</td>
+</tr>
+<tr class="odd">
+<td>"route"</td>
+<td>"NN1"</td>
+<td>2</td>
+<td>2</td>
+<td>0.39617</td>
+</tr>
+<tr class="even">
+<td>"arms"</td>
+<td>"NN2"</td>
+<td>21</td>
+<td>55</td>
+<td>0.392562</td>
+</tr>
+<tr class="odd">
+<td>"absurdities"</td>
+<td>"NN2"</td>
+<td>1</td>
+<td>1</td>
+<td>0.372722</td>
+</tr>
+<tr class="even">
+<td>"addiction"</td>
+<td>"NN1"</td>
+<td>1</td>
+<td>1</td>
+<td>0.372722</td>
+</tr>
+<tr class="odd">
+<td>"ambivalent"</td>
+<td>"NN1"</td>
+<td>1</td>
+<td>1</td>
+<td>0.372722</td>
+</tr>
+<tr class="even">
+<td>"aquarium"</td>
+<td>"NN1"</td>
+<td>1</td>
+<td>1</td>
+<td>0.372722</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><strong>Add frequency threshold to focus on substantive patterns:</strong></p>
+<div id="8a5b5ca5" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>me_collocates.<span class="bu">filter</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    pl.col(<span class="st">"Tag"</span>).<span class="bu">str</span>.starts_with(<span class="st">"NN"</span>),</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    pl.col(<span class="st">"Freq Total"</span>) <span class="op">&gt;</span> <span class="dv">10</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>).head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (10, 5)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Token</th>
+<th data-quarto-table-cell-role="th">Tag</th>
+<th data-quarto-table-cell-role="th">Freq Span</th>
+<th data-quarto-table-cell-role="th">Freq Total</th>
+<th data-quarto-table-cell-role="th">MI</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>u32</th>
+<th>u32</th>
+<th>f64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"arms"</td>
+<td>"NN2"</td>
+<td>21</td>
+<td>55</td>
+<td>0.392562</td>
+</tr>
+<tr class="even">
+<td>"door"</td>
+<td>"NN1"</td>
+<td>34</td>
+<td>166</td>
+<td>0.339577</td>
+</tr>
+<tr class="odd">
+<td>"mom"</td>
+<td>"NN1"</td>
+<td>16</td>
+<td>62</td>
+<td>0.336793</td>
+</tr>
+<tr class="even">
+<td>"chest"</td>
+<td>"NN1"</td>
+<td>8</td>
+<td>25</td>
+<td>0.334889</td>
+</tr>
+<tr class="odd">
+<td>"surprise"</td>
+<td>"NN1"</td>
+<td>7</td>
+<td>23</td>
+<td>0.325174</td>
+</tr>
+<tr class="even">
+<td>"step"</td>
+<td>"NN1"</td>
+<td>6</td>
+<td>19</td>
+<td>0.323841</td>
+</tr>
+<tr class="odd">
+<td>"eyes"</td>
+<td>"NN2"</td>
+<td>70</td>
+<td>497</td>
+<td>0.322257</td>
+</tr>
+<tr class="even">
+<td>"look"</td>
+<td>"NN1"</td>
+<td>11</td>
+<td>44</td>
+<td>0.319834</td>
+</tr>
+<tr class="odd">
+<td>"minute"</td>
+<td>"NNT1"</td>
+<td>8</td>
+<td>36</td>
+<td>0.29703</td>
+</tr>
+<tr class="even">
+<td>"back"</td>
+<td>"NN1"</td>
+<td>15</td>
+<td>82</td>
+<td>0.296155</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><strong>Look at verbs (especially present participles -ing forms):</strong></p>
+<div id="3117231b" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>me_collocates.<span class="bu">filter</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    pl.col(<span class="st">"Tag"</span>) <span class="op">==</span> <span class="st">"VVG"</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    pl.col(<span class="st">"Freq Total"</span>) <span class="op">&gt;</span> <span class="dv">5</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>).head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (10, 5)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Token</th>
+<th data-quarto-table-cell-role="th">Tag</th>
+<th data-quarto-table-cell-role="th">Freq Span</th>
+<th data-quarto-table-cell-role="th">Freq Total</th>
+<th data-quarto-table-cell-role="th">MI</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>u32</th>
+<th>u32</th>
+<th>f64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"staring"</td>
+<td>"VVG"</td>
+<td>24</td>
+<td>62</td>
+<td>0.400315</td>
+</tr>
+<tr class="even">
+<td>"telling"</td>
+<td>"VVG"</td>
+<td>7</td>
+<td>13</td>
+<td>0.383602</td>
+</tr>
+<tr class="odd">
+<td>"speaking"</td>
+<td>"VVG"</td>
+<td>7</td>
+<td>14</td>
+<td>0.376012</td>
+</tr>
+<tr class="even">
+<td>"holding"</td>
+<td>"VVG"</td>
+<td>10</td>
+<td>23</td>
+<td>0.375412</td>
+</tr>
+<tr class="odd">
+<td>"waiting"</td>
+<td>"VVG"</td>
+<td>18</td>
+<td>64</td>
+<td>0.351044</td>
+</tr>
+<tr class="even">
+<td>"pulling"</td>
+<td>"VVG"</td>
+<td>7</td>
+<td>18</td>
+<td>0.350276</td>
+</tr>
+<tr class="odd">
+<td>"touching"</td>
+<td>"VVG"</td>
+<td>5</td>
+<td>13</td>
+<td>0.337515</td>
+</tr>
+<tr class="even">
+<td>"glancing"</td>
+<td>"VVG"</td>
+<td>4</td>
+<td>10</td>
+<td>0.334019</td>
+</tr>
+<tr class="odd">
+<td>"opening"</td>
+<td>"VVG"</td>
+<td>3</td>
+<td>7</td>
+<td>0.331466</td>
+</tr>
+<tr class="even">
+<td>"making"</td>
+<td>"VVG"</td>
+<td>8</td>
+<td>26</td>
+<td>0.330817</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="comparative-analysis" class="level3" data-number="6.3.4">
+<h3 data-number="6.3.4" class="anchored" data-anchor-id="comparative-analysis"><span class="header-section-number">6.3.4</span> Comparative Analysis</h3>
+<p>Collocations become more revealing when compared across different node words:</p>
+<div id="3cd10496" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Edward's collocates (love interest)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>edward_collocates <span class="op">=</span> ds.coll_table(twilight_tokens, node_word<span class="op">=</span><span class="st">'edward'</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Nouns around Edward</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>edward_collocates.<span class="bu">filter</span>(</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    pl.col(<span class="st">"Tag"</span>).<span class="bu">str</span>.starts_with(<span class="st">"NN"</span>),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    pl.col(<span class="st">"Freq Total"</span>) <span class="op">&gt;</span> <span class="dv">10</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>).head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (10, 5)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Token</th>
+<th data-quarto-table-cell-role="th">Tag</th>
+<th data-quarto-table-cell-role="th">Freq Span</th>
+<th data-quarto-table-cell-role="th">Freq Total</th>
+<th data-quarto-table-cell-role="th">MI</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>u32</th>
+<th>u32</th>
+<th>f64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"look"</td>
+<td>"NN1"</td>
+<td>7</td>
+<td>44</td>
+<td>0.388868</td>
+</tr>
+<tr class="even">
+<td>"step"</td>
+<td>"NN1"</td>
+<td>3</td>
+<td>19</td>
+<td>0.357109</td>
+</tr>
+<tr class="odd">
+<td>"shadows"</td>
+<td>"NN2"</td>
+<td>2</td>
+<td>11</td>
+<td>0.356772</td>
+</tr>
+<tr class="even">
+<td>"biology"</td>
+<td>"NN1"</td>
+<td>3</td>
+<td>21</td>
+<td>0.347678</td>
+</tr>
+<tr class="odd">
+<td>"matter"</td>
+<td>"NN1"</td>
+<td>2</td>
+<td>13</td>
+<td>0.341609</td>
+</tr>
+<tr class="even">
+<td>"gaze"</td>
+<td>"NN1"</td>
+<td>3</td>
+<td>24</td>
+<td>0.335095</td>
+</tr>
+<tr class="odd">
+<td>"engine"</td>
+<td>"NN1"</td>
+<td>3</td>
+<td>25</td>
+<td>0.331249</td>
+</tr>
+<tr class="even">
+<td>"boyfriend"</td>
+<td>"NN1"</td>
+<td>2</td>
+<td>15</td>
+<td>0.328621</td>
+</tr>
+<tr class="odd">
+<td>"horror"</td>
+<td>"NN1"</td>
+<td>2</td>
+<td>16</td>
+<td>0.322763</td>
+</tr>
+<tr class="even">
+<td>"plan"</td>
+<td>"NN1"</td>
+<td>2</td>
+<td>16</td>
+<td>0.322763</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><strong>What patterns emerge?</strong></p>
+<p>Compare the nouns around “me” vs.&nbsp;“edward”—do they reveal different narrative roles or descriptive patterns?</p>
+</section>
+</section>
+<section id="n-gram-clusters-fixed-sequences" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="n-gram-clusters-fixed-sequences"><span class="header-section-number">6.4</span> N-gram Clusters: Fixed Sequences</h2>
+<p>While <code>coll_table()</code> finds any words within a span, <code>clusters_by_token()</code> identifies <strong>fixed multi-word sequences</strong> (n-grams) anchored by your node word in a specific position.</p>
+<section id="grams-with-me-in-final-position" class="level3" data-number="6.4.1">
+<h3 data-number="6.4.1" class="anchored" data-anchor-id="grams-with-me-in-final-position"><span class="header-section-number">6.4.1</span> 2-grams with “me” in Final Position</h3>
+<div id="5c7088e8" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find patterns like "told me", "asked me"</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>me_clusters_2gram <span class="op">=</span> ds.clusters_by_token(twilight_tokens, <span class="st">"me"</span>, node_position<span class="op">=</span><span class="dv">2</span>, span<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>me_clusters_2gram.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (10, 7)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Token_1</th>
+<th data-quarto-table-cell-role="th">Token_2</th>
+<th data-quarto-table-cell-role="th">Tag_1</th>
+<th data-quarto-table-cell-role="th">Tag_2</th>
+<th data-quarto-table-cell-role="th">AF</th>
+<th data-quarto-table-cell-role="th">RF</th>
+<th data-quarto-table-cell-role="th">Range</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>u32</th>
+<th>f64</th>
+<th>f64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"at"</td>
+<td>"me"</td>
+<td>"II"</td>
+<td>"PPIO1"</td>
+<td>145</td>
+<td>1189.538623</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"to"</td>
+<td>"me"</td>
+<td>"II"</td>
+<td>"PPIO1"</td>
+<td>107</td>
+<td>877.797467</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"for"</td>
+<td>"me"</td>
+<td>"IF"</td>
+<td>"PPIO1"</td>
+<td>84</td>
+<td>689.11203</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"with"</td>
+<td>"me"</td>
+<td>"IW"</td>
+<td>"PPIO1"</td>
+<td>62</td>
+<td>508.630308</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"behind"</td>
+<td>"me"</td>
+<td>"II"</td>
+<td>"PPIO1"</td>
+<td>39</td>
+<td>319.944871</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"made"</td>
+<td>"me"</td>
+<td>"VVD"</td>
+<td>"PPIO1"</td>
+<td>32</td>
+<td>262.518869</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"toward"</td>
+<td>"me"</td>
+<td>"II"</td>
+<td>"PPIO1"</td>
+<td>29</td>
+<td>237.907725</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"on"</td>
+<td>"me"</td>
+<td>"II"</td>
+<td>"PPIO1"</td>
+<td>26</td>
+<td>213.296581</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"away from"</td>
+<td>"me"</td>
+<td>"II"</td>
+<td>"PPIO1"</td>
+<td>21</td>
+<td>172.278007</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"tell"</td>
+<td>"me"</td>
+<td>"VV0"</td>
+<td>"PPIO1"</td>
+<td>20</td>
+<td>164.074293</td>
+<td>100.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><strong>Interpreting cluster tables:</strong></p>
+<ul>
+<li><code>Token_1</code>, <code>Token_2</code>: The words in the n-gram</li>
+<li><code>Tag_1</code>, <code>Tag_2</code>: Part-of-speech tags for each position</li>
+<li><code>AF</code>: Absolute frequency (raw count)</li>
+<li><code>RF</code>: Relative frequency (per 100 tokens)</li>
+<li><code>Range</code>: Percentage of documents containing this cluster</li>
+</ul>
+</section>
+<section id="filtering-clusters-by-pattern" class="level3" data-number="6.4.2">
+<h3 data-number="6.4.2" class="anchored" data-anchor-id="filtering-clusters-by-pattern"><span class="header-section-number">6.4.2</span> Filtering Clusters by Pattern</h3>
+<p><strong>Find verbs preceding “me”:</strong></p>
+<div id="7637c810" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>me_clusters_2gram.<span class="bu">filter</span>(pl.col(<span class="st">"Tag_1"</span>) <span class="op">==</span> <span class="st">"VVG"</span>).head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (10, 7)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Token_1</th>
+<th data-quarto-table-cell-role="th">Token_2</th>
+<th data-quarto-table-cell-role="th">Tag_1</th>
+<th data-quarto-table-cell-role="th">Tag_2</th>
+<th data-quarto-table-cell-role="th">AF</th>
+<th data-quarto-table-cell-role="th">RF</th>
+<th data-quarto-table-cell-role="th">Range</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>u32</th>
+<th>f64</th>
+<th>f64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"watching"</td>
+<td>"me"</td>
+<td>"VVG"</td>
+<td>"PPIO1"</td>
+<td>9</td>
+<td>73.833432</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"telling"</td>
+<td>"me"</td>
+<td>"VVG"</td>
+<td>"PPIO1"</td>
+<td>7</td>
+<td>57.426002</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"pulling"</td>
+<td>"me"</td>
+<td>"VVG"</td>
+<td>"PPIO1"</td>
+<td>6</td>
+<td>49.222288</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"holding"</td>
+<td>"me"</td>
+<td>"VVG"</td>
+<td>"PPIO1"</td>
+<td>6</td>
+<td>49.222288</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"making"</td>
+<td>"me"</td>
+<td>"VVG"</td>
+<td>"PPIO1"</td>
+<td>5</td>
+<td>41.018573</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"taking"</td>
+<td>"me"</td>
+<td>"VVG"</td>
+<td>"PPIO1"</td>
+<td>4</td>
+<td>32.814859</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"leaving"</td>
+<td>"me"</td>
+<td>"VVG"</td>
+<td>"PPIO1"</td>
+<td>4</td>
+<td>32.814859</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"touching"</td>
+<td>"me"</td>
+<td>"VVG"</td>
+<td>"PPIO1"</td>
+<td>3</td>
+<td>24.611144</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"dragging"</td>
+<td>"me"</td>
+<td>"VVG"</td>
+<td>"PPIO1"</td>
+<td>2</td>
+<td>16.407429</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"forcing"</td>
+<td>"me"</td>
+<td>"VVG"</td>
+<td>"PPIO1"</td>
+<td>2</td>
+<td>16.407429</td>
+<td>100.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="grams-complex-patterns" class="level3" data-number="6.4.3">
+<h3 data-number="6.4.3" class="anchored" data-anchor-id="grams-complex-patterns"><span class="header-section-number">6.4.3</span> 3-grams: Complex Patterns</h3>
+<p>Longer n-grams capture more complex grammatical structures:</p>
+<div id="1cd1cf02" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find 3-word sequences with "he" in first position</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>he_me_clusters <span class="op">=</span> ds.clusters_by_token(twilight_tokens, <span class="st">"he"</span>, node_position<span class="op">=</span><span class="dv">1</span>, span<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for those with "me" in third position</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>he_me_clusters <span class="op">=</span> he_me_clusters.<span class="bu">filter</span>(pl.col(<span class="st">"Token_3"</span>) <span class="op">==</span> <span class="st">"me"</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>he_me_clusters.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (10, 9)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Token_1</th>
+<th data-quarto-table-cell-role="th">Token_2</th>
+<th data-quarto-table-cell-role="th">Token_3</th>
+<th data-quarto-table-cell-role="th">Tag_1</th>
+<th data-quarto-table-cell-role="th">Tag_2</th>
+<th data-quarto-table-cell-role="th">Tag_3</th>
+<th data-quarto-table-cell-role="th">AF</th>
+<th data-quarto-table-cell-role="th">RF</th>
+<th data-quarto-table-cell-role="th">Range</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>u32</th>
+<th>f64</th>
+<th>f64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"he"</td>
+<td>"reminded"</td>
+<td>"me"</td>
+<td>"PPHS1"</td>
+<td>"VVD"</td>
+<td>"PPIO1"</td>
+<td>9</td>
+<td>73.833432</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"he"</td>
+<td>"ignored"</td>
+<td>"me"</td>
+<td>"PPHS1"</td>
+<td>"VVD"</td>
+<td>"PPIO1"</td>
+<td>7</td>
+<td>57.426002</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"he"</td>
+<td>"pulled"</td>
+<td>"me"</td>
+<td>"PPHS1"</td>
+<td>"VVD"</td>
+<td>"PPIO1"</td>
+<td>6</td>
+<td>49.222288</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"he"</td>
+<td>"told"</td>
+<td>"me"</td>
+<td>"PPHS1"</td>
+<td>"VVD"</td>
+<td>"PPIO1"</td>
+<td>6</td>
+<td>49.222288</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"he"</td>
+<td>"held"</td>
+<td>"me"</td>
+<td>"PPHS1"</td>
+<td>"VVD"</td>
+<td>"PPIO1"</td>
+<td>5</td>
+<td>41.018573</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"he"</td>
+<td>"walked"</td>
+<td>"me"</td>
+<td>"PPHS1"</td>
+<td>"VVD"</td>
+<td>"PPIO1"</td>
+<td>4</td>
+<td>32.814859</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"he"</td>
+<td>"caught"</td>
+<td>"me"</td>
+<td>"PPHS1"</td>
+<td>"VVD"</td>
+<td>"PPIO1"</td>
+<td>4</td>
+<td>32.814859</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"he"</td>
+<td>"asked"</td>
+<td>"me"</td>
+<td>"PPHS1"</td>
+<td>"VVD"</td>
+<td>"PPIO1"</td>
+<td>4</td>
+<td>32.814859</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"he"</td>
+<td>"led"</td>
+<td>"me"</td>
+<td>"PPHS1"</td>
+<td>"VVD"</td>
+<td>"PPIO1"</td>
+<td>3</td>
+<td>24.611144</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"he"</td>
+<td>"gave"</td>
+<td>"me"</td>
+<td>"PPHS1"</td>
+<td>"VVD"</td>
+<td>"PPIO1"</td>
+<td>3</td>
+<td>24.611144</td>
+<td>100.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><strong>Comparing directional patterns:</strong></p>
+<div id="6659bc33" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Now reverse: "I _ him" patterns</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>i_him_clusters <span class="op">=</span> ds.clusters_by_token(twilight_tokens, <span class="st">"I"</span>, node_position<span class="op">=</span><span class="dv">1</span>, span<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>i_him_clusters <span class="op">=</span> i_him_clusters.<span class="bu">filter</span>(pl.col(<span class="st">"Token_3"</span>) <span class="op">==</span> <span class="st">"him"</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>i_him_clusters.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (10, 9)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Token_1</th>
+<th data-quarto-table-cell-role="th">Token_2</th>
+<th data-quarto-table-cell-role="th">Token_3</th>
+<th data-quarto-table-cell-role="th">Tag_1</th>
+<th data-quarto-table-cell-role="th">Tag_2</th>
+<th data-quarto-table-cell-role="th">Tag_3</th>
+<th data-quarto-table-cell-role="th">AF</th>
+<th data-quarto-table-cell-role="th">RF</th>
+<th data-quarto-table-cell-role="th">Range</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>u32</th>
+<th>f64</th>
+<th>f64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"i"</td>
+<td>"reminded"</td>
+<td>"him"</td>
+<td>"PPIS1"</td>
+<td>"VVD"</td>
+<td>"PPHO1"</td>
+<td>12</td>
+<td>98.444576</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"i"</td>
+<td>"assured"</td>
+<td>"him"</td>
+<td>"PPIS1"</td>
+<td>"VVD"</td>
+<td>"PPHO1"</td>
+<td>7</td>
+<td>57.426002</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"i"</td>
+<td>"watched"</td>
+<td>"him"</td>
+<td>"PPIS1"</td>
+<td>"VVD"</td>
+<td>"PPHO1"</td>
+<td>6</td>
+<td>49.222288</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"i"</td>
+<td>"told"</td>
+<td>"him"</td>
+<td>"PPIS1"</td>
+<td>"VVD"</td>
+<td>"PPHO1"</td>
+<td>6</td>
+<td>49.222288</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"i"</td>
+<td>"warned"</td>
+<td>"him"</td>
+<td>"PPIS1"</td>
+<td>"VVD"</td>
+<td>"PPHO1"</td>
+<td>6</td>
+<td>49.222288</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"i"</td>
+<td>"saw"</td>
+<td>"him"</td>
+<td>"PPIS1"</td>
+<td>"VVD"</td>
+<td>"PPHO1"</td>
+<td>5</td>
+<td>41.018573</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"i"</td>
+<td>"ignored"</td>
+<td>"him"</td>
+<td>"PPIS1"</td>
+<td>"VVD"</td>
+<td>"PPHO1"</td>
+<td>4</td>
+<td>32.814859</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"i"</td>
+<td>"felt"</td>
+<td>"him"</td>
+<td>"PPIS1"</td>
+<td>"VVD"</td>
+<td>"PPHO1"</td>
+<td>3</td>
+<td>24.611144</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"i"</td>
+<td>"imagined"</td>
+<td>"him"</td>
+<td>"PPIS1"</td>
+<td>"VVD"</td>
+<td>"PPHO1"</td>
+<td>2</td>
+<td>16.407429</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"i"</td>
+<td>"asked"</td>
+<td>"him"</td>
+<td>"PPIS1"</td>
+<td>"VVD"</td>
+<td>"PPHO1"</td>
+<td>2</td>
+<td>16.407429</td>
+<td>100.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="computational-reasoning-from-patterns-to-insights" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="computational-reasoning-from-patterns-to-insights"><span class="header-section-number">6.5</span> Computational Reasoning: From Patterns to Insights</h2>
+<section id="research-workflow" class="level3" data-number="6.5.1">
+<h3 data-number="6.5.1" class="anchored" data-anchor-id="research-workflow"><span class="header-section-number">6.5.1</span> Research Workflow</h3>
+<p>Collocation analysis supports multiple research questions:</p>
+<p><strong>1. Semantic prosody and connotation</strong></p>
+<p>What emotional or evaluative tone do words carry through their collocates?</p>
+<ul>
+<li>Search for a node word (e.g., “commit”)</li>
+<li>Examine noun collocates: what does it commit? (crimes, suicide, resources, time)</li>
+<li>Conclusion: Different senses have different prosodies</li>
+</ul>
+<p><strong>2. Character construction</strong></p>
+<p>How are characters described through language patterns around their names?</p>
+<ul>
+<li>Generate collocates for character names</li>
+<li>Compare verb patterns: Who does what? Who has things done to them?</li>
+<li>Conclusion: Collocational profiles reveal agency, power, relationships</li>
+</ul>
+<p><strong>3. Genre conventions</strong></p>
+<p>What phraseological patterns define a genre?</p>
+<ul>
+<li>Find collocates of genre-specific terms</li>
+<li>Compare across corpora (romance vs.&nbsp;thriller, academic vs.&nbsp;news)</li>
+<li>Conclusion: Genres have distinctive collocational fingerprints</li>
+</ul>
+<p><strong>4. Diachronic change</strong></p>
+<p>How do word meanings shift through changing collocational patterns?</p>
+<ul>
+<li>Track collocates of a word across time periods</li>
+<li>Note which partners appear/disappear</li>
+<li>Conclusion: Meaning is usage, and usage patterns change</li>
+</ul>
+</section>
+<section id="case-study-narrative-agency-in-twilight" class="level3" data-number="6.5.2">
+<h3 data-number="6.5.2" class="anchored" data-anchor-id="case-study-narrative-agency-in-twilight"><span class="header-section-number">6.5.2</span> Case Study: Narrative Agency in Twilight</h3>
+<p>Let’s explore power dynamics through pronoun-verb clusters:</p>
+<p><strong>Who does things? Who has things done to them?</strong></p>
+<div id="e30f5f51" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Actions Bella (I) performs toward Edward (him)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>i_verb_him <span class="op">=</span> ds.clusters_by_token(twilight_tokens, <span class="st">"I"</span>, node_position<span class="op">=</span><span class="dv">1</span>, span<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>i_verb_him <span class="op">=</span> i_verb_him.<span class="bu">filter</span>(pl.col(<span class="st">"Token_3"</span>) <span class="op">==</span> <span class="st">"him"</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Top 5 "I [verb] him" patterns</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>i_verb_him.head(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 9)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Token_1</th>
+<th data-quarto-table-cell-role="th">Token_2</th>
+<th data-quarto-table-cell-role="th">Token_3</th>
+<th data-quarto-table-cell-role="th">Tag_1</th>
+<th data-quarto-table-cell-role="th">Tag_2</th>
+<th data-quarto-table-cell-role="th">Tag_3</th>
+<th data-quarto-table-cell-role="th">AF</th>
+<th data-quarto-table-cell-role="th">RF</th>
+<th data-quarto-table-cell-role="th">Range</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>u32</th>
+<th>f64</th>
+<th>f64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"i"</td>
+<td>"reminded"</td>
+<td>"him"</td>
+<td>"PPIS1"</td>
+<td>"VVD"</td>
+<td>"PPHO1"</td>
+<td>12</td>
+<td>98.444576</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"i"</td>
+<td>"assured"</td>
+<td>"him"</td>
+<td>"PPIS1"</td>
+<td>"VVD"</td>
+<td>"PPHO1"</td>
+<td>7</td>
+<td>57.426002</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"i"</td>
+<td>"warned"</td>
+<td>"him"</td>
+<td>"PPIS1"</td>
+<td>"VVD"</td>
+<td>"PPHO1"</td>
+<td>6</td>
+<td>49.222288</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"i"</td>
+<td>"watched"</td>
+<td>"him"</td>
+<td>"PPIS1"</td>
+<td>"VVD"</td>
+<td>"PPHO1"</td>
+<td>6</td>
+<td>49.222288</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"i"</td>
+<td>"told"</td>
+<td>"him"</td>
+<td>"PPIS1"</td>
+<td>"VVD"</td>
+<td>"PPHO1"</td>
+<td>6</td>
+<td>49.222288</td>
+<td>100.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="ebe3e617" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Actions Edward (he) performs toward Bella (me)</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>he_verb_me <span class="op">=</span> ds.clusters_by_token(twilight_tokens, <span class="st">"he"</span>, node_position<span class="op">=</span><span class="dv">1</span>, span<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>he_verb_me <span class="op">=</span> he_verb_me.<span class="bu">filter</span>(pl.col(<span class="st">"Token_3"</span>) <span class="op">==</span> <span class="st">"me"</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Top 5 "he [verb] me" patterns</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>he_verb_me.head(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 9)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Token_1</th>
+<th data-quarto-table-cell-role="th">Token_2</th>
+<th data-quarto-table-cell-role="th">Token_3</th>
+<th data-quarto-table-cell-role="th">Tag_1</th>
+<th data-quarto-table-cell-role="th">Tag_2</th>
+<th data-quarto-table-cell-role="th">Tag_3</th>
+<th data-quarto-table-cell-role="th">AF</th>
+<th data-quarto-table-cell-role="th">RF</th>
+<th data-quarto-table-cell-role="th">Range</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>u32</th>
+<th>f64</th>
+<th>f64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"he"</td>
+<td>"reminded"</td>
+<td>"me"</td>
+<td>"PPHS1"</td>
+<td>"VVD"</td>
+<td>"PPIO1"</td>
+<td>9</td>
+<td>73.833432</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"he"</td>
+<td>"ignored"</td>
+<td>"me"</td>
+<td>"PPHS1"</td>
+<td>"VVD"</td>
+<td>"PPIO1"</td>
+<td>7</td>
+<td>57.426002</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"he"</td>
+<td>"pulled"</td>
+<td>"me"</td>
+<td>"PPHS1"</td>
+<td>"VVD"</td>
+<td>"PPIO1"</td>
+<td>6</td>
+<td>49.222288</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"he"</td>
+<td>"told"</td>
+<td>"me"</td>
+<td>"PPHS1"</td>
+<td>"VVD"</td>
+<td>"PPIO1"</td>
+<td>6</td>
+<td>49.222288</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"he"</td>
+<td>"held"</td>
+<td>"me"</td>
+<td>"PPHS1"</td>
+<td>"VVD"</td>
+<td>"PPIO1"</td>
+<td>5</td>
+<td>41.018573</td>
+<td>100.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><strong>Questions to ask:</strong></p>
+<ul>
+<li>Are the verbs symmetric? Or does one character primarily act while the other is acted upon?</li>
+<li>What verbs appear? Active (push, pull) vs.&nbsp;perceptual (look, see) vs.&nbsp;communicative (tell, ask)?</li>
+<li>What does this reveal about power, agency, or narrative focalization?</li>
+</ul>
+<p><strong>Interpreting the patterns</strong>: If “I [verb] him” shows mostly perceptual verbs (“saw him,” “watched him”) while “he [verb] me” shows speech acts (“told me,” “asked me”), this suggests asymmetric communicative roles—one character observes while the other directs discourse. This isn’t just about frequency; it’s about <strong>what kinds of actions</strong> each character performs, which can reveal narrative power structures even in a first-person narration.</p>
+</section>
+<section id="visualization-comparing-collocational-profiles" class="level3" data-number="6.5.3">
+<h3 data-number="6.5.3" class="anchored" data-anchor-id="visualization-comparing-collocational-profiles"><span class="header-section-number">6.5.3</span> Visualization: Comparing Collocational Profiles</h3>
+<p>We can visualize differences between node words by comparing their top collocates:</p>
+<div id="cell-fig-collocate-comparison" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get top nouns for each</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>me_nouns <span class="op">=</span> (me_collocates</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">filter</span>(pl.col(<span class="st">"Tag"</span>).<span class="bu">str</span>.starts_with(<span class="st">"NN"</span>), pl.col(<span class="st">"Freq Total"</span>) <span class="op">&gt;</span> <span class="dv">15</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    .sort(<span class="st">"MI"</span>, descending<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    .head(<span class="dv">10</span>))</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>edward_nouns <span class="op">=</span> (edward_collocates</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">filter</span>(pl.col(<span class="st">"Tag"</span>).<span class="bu">str</span>.starts_with(<span class="st">"NN"</span>), pl.col(<span class="st">"Freq Total"</span>) <span class="op">&gt;</span> <span class="dv">15</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    .sort(<span class="st">"MI"</span>, descending<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    .head(<span class="dv">10</span>))</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Create side-by-side bar charts</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">5</span>))</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Me collocates</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>me_tokens <span class="op">=</span> me_nouns.get_column(<span class="st">"Token"</span>).to_list()</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>me_mi <span class="op">=</span> me_nouns.get_column(<span class="st">"MI"</span>).to_list()</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>ax1.barh(<span class="bu">range</span>(<span class="bu">len</span>(me_tokens)), me_mi, color<span class="op">=</span><span class="st">'steelblue'</span>)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>ax1.set_yticks(<span class="bu">range</span>(<span class="bu">len</span>(me_tokens)))</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>ax1.set_yticklabels(me_tokens)</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>ax1.set_xlabel(<span class="st">'NPMI Score'</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">"Noun collocates of 'me'"</span>, fontsize<span class="op">=</span><span class="dv">12</span>, weight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>ax1.invert_yaxis()</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Edward collocates  </span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>edward_tokens <span class="op">=</span> edward_nouns.get_column(<span class="st">"Token"</span>).to_list()</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>edward_mi <span class="op">=</span> edward_nouns.get_column(<span class="st">"MI"</span>).to_list()</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>ax2.barh(<span class="bu">range</span>(<span class="bu">len</span>(edward_tokens)), edward_mi, color<span class="op">=</span><span class="st">'darkred'</span>)</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>ax2.set_yticks(<span class="bu">range</span>(<span class="bu">len</span>(edward_tokens)))</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>ax2.set_yticklabels(edward_tokens)</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>ax2.set_xlabel(<span class="st">'NPMI Score'</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">"Noun collocates of 'edward'"</span>, fontsize<span class="op">=</span><span class="dv">12</span>, weight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>ax2.invert_yaxis()</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-collocate-comparison" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-collocate-comparison-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="collocations_files/figure-html/fig-collocate-comparison-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-collocate-comparison-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.1: Comparing noun collocates of ‘me’ vs.&nbsp;‘edward’ (Freq Total &gt; 15)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="when-to-use-collocation-analysis" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="when-to-use-collocation-analysis"><span class="header-section-number">6.6</span> When to Use Collocation Analysis</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Well-Suited Research Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Collocation analysis works best when you want to:</p>
+<ul>
+<li><strong>Explore semantic prosody</strong>: What connotations does a word carry?</li>
+<li><strong>Study phraseology</strong>: What are the formulaic patterns in a genre or register?</li>
+<li><strong>Character analysis</strong>: How are characters constructed through language around their names?</li>
+<li><strong>Compare varieties</strong>: How do different authors, genres, or time periods use the same word differently?</li>
+<li><strong>Hypothesis generation</strong>: Find unexpected patterns to investigate further</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Limitations and Alternatives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>When collocation analysis struggles:</strong></p>
+<ul>
+<li><strong>Fixed phrases</strong>: If you want exact sequences, use n-gram extraction (not collocation windows)</li>
+<li><strong>Grammatical relations</strong>: Collocation doesn’t capture syntax—use dependency parsing instead</li>
+<li><strong>Meaning disambiguation</strong>: High-frequency words (like “get”, “make”) have many senses; collocates mix them all</li>
+<li><strong>Directionality</strong>: Basic collocation treats left and right context equally; sometimes direction matters</li>
+</ul>
+<p><strong>Alternative methods:</strong></p>
+<ul>
+<li>Use <code>clusters_by_token()</code> for fixed n-grams</li>
+<li>Use dependency parsing for grammatical relationships</li>
+<li>Use keyword analysis (keyness) for comparing corpora</li>
+<li>Use embeddings (word2vec) for semantic similarity beyond co-occurrence</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="common-pitfalls" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="common-pitfalls"><span class="header-section-number">6.7</span> Common Pitfalls</h2>
+<p><strong>1. Ignoring frequency thresholds</strong></p>
+<p>A word appearing 3 times total can have a high MI score if 2 of those are near your node word. Always filter by <code>Freq Total</code> or <code>Freq Span</code> to ensure robustness.</p>
+<p><strong>2. Misinterpreting association measures</strong></p>
+<p>PMI/NPMI measures <em>strength of association</em>, not frequency. A collocate with NPMI = 0.8 but Freq Span = 2 is a strong but rare pairing. Consider both strength and frequency.</p>
+<p><strong>3. Assuming causality or meaning</strong></p>
+<p>Collocation shows co-occurrence patterns, not semantic relationships. “Doctor” and “patient” collocate not because they mean the same thing, but because they appear in related contexts. Interpretation requires close reading.</p>
+<p><strong>4. Over-relying on default spans</strong></p>
+<p>The 4-4 window is conventional, but not universal. Grammatical collocations (like verb-preposition pairs) might need 1-2 words; semantic associations might need 5-8. Experiment with span sizes.</p>
+<p><strong>5. Treating all collocates equally</strong></p>
+<p>Part-of-speech matters enormously. Nouns, verbs, adjectives, and function words reveal different patterns. Always filter by POS tags to focus analysis.</p>
+<p><strong>6. Forgetting about directionality</strong></p>
+<p>Some relationships are asymmetric. A word might appear frequently <em>before</em> your node but rarely <em>after</em>. Use position-specific n-grams when direction matters.</p>
+</section>
+<section id="what-to-do-after-finding-collocations" class="level2" data-number="6.8">
+<h2 data-number="6.8" class="anchored" data-anchor-id="what-to-do-after-finding-collocations"><span class="header-section-number">6.8</span> What to Do After Finding Collocations</h2>
+<p>Collocations are a discovery tool, not an endpoint. Here’s how to build on initial findings:</p>
+<section id="concordancing-for-context" class="level3" data-number="6.8.1">
+<h3 data-number="6.8.1" class="anchored" data-anchor-id="concordancing-for-context"><span class="header-section-number">6.8.1</span> 1. Concordancing for Context</h3>
+<p>Use KWIC (Key Words in Context) to see collocates in actual sentences:</p>
+<div id="f43beaf9" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># See "told me" in context</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>ds.kwic_center_node(twilight_tokens, <span class="st">"told me"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (0, 4)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Doc ID</th>
+<th data-quarto-table-cell-role="th">Pre-Node</th>
+<th data-quarto-table-cell-role="th">Node</th>
+<th data-quarto-table-cell-role="th">Post-Node</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>This grounds statistical patterns in readable text.</p>
+</section>
+<section id="expand-to-related-words" class="level3" data-number="6.8.2">
+<h3 data-number="6.8.2" class="anchored" data-anchor-id="expand-to-related-words"><span class="header-section-number">6.8.2</span> 2. Expand to Related Words</h3>
+<p>If “told me” is frequent, check related verbs:</p>
+<div id="7b60099f" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># What other communication verbs appear with "me"?</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>me_collocates.<span class="bu">filter</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    pl.col(<span class="st">"Tag"</span>).<span class="bu">str</span>.contains(<span class="st">"VV"</span>),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    pl.col(<span class="st">"Token"</span>).<span class="bu">str</span>.contains(<span class="st">"(tell|ask|say|whisper|murmur)"</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>).head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (10, 5)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Token</th>
+<th data-quarto-table-cell-role="th">Tag</th>
+<th data-quarto-table-cell-role="th">Freq Span</th>
+<th data-quarto-table-cell-role="th">Freq Total</th>
+<th data-quarto-table-cell-role="th">MI</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>u32</th>
+<th>u32</th>
+<th>f64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"tell"</td>
+<td>"VV0"</td>
+<td>23</td>
+<td>34</td>
+<td>0.463423</td>
+</tr>
+<tr class="even">
+<td>"telling"</td>
+<td>"VVG"</td>
+<td>7</td>
+<td>13</td>
+<td>0.383602</td>
+</tr>
+<tr class="odd">
+<td>"tell"</td>
+<td>"VVI"</td>
+<td>20</td>
+<td>84</td>
+<td>0.336175</td>
+</tr>
+<tr class="even">
+<td>"ask"</td>
+<td>"VV0"</td>
+<td>2</td>
+<td>5</td>
+<td>0.313005</td>
+</tr>
+<tr class="odd">
+<td>"asked"</td>
+<td>"VVD"</td>
+<td>37</td>
+<td>320</td>
+<td>0.272532</td>
+</tr>
+<tr class="even">
+<td>"ask"</td>
+<td>"VVI"</td>
+<td>7</td>
+<td>45</td>
+<td>0.256442</td>
+</tr>
+<tr class="odd">
+<td>"asked"</td>
+<td>"VVN"</td>
+<td>2</td>
+<td>10</td>
+<td>0.250094</td>
+</tr>
+<tr class="even">
+<td>"say"</td>
+<td>"VV0"</td>
+<td>3</td>
+<td>18</td>
+<td>0.242469</td>
+</tr>
+<tr class="odd">
+<td>"whispered"</td>
+<td>"VVD"</td>
+<td>6</td>
+<td>61</td>
+<td>0.206247</td>
+</tr>
+<tr class="even">
+<td>"murmured"</td>
+<td>"VVD"</td>
+<td>4</td>
+<td>42</td>
+<td>0.195023</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="compare-across-subcorpora" class="level3" data-number="6.8.3">
+<h3 data-number="6.8.3" class="anchored" data-anchor-id="compare-across-subcorpora"><span class="header-section-number">6.8.3</span> 3. Compare Across Subcorpora</h3>
+<p>If you have multiple books, authors, or time periods:</p>
+<ul>
+<li>Generate collocates for each subcorpus separately</li>
+<li>Compare: which collocates are shared? Which are distinctive?</li>
+<li>Use keyness analysis to find subcorpus-specific collocates</li>
+</ul>
+</section>
+<section id="network-analysis" class="level3" data-number="6.8.4">
+<h3 data-number="6.8.4" class="anchored" data-anchor-id="network-analysis"><span class="header-section-number">6.8.4</span> 4. Network Analysis</h3>
+<p>Collocations form networks—words that collocate with each other create clusters:</p>
+<ul>
+<li>Node A collocates with B, B with C, C with A = semantic field</li>
+<li>Map these networks to visualize lexical domains</li>
+</ul>
+</section>
+<section id="qualitative-deep-dive" class="level3" data-number="6.8.5">
+<h3 data-number="6.8.5" class="anchored" data-anchor-id="qualitative-deep-dive"><span class="header-section-number">6.8.5</span> 5. Qualitative Deep Dive</h3>
+<p>Statistics show you <em>what</em> patterns exist. Close reading explains <em>why</em>:</p>
+<ul>
+<li>Read passages containing key collocations</li>
+<li>Consider narrative function, character development, thematic resonance</li>
+<li>Connect computational patterns to literary interpretation</li>
+</ul>
+</section>
+</section>
+<section id="conclusion" class="level2" data-number="6.9">
+<h2 data-number="6.9" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">6.9</span> Conclusion</h2>
+<p>Collocation analysis reveals the phraseological fabric of language—patterns that native speakers know implicitly but rarely articulate. By quantifying word attraction, we can:</p>
+<ul>
+<li><strong>Make the invisible visible</strong>: Surface patterns that operate below conscious awareness</li>
+<li><strong>Scale interpretation</strong>: Analyze thousands of instances that close reading alone couldn’t cover</li>
+<li><strong>Generate hypotheses</strong>: Find unexpected patterns worth investigating qualitatively</li>
+<li><strong>Compare systematically</strong>: Contrast how different texts, authors, or time periods use the same words</li>
+</ul>
+<p><strong>The computational reasoning workflow</strong>:</p>
+<ol type="1">
+<li><strong>Identify the pattern</strong> (high MI score, unusual collocates)</li>
+<li><strong>Examine the evidence</strong> (check frequency thresholds, read concordances)</li>
+<li><strong>Ask why it matters</strong> (connect to research question)</li>
+<li><strong>Contextualize</strong> (compare across corpora, consider genre/register)</li>
+<li><strong>Interpret cautiously</strong> (collocation shows attraction, not causation or meaning)</li>
+</ol>
+<p>Remember: statistical association is the starting point for investigation, not the conclusion. The goal isn’t to reduce texts to numbers, but to use numbers to <strong>ask better questions</strong> about texts.</p>
+<ul>
+<li>Make <strong>implicit patterns explicit</strong></li>
+<li><strong>Compare</strong> texts, authors, genres, or time periods systematically<br>
+</li>
+<li><strong>Generate hypotheses</strong> about meaning, style, and usage</li>
+<li><strong>Ground</strong> interpretation in observable linguistic behavior</li>
+</ul>
+<p>The power of collocation analysis lies not in replacing close reading, but in directing it—showing you <em>where</em> to look more carefully in large corpora.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Connecting Concepts
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>From keyness to collocations</strong>: Keyness finds distinctive <em>words</em>; collocations find distinctive <em>word combinations</em></li>
+<li><strong>From collocations to n-grams</strong>: Collocation windows capture associations; n-grams capture fixed sequences</li>
+<li><strong>From collocations to embeddings</strong>: Both measure word relationships, but embeddings (Tutorial 9) capture semantic similarity beyond direct co-occurrence</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="further-reading" class="level2" data-number="6.10">
+<h2 data-number="6.10" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">6.10</span> Further Reading</h2>
+<p>For deeper exploration of collocation methods and interpretation:</p>
+<ul>
+<li>Stubbs, M. (2001). <em>Words and Phrases: Corpus Studies of Lexical Semantics</em>. Oxford: Blackwell. [Classic treatment of semantic prosody]</li>
+<li>Sinclair, J. (1991). <em>Corpus, Concordance, Collocation</em>. Oxford: Oxford University Press. [Foundational work on phraseology]</li>
+<li>Gries, S. Th. (2013). “50-something years of work on collocations.” <em>International Journal of Corpus Linguistics</em> 18(1): 137-166. [Survey of measures and methods]</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../tutorials/keyness.html" class="pagination-link" aria-label="Keyness">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Keyness</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../tutorials/time-series.html" class="pagination-link" aria-label="Time Series Analysis">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Time Series Analysis</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/browndw/humanities_analytics/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

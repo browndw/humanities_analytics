@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.557">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Methods in Humanities Analytics - Coffee Break Experiment #3: Final Project Pilot Study</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../reports/final-project.html" rel="next">
+<link href="../reports/cbe_02.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../images/text_analysis.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Methods in Humanities Analytics</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/browndw/humanities_analytics" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reports/cbe_01.html">Reports</a></li><li class="breadcrumb-item"><a href="../reports/cbe_03.html">Coffee Break Experiment #3: Final Project Pilot Study</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/sentiment-and-syuzhet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Texts, Algorithms, and Black-Boxes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/corpus-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Corpus Basics: Tokenization and Processing Pipelines</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/spacy-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NLP Processing with spaCy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/frequency-and-distributions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Distributions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Core Methods</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/keyness.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Keyness</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/collocations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Collocations and N-grams</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/time-series.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Time Series Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/topic-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Topic Modeling</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Advanced Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/categorical-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">ANOVA and R²: Comparing Groups and Explaining Variance</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/cluster-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Clustering Methods</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/correlations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Correlation and Multi-Collinearity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/multi-dimensional-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Multi-Dimensional Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/contextual-embeddings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Contextual Embeddings and Transformers</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/classification-federalist-papers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Classification &amp; Authorship Attribution</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Reports</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #1: From Curiosity to Visualization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #2: From Results to Research</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_03.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Coffee Break Experiment #3: Final Project Pilot Study</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/final-project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Final Project: Independent Corpus Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/statistical-reporting-guide.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Statistical Reporting Guide</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Course Resources</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/using-colab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Using Google Colab</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../resources/packages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Python Packages for This Course</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../resources/data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Course Data Resources</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#part-1-approaching-cbe-3-as-a-pilot-study" id="toc-part-1-approaching-cbe-3-as-a-pilot-study" class="nav-link active" data-scroll-target="#part-1-approaching-cbe-3-as-a-pilot-study">Part 1: Approaching CBE #3 as a Pilot Study</a>
+  <ul class="collapse">
+  <li><a href="#two-strategic-approaches" id="toc-two-strategic-approaches" class="nav-link" data-scroll-target="#two-strategic-approaches">Two Strategic Approaches</a></li>
+  <li><a href="#what-makes-a-good-pilot-study" id="toc-what-makes-a-good-pilot-study" class="nav-link" data-scroll-target="#what-makes-a-good-pilot-study">What Makes a Good Pilot Study?</a></li>
+  <li><a href="#scoping-your-pilot-appropriately" id="toc-scoping-your-pilot-appropriately" class="nav-link" data-scroll-target="#scoping-your-pilot-appropriately">Scoping Your Pilot Appropriately</a></li>
+  </ul></li>
+  <li><a href="#part-2-connecting-to-course-materials" id="toc-part-2-connecting-to-course-materials" class="nav-link" data-scroll-target="#part-2-connecting-to-course-materials">Part 2: Connecting to Course Materials</a>
+  <ul class="collapse">
+  <li><a href="#core-analysis-methods" id="toc-core-analysis-methods" class="nav-link" data-scroll-target="#core-analysis-methods">Core Analysis Methods</a></li>
+  <li><a href="#advanced-methods" id="toc-advanced-methods" class="nav-link" data-scroll-target="#advanced-methods">Advanced Methods</a></li>
+  <li><a href="#supporting-concepts" id="toc-supporting-concepts" class="nav-link" data-scroll-target="#supporting-concepts">Supporting Concepts</a></li>
+  <li><a href="#choosing-your-methods" id="toc-choosing-your-methods" class="nav-link" data-scroll-target="#choosing-your-methods">Choosing Your Method(s)</a></li>
+  </ul></li>
+  <li><a href="#part-3-data-collection-and-processing" id="toc-part-3-data-collection-and-processing" class="nav-link" data-scroll-target="#part-3-data-collection-and-processing">Part 3: Data Collection and Processing</a>
+  <ul class="collapse">
+  <li><a href="#finding-and-preparing-your-data" id="toc-finding-and-preparing-your-data" class="nav-link" data-scroll-target="#finding-and-preparing-your-data">Finding and Preparing Your Data</a></li>
+  <li><a href="#documenting-your-pipeline" id="toc-documenting-your-pipeline" class="nav-link" data-scroll-target="#documenting-your-pipeline">Documenting Your Pipeline</a></li>
+  </ul></li>
+  <li><a href="#part-4-exploratory-analysis-and-iteration" id="toc-part-4-exploratory-analysis-and-iteration" class="nav-link" data-scroll-target="#part-4-exploratory-analysis-and-iteration">Part 4: Exploratory Analysis and Iteration</a>
+  <ul class="collapse">
+  <li><a href="#embrace-the-pilot-mindset" id="toc-embrace-the-pilot-mindset" class="nav-link" data-scroll-target="#embrace-the-pilot-mindset">Embrace the Pilot Mindset</a></li>
+  <li><a href="#iteration-examples" id="toc-iteration-examples" class="nav-link" data-scroll-target="#iteration-examples">Iteration Examples</a></li>
+  <li><a href="#generating-provisional-findings" id="toc-generating-provisional-findings" class="nav-link" data-scroll-target="#generating-provisional-findings">Generating Provisional Findings</a></li>
+  </ul></li>
+  <li><a href="#part-5-from-pilot-to-final-project" id="toc-part-5-from-pilot-to-final-project" class="nav-link" data-scroll-target="#part-5-from-pilot-to-final-project">Part 5: From Pilot to Final Project</a>
+  <ul class="collapse">
+  <li><a href="#using-cbe-3-to-refine-your-research-question" id="toc-using-cbe-3-to-refine-your-research-question" class="nav-link" data-scroll-target="#using-cbe-3-to-refine-your-research-question">Using CBE #3 to Refine Your Research Question</a></li>
+  <li><a href="#translating-pilot-findings-to-final-project-plan" id="toc-translating-pilot-findings-to-final-project-plan" class="nav-link" data-scroll-target="#translating-pilot-findings-to-final-project-plan">Translating Pilot Findings to Final Project Plan</a></li>
+  <li><a href="#technical-lessons-learned" id="toc-technical-lessons-learned" class="nav-link" data-scroll-target="#technical-lessons-learned">Technical Lessons Learned</a></li>
+  </ul></li>
+  <li><a href="#part-6-writing-the-report" id="toc-part-6-writing-the-report" class="nav-link" data-scroll-target="#part-6-writing-the-report">Part 6: Writing the Report</a>
+  <ul class="collapse">
+  <li><a href="#structuring-cbe-3-for-maximum-learning" id="toc-structuring-cbe-3-for-maximum-learning" class="nav-link" data-scroll-target="#structuring-cbe-3-for-maximum-learning">Structuring CBE #3 for Maximum Learning</a></li>
+  <li><a href="#tables-and-figures" id="toc-tables-and-figures" class="nav-link" data-scroll-target="#tables-and-figures">Tables and Figures</a></li>
+  <li><a href="#citations-and-bibliography" id="toc-citations-and-bibliography" class="nav-link" data-scroll-target="#citations-and-bibliography">Citations and Bibliography</a></li>
+  </ul></li>
+  <li><a href="#part-7-team-collaboration-strategies" id="toc-part-7-team-collaboration-strategies" class="nav-link" data-scroll-target="#part-7-team-collaboration-strategies">Part 7: Team Collaboration Strategies</a>
+  <ul class="collapse">
+  <li><a href="#dividing-pilot-study-work" id="toc-dividing-pilot-study-work" class="nav-link" data-scroll-target="#dividing-pilot-study-work">Dividing Pilot Study Work</a></li>
+  <li><a href="#managing-iteration-and-pivots" id="toc-managing-iteration-and-pivots" class="nav-link" data-scroll-target="#managing-iteration-and-pivots">Managing Iteration and Pivots</a></li>
+  </ul></li>
+  <li><a href="#part-8-from-cbe-3-to-final-project-proposal" id="toc-part-8-from-cbe-3-to-final-project-proposal" class="nav-link" data-scroll-target="#part-8-from-cbe-3-to-final-project-proposal">Part 8: From CBE #3 to Final Project Proposal</a>
+  <ul class="collapse">
+  <li><a href="#using-cbe-3-to-write-your-proposal" id="toc-using-cbe-3-to-write-your-proposal" class="nav-link" data-scroll-target="#using-cbe-3-to-write-your-proposal">Using CBE #3 to Write Your Proposal</a></li>
+  <li><a href="#timeline-for-final-project" id="toc-timeline-for-final-project" class="nav-link" data-scroll-target="#timeline-for-final-project">Timeline for Final Project</a></li>
+  </ul></li>
+  <li><a href="#reflection-questions" id="toc-reflection-questions" class="nav-link" data-scroll-target="#reflection-questions">Reflection Questions</a></li>
+  <li><a href="#final-project-preview-whats-next" id="toc-final-project-preview-whats-next" class="nav-link" data-scroll-target="#final-project-preview-whats-next">Final Project Preview: What’s Next?</a></li>
+  <li><a href="#works-cited" id="toc-works-cited" class="nav-link" data-scroll-target="#works-cited">Works Cited</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/browndw/humanities_analytics/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reports/cbe_01.html">Reports</a></li><li class="breadcrumb-item"><a href="../reports/cbe_03.html">Coffee Break Experiment #3: Final Project Pilot Study</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Coffee Break Experiment #3: Final Project Pilot Study</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This assignment is your <strong>testing ground for the final project</strong>. Unlike CBE #2 (which used pre-determined data and methods), CBE #3 gives you freedom to explore your own research questions using your own data—but on a smaller, manageable scale.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+This is a Stepping Stone, Not a Final Product
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>CBE #3 is designed as a <strong>pilot study</strong> that: - Tests your data collection and processing pipeline - Tries out analytical methods on a small sample - Identifies challenges before you commit to the full project - Generates preliminary findings to refine your research questions</p>
+<p><strong>You’re not expected to solve everything</strong>—you’re expected to learn what works, what doesn’t, and what adjustments you need to make.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Template Access
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Read-only template</strong>: <a href="https://www.overleaf.com/read/sfhmdxyqftzf#ad72b5" class="uri">https://www.overleaf.com/read/sfhmdxyqftzf#ad72b5</a></p>
+<p>If you choose to collaborate, select a team manager and have them make a copy of this template and share it with team members (same template as CBE #2).</p>
+</div>
+</div>
+<section id="part-1-approaching-cbe-3-as-a-pilot-study" class="level2">
+<h2 class="anchored" data-anchor-id="part-1-approaching-cbe-3-as-a-pilot-study">Part 1: Approaching CBE #3 as a Pilot Study</h2>
+<section id="two-strategic-approaches" class="level3">
+<h3 class="anchored" data-anchor-id="two-strategic-approaches">Two Strategic Approaches</h3>
+<p><strong>Option 1: Preliminary Exploration of Final Project Data</strong></p>
+<p>Analyze a <strong>subset</strong> of your final project corpus using <strong>simpler methods</strong>:</p>
+<p><strong>Example</strong>: - <strong>Final project</strong>: Topic modeling 500 congressional speeches (1990-2020) to track political discourse evolution - <strong>CBE #3 pilot</strong>: Analyze 30 speeches (5 per decade) using basic frequency analysis and keyness to identify distinctive vocabulary by era, confirming your corpus shows temporal variation before investing in full topic modeling</p>
+<p><strong>Why this works</strong>: Tests data collection, validates that patterns exist, identifies preprocessing needs</p>
+<hr>
+<p><strong>Option 2: Full Pipeline on Small Sample</strong></p>
+<p>Test your <strong>complete analytical workflow</strong> on a <strong>small corpus</strong> before scaling up:</p>
+<p><strong>Example</strong>: - <strong>Final project</strong>: Multi-Dimensional Analysis of 1,000 19th-century novels to identify register differences across publishers - <strong>CBE #3 pilot</strong>: Process 10 novels (2 per publisher) through spaCy → pybiber → MDA to test pipeline, check processing time, ensure features extract correctly, see if preliminary patterns emerge</p>
+<p><strong>Why this works</strong>: Debugs technical workflow, estimates computational requirements, reveals whether your approach is viable</p>
+<hr>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Choose Based on Your Uncertainty
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Uncertain about data quality or patterns?</strong> → Option 1 (simple methods on small sample)<br>
+<strong>Uncertain about technical pipeline?</strong> → Option 2 (full workflow on tiny corpus)<br>
+<strong>Uncertain about both?</strong> → Option 1, then scale to Option 2 for final project</p>
+</div>
+</div>
+</section>
+<section id="what-makes-a-good-pilot-study" class="level3">
+<h3 class="anchored" data-anchor-id="what-makes-a-good-pilot-study">What Makes a Good Pilot Study?</h3>
+<p><strong>Good pilots answer specific questions:</strong></p>
+<p>✅ “Does my corpus actually show the variation I expect?” (test with keyness, frequency comparisons)<br>
+✅ “Can I successfully process texts with this tool?” (test pipeline on 5-10 documents)<br>
+✅ “Do preliminary patterns suggest my hypothesis is worth pursuing?” (exploratory visualization)<br>
+✅ “How long will processing take for the full corpus?” (time 10 documents, extrapolate to 1000)</p>
+<p><strong>Poor pilots try to do everything:</strong></p>
+<p>❌ Attempting definitive analysis with insufficient data (3 texts can’t support topic modeling)<br>
+❌ Using complex methods before verifying basic patterns (MDA on data you haven’t checked for variation)<br>
+❌ Perfect polished prose instead of learning from failures</p>
+</section>
+<section id="scoping-your-pilot-appropriately" class="level3">
+<h3 class="anchored" data-anchor-id="scoping-your-pilot-appropriately">Scoping Your Pilot Appropriately</h3>
+<p><strong>Corpus size guidelines:</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Minimum for CBE #3</th>
+<th>Ideal for Final Project</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Frequency/Distributions</td>
+<td>10-20 texts</td>
+<td>100+ texts</td>
+</tr>
+<tr class="even">
+<td>Keyness</td>
+<td>15+ per group (30 total)</td>
+<td>50+ per group</td>
+</tr>
+<tr class="odd">
+<td>Collocations</td>
+<td>20-30 texts</td>
+<td>100+ texts</td>
+</tr>
+<tr class="even">
+<td>Sentiment/Syuzhet</td>
+<td>5-10 narratives</td>
+<td>50+ narratives</td>
+</tr>
+<tr class="odd">
+<td>Topic Modeling</td>
+<td>50+ texts (bare minimum)</td>
+<td>200+ texts</td>
+</tr>
+<tr class="even">
+<td>MDA (Factor Analysis)</td>
+<td>30+ texts (risky)</td>
+<td>100+ texts</td>
+</tr>
+<tr class="odd">
+<td>Classification</td>
+<td>20+ per class (40 total)</td>
+<td>100+ per class</td>
+</tr>
+<tr class="even">
+<td>Clustering</td>
+<td>20-30 texts</td>
+<td>100+ texts</td>
+</tr>
+<tr class="odd">
+<td>Time Series</td>
+<td>15+ time points</td>
+<td>30+ time points</td>
+</tr>
+<tr class="even">
+<td>Vector Models</td>
+<td>30+ texts</td>
+<td>200+ texts</td>
+</tr>
+</tbody>
+</table>
+<p><strong>For CBE #3</strong>: Use the <strong>minimum</strong> or even smaller (to test feasibility). For final project, aim for <strong>ideal</strong> range.</p>
+</section>
+</section>
+<section id="part-2-connecting-to-course-materials" class="level2">
+<h2 class="anchored" data-anchor-id="part-2-connecting-to-course-materials">Part 2: Connecting to Course Materials</h2>
+<p>You now have access to the <strong>full repertoire</strong> of tutorials and mini labs. Here’s how to leverage them for CBE #3:</p>
+<section id="core-analysis-methods" class="level3">
+<h3 class="anchored" data-anchor-id="core-analysis-methods">Core Analysis Methods</h3>
+<p><strong>Basic Text Statistics</strong> (<a href="../tutorials/corpus-basics.html">Tutorial: Corpus Basics</a>) - Good for: Initial corpus exploration, validating data structure - <strong>Pilot use</strong>: Check text lengths, vocabulary sizes, basic distributions before committing to complex analysis - <strong>Mini Lab 2</strong>: Practice with Brown corpus subsetting</p>
+<p><strong>Frequency and Distributions</strong> (<a href="../tutorials/frequency-and-distributions.html">Tutorial: Frequency</a>) - Good for: Identifying salient features, comparing genres/authors - <strong>Pilot use</strong>: See if hypothesized differences actually exist in data - <strong>Mini Lab 3</strong>: Frequency calculations, dispersion measures</p>
+<p><strong>Keyness Analysis</strong> (<a href="../tutorials/keyness.html">Tutorial: Keyness</a>) - Good for: Finding distinctive features between corpora, hypothesis generation - <strong>Pilot use</strong>: Quick test of whether two categories differ linguistically - <strong>Mini Labs 4-5</strong>: Log-likelihood, effect sizes, visualization</p>
+<p><strong>Collocations</strong> (<a href="../tutorials/collocations.html">Tutorial: Collocations</a>) - Good for: Local co-occurrence patterns, phrase identification - <strong>Pilot use</strong>: Test if target keywords have interesting collocational patterns worth pursuing - <strong>Mini Lab 6</strong>: MI scores, t-scores, cluster extraction</p>
+<p><strong>Time Series</strong> (<a href="../tutorials/time-series.html">Tutorial: Time Series</a>) - Good for: Diachronic change, periodization - <strong>Pilot use</strong>: Check if temporal variation exists before committing to full historical analysis - <strong>Mini Lab 7</strong>: Change-point detection, VNC clustering</p>
+<p><strong>spaCy Processing</strong> (<a href="../tutorials/spacy-basics.html">Tutorial: spaCy Basics</a>) - Good for: Linguistic annotation (POS, dependencies, NER) - <strong>Pilot use</strong>: Test processing pipeline, check annotation quality on sample before scaling - <strong>Mini Lab 8</strong>: Custom pipelines, token filtering</p>
+<p><strong>Sentiment and Narrative Analysis</strong> (<a href="../tutorials/sentiment-and-syuzhet.html">Tutorial: Sentiment/Syuzhet</a>) - Good for: Emotional arcs, plot structures - <strong>Pilot use</strong>: Test if narrative shapes emerge in small sample - <strong>Mini Labs 1, 11-12</strong>: Sentiment lexicons, syuzhet curves</p>
+</section>
+<section id="advanced-methods" class="level3">
+<h3 class="anchored" data-anchor-id="advanced-methods">Advanced Methods</h3>
+<p><strong>Topic Modeling</strong> (<a href="../tutorials/topic-modeling.html">Tutorial: Topic Modeling</a>) - Good for: Discovering thematic structure in large corpora - <strong>Pilot use</strong>: <em>Risky for CBE #3</em> unless you have 50+ texts; consider deferring to final project - <strong>Mini Lab 9</strong>: LDA, coherence, interpretation</p>
+<p><strong>Vector Models (Word2Vec, Embeddings)</strong> (<a href="../tutorials/spacy-basics.html">Tutorial: Vector Models</a>, <a href="../tutorials/contextual-embeddings.html">Contextual Embeddings</a>) - Good for: Semantic similarity, meaning in context - <strong>Pilot use</strong>: Test if semantic clustering reveals patterns; requires moderate corpus size - <strong>Mini Labs 9, 11</strong>: word2vec, sentence transformers, similarity</p>
+<p><strong>Multi-Dimensional Analysis</strong> (<a href="../tutorials/multi-dimensional-analysis.html">Tutorial: MDA</a>) - Good for: Identifying register dimensions, functional variation - <strong>Pilot use</strong>: <em>Risky for CBE #3</em> with &lt; 30 texts; test feature extraction pipeline instead - <strong>Mini Lab 10</strong>: Factor analysis, dimension interpretation</p>
+<p><strong>Classification/Authorship</strong> (<a href="../tutorials/classification-federalist-papers.html">Tutorial: Classification</a>) - Good for: Genre prediction, authorship attribution, stylistics - <strong>Pilot use</strong>: Test if features distinguish categories before building full classifier - <strong>Mini Lab 12</strong>: Random Forest, feature importance</p>
+</section>
+<section id="supporting-concepts" class="level3">
+<h3 class="anchored" data-anchor-id="supporting-concepts">Supporting Concepts</h3>
+<p><strong>Clustering</strong> (<a href="../tutorials/cluster-analysis.html">Tutorial: Clustering</a>) - Hierarchical clustering for exploratory grouping - K-means for thematic discovery - <strong>Pilot use</strong>: See if texts naturally cluster by hypothesized categories</p>
+<p><strong>Correlation and Multi-Collinearity</strong> (<a href="../tutorials/correlations.html">Tutorial: Correlations</a>) - Understanding feature relationships - Feature selection for classification/regression - <strong>Pilot use</strong>: Check which features co-occur before MDA or classification</p>
+<p><strong>ANOVA and R²</strong> (<a href="../tutorials/categorical-variables.html">Tutorial: ANOVA</a>) - Testing if groups differ on dimensions - Quantifying variance explained - <strong>Pilot use</strong>: Validate that extracted dimensions distinguish your categories</p>
+</section>
+<section id="choosing-your-methods" class="level3">
+<h3 class="anchored" data-anchor-id="choosing-your-methods">Choosing Your Method(s)</h3>
+<p><strong>Decision tree for CBE #3:</strong></p>
+<pre><code>Do you have clear categories to compare?
+├─ YES → Keyness (quick) or Classification (if testing pipeline)
+└─ NO → Do you expect temporal patterns?
+    ├─ YES → Time Series or Frequency over time
+    └─ NO → Do you want to discover themes?
+        ├─ YES → Topic Modeling (if n &gt; 50) or Clustering
+        └─ NO → Do you want semantic relationships?
+            ├─ YES → Vector Models or Embeddings
+            └─ NO → Start with basic Frequency/Distributions</code></pre>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Start Simple, Add Complexity
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Even if your final project will use MDA or Topic Modeling, consider starting CBE #3 with: 1. <strong>Corpus exploration</strong> (distributions, word counts) 2. <strong>Basic comparison</strong> (keyness if two groups, frequency if one) 3. <strong>One targeted method</strong> (the one most central to your final project)</p>
+<p>This ensures you learn something even if the advanced method doesn’t work perfectly.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="part-3-data-collection-and-processing" class="level2">
+<h2 class="anchored" data-anchor-id="part-3-data-collection-and-processing">Part 3: Data Collection and Processing</h2>
+<section id="finding-and-preparing-your-data" class="level3">
+<h3 class="anchored" data-anchor-id="finding-and-preparing-your-data">Finding and Preparing Your Data</h3>
+<p><strong>Data sources</strong> (see <a href="../resources/data.html">Data Resources</a>):</p>
+<ul>
+<li><strong>Project Gutenberg</strong>: Historical literature (out of copyright)</li>
+<li><strong>Archive.org</strong>: Digitized texts, speeches, periodicals</li>
+<li><strong>Corpora</strong>: Brown, inaugural addresses, MICUSP (academic writing)</li>
+<li><strong>Web scraping</strong>: News articles, blogs, social media (with ethical considerations)</li>
+<li><strong>Custom collection</strong>: Interviews, student writing, archival materials</li>
+</ul>
+<p><strong>Processing pipeline checklist:</strong></p>
+<ol type="1">
+<li><p><strong>Load data</strong> into polars DataFrame</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>corpus <span class="op">=</span> pl.DataFrame({</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'doc_id'</span>: [...],</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'text'</span>: [...],</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'metadata'</span>: [...]  <span class="co"># genre, date, author, etc.</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>Clean text</strong> (if needed)</p>
+<ul>
+<li>Remove headers/footers (Project Gutenberg boilerplate)</li>
+<li>Handle encoding issues</li>
+<li>See <a href="../tutorials/corpus-basics.html">Corpus Basics tutorial</a></li>
+</ul></li>
+<li><p><strong>Annotate</strong> (if using spaCy/pybiber)</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>nlp <span class="op">=</span> spacy.load(<span class="st">"en_core_web_sm"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># See Mini Lab 8, spaCy tutorial</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>Create document-feature matrix</strong></p>
+<ul>
+<li>Word counts, POS tags, DocuScope categories, or Biber features</li>
+<li>See relevant tutorial for your chosen method</li>
+</ul></li>
+</ol>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Start Small, Verify Quality
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Process 2-3 texts first, manually inspect output: - Do POS tags look correct? - Are sentences segmented properly? - Is metadata aligned with text?</p>
+<p>Catching errors early saves hours of debugging later.</p>
+</div>
+</div>
+</section>
+<section id="documenting-your-pipeline" class="level3">
+<h3 class="anchored" data-anchor-id="documenting-your-pipeline">Documenting Your Pipeline</h3>
+<p><strong>In your Methods section</strong>, explain:</p>
+<ol type="1">
+<li><strong>Data source</strong>: “We collected 15 Victorian novels from Project Gutenberg (1850-1900)”</li>
+<li><strong>Selection criteria</strong>: “We selected novels by women authors with &gt; 50,000 words”</li>
+<li><strong>Processing steps</strong>: “Texts were parsed with spaCy en_core_web_sm, extracting POS tags and dependency relations”</li>
+<li><strong>Feature extraction</strong>: “We computed normalized frequencies for 67 Biber features using pybiber v0.5”</li>
+<li><strong>Quality checks</strong>: “We manually verified POS tagging accuracy on 3 sample texts”</li>
+</ol>
+<p><strong>Why documentation matters</strong>: If something doesn’t work, you (and your team) can trace where it went wrong.</p>
+</section>
+</section>
+<section id="part-4-exploratory-analysis-and-iteration" class="level2">
+<h2 class="anchored" data-anchor-id="part-4-exploratory-analysis-and-iteration">Part 4: Exploratory Analysis and Iteration</h2>
+<section id="embrace-the-pilot-mindset" class="level3">
+<h3 class="anchored" data-anchor-id="embrace-the-pilot-mindset">Embrace the Pilot Mindset</h3>
+<p><strong>CBE #3 is not about perfection</strong>—it’s about <strong>learning what works</strong>:</p>
+<p>✅ “We tried clustering 10 novels, but they didn’t group by author as expected. Might need more texts or different features.”<br>
+✅ “Keyness revealed that Author A uses significantly more abstract nouns—worth investigating with MDA in final project.”<br>
+✅ “Processing 10 texts took 2 hours. Scaling to 500 will require parallelization.”</p>
+<p>❌ “We got perfect results and everything worked flawlessly.” (Suspiciously polished for a pilot)</p>
+</section>
+<section id="iteration-examples" class="level3">
+<h3 class="anchored" data-anchor-id="iteration-examples">Iteration Examples</h3>
+<p><strong>Iteration 1: Initial hypothesis fails</strong> - <strong>Tried</strong>: Topic modeling 30 blog posts - <strong>Result</strong>: Incoherent topics (too few documents) - <strong>Pivot</strong>: Switched to keyness comparison (political blogs vs.&nbsp;personal blogs)—worked better - <strong>Learning</strong>: Small corpus → simpler methods</p>
+<p><strong>Iteration 2: Data quality issues</strong> - <strong>Tried</strong>: Sentiment analysis on scraped tweets - <strong>Result</strong>: Many non-English tweets corrupted results - <strong>Pivot</strong>: Added language detection, filtered to English only - <strong>Learning</strong>: Always validate data quality assumptions</p>
+<p><strong>Iteration 3: Pipeline too slow</strong> - <strong>Tried</strong>: Processing 50 novels through spaCy + pybiber - <strong>Result</strong>: Took 6 hours (not scalable to 500) - <strong>Pivot</strong>: Tested <code>n_process=4</code> (parallel), reduced to 1.5 hours - <strong>Learning</strong>: Test computational requirements early</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Document What Didn’t Work
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Your Discussion section should honestly report: - What you tried that failed - Why you think it failed - What you learned - How you’d adjust for the final project</p>
+<p>Failed experiments teach more than successful ones.</p>
+</div>
+</div>
+</section>
+<section id="generating-provisional-findings" class="level3">
+<h3 class="anchored" data-anchor-id="generating-provisional-findings">Generating Provisional Findings</h3>
+<p><strong>Even with a small pilot, you can learn something:</strong></p>
+<p><strong>From 15 texts</strong> (too small for topic modeling): - ✅ Keyness shows distinctive vocabulary - ✅ Frequency distributions reveal stylistic differences - ✅ Correlation analysis shows which features co-occur - ❌ Topic modeling (too few documents) - ❌ MDA (underpowered)</p>
+<p><strong>From 30 texts</strong> (borderline for complex methods): - ✅ Clustering might work (exploratory) - ✅ Sentiment trends visible - ✅ Classification possible (if 15+ per class) - ⚠️ Topic modeling (risky, check coherence) - ⚠️ MDA (check KMO, Bartlett’s test)</p>
+<p><strong>From 50+ texts</strong> (most methods viable): - ✅ Topic modeling - ✅ MDA (if features are appropriate) - ✅ Robust classification - ✅ Vector models (if corpus is cohesive)</p>
+</section>
+</section>
+<section id="part-5-from-pilot-to-final-project" class="level2">
+<h2 class="anchored" data-anchor-id="part-5-from-pilot-to-final-project">Part 5: From Pilot to Final Project</h2>
+<section id="using-cbe-3-to-refine-your-research-question" class="level3">
+<h3 class="anchored" data-anchor-id="using-cbe-3-to-refine-your-research-question">Using CBE #3 to Refine Your Research Question</h3>
+<p><strong>Before CBE #3</strong>: “I want to analyze gender differences in 19th-century novels”<br>
+<strong>After CBE #3</strong>: “Pilot showed female authors use more emotion words (keyness LR &gt; 0.6). Final project will test if this holds across 200 novels using MDA to identify broader stylistic dimensions beyond single features.”</p>
+<p><strong>How the pilot refines the question:</strong></p>
+<ol type="1">
+<li><strong>Validates basic premise</strong> (yes, gender differences exist in this corpus)</li>
+<li><strong>Identifies specific patterns</strong> (emotion words, not just abstract “style”)</li>
+<li><strong>Suggests appropriate methods</strong> (MDA better than simple frequency for multidimensional patterns)</li>
+<li><strong>Scopes the project</strong> (200 novels feasible, 1000 not necessary)</li>
+</ol>
+</section>
+<section id="translating-pilot-findings-to-final-project-plan" class="level3">
+<h3 class="anchored" data-anchor-id="translating-pilot-findings-to-final-project-plan">Translating Pilot Findings to Final Project Plan</h3>
+<p><strong>In your CBE #3 Discussion, sketch the path forward:</strong></p>
+<p><strong>Example 1: Scaling up</strong> &gt; “Our pilot analyzed 20 news articles (10 print, 10 online) using keyness. We found online news uses 40% more interactive language (questions, second-person pronouns). For the final project, we’ll expand to 200 articles (100 per medium) and use MDA to test if ‘interactive vs.&nbsp;informational’ forms a coherent dimension beyond these individual features. We’ll also add a temporal component (2000, 2010, 2020) to see if convergence is occurring.”</p>
+<p><strong>Example 2: Pivoting method</strong> &gt; “We attempted topic modeling on 30 congressional speeches but topics were incoherent (perplexity = 850, coherence = 0.32). For the final project, we’ll collect 150 speeches and use clustering + keyness instead: cluster speeches by similarity, then identify distinctive vocabulary for each cluster. This better suits our corpus size and provides more interpretable results.”</p>
+<p><strong>Example 3: Refining focus</strong> &gt; “We extracted 67 Biber features for 15 academic papers across 3 disciplines. Factor analysis failed (KMO = 0.51, insufficient correlations). Examining individual features, we noticed ‘nominalizations’ and ‘passives’ alone distinguish STEM from humanities (LR &gt; 0.5). Final project will focus on these 10 key features with targeted analysis (ANOVA, regression) rather than full MDA, using 100 papers per discipline.”</p>
+</section>
+<section id="technical-lessons-learned" class="level3">
+<h3 class="anchored" data-anchor-id="technical-lessons-learned">Technical Lessons Learned</h3>
+<p><strong>Document in your Discussion:</strong></p>
+<p><strong>Data collection:</strong> - “Scraping took longer than expected due to rate limits—build in buffer time” - “10% of texts had encoding errors—add validation step” - “Metadata was inconsistent—need standardized schema”</p>
+<p><strong>Processing:</strong> - “spaCy sentence segmentation failed on dialog—consider custom rules” - “pybiber dropped 12 features due to low correlation—expected, not problematic” - “Processing 30 texts took 45 minutes—final 200 will take ~5 hours (acceptable)”</p>
+<p><strong>Analysis:</strong> - “Topic coherence improved when we increased n_topics from 5 to 8” - “Clustering worked better with TF-IDF than raw counts” - “Dimension 1 explained 35% variance—strong enough to pursue”</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Think of CBE #3 as a Feasibility Study
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Your Discussion should answer: - <strong>Is this project doable?</strong> (data accessible, methods viable) - <strong>Is it interesting?</strong> (patterns exist, not just noise) - <strong>What adjustments are needed?</strong> (more data, different method, refined question) - <strong>What’s the timeline?</strong> (realistic estimate based on pilot)</p>
+</div>
+</div>
+</section>
+</section>
+<section id="part-6-writing-the-report" class="level2">
+<h2 class="anchored" data-anchor-id="part-6-writing-the-report">Part 6: Writing the Report</h2>
+<section id="structuring-cbe-3-for-maximum-learning" class="level3">
+<h3 class="anchored" data-anchor-id="structuring-cbe-3-for-maximum-learning">Structuring CBE #3 for Maximum Learning</h3>
+<p><strong>Introduction</strong> (1-2 paragraphs): - <strong>Research question</strong>: What do you want to explore? - <strong>Rationale</strong>: Why is this interesting/important? - <strong>Pilot scope</strong>: What are you testing in CBE #3 specifically?</p>
+<p><strong>Example</strong>: &gt; We investigate whether computational metaphor identification can distinguish academic from popular science writing. Prior work suggests experts use more abstract metaphors (Lakoff &amp; Johnson, 1980), but computational validation is limited. This pilot tests whether spaCy’s dependency parsing can reliably extract metaphor candidates, using 10 texts (5 academic, 5 popular) to assess feasibility before scaling to 200 texts for the final project.</p>
+<hr>
+<p><strong>Data</strong> (1 paragraph + table): - <strong>Source</strong>: Where did data come from? - <strong>Selection</strong>: How did you choose texts? - <strong>Composition</strong>: Table showing corpus breakdown</p>
+<p><strong>Example</strong>: &gt; We collected 15 Victorian novels from Project Gutenberg, selecting 5 each by Austen, Brontë, and Eliot to test author differentiation. Table 1 shows composition by author and decade. All novels exceeded 100,000 tokens.</p>
+<hr>
+<p><strong>Methods</strong> (1-2 paragraphs): - <strong>Processing pipeline</strong>: spaCy → feature extraction - <strong>Features/Analysis</strong>: Which features, which statistical tests - <strong>Tools</strong>: Polars, pybiber, sklearn, etc.</p>
+<p><strong>Example</strong>: &gt; Texts were parsed with spaCy en_core_web_sm. We extracted 67 Biber features using pybiber v0.5, normalized per 1,000 words. Due to small sample size (n=15), we used keyness analysis (log-likelihood, effect sizes) to compare authors rather than MDA, which requires 30+ texts for stable factors.</p>
+<hr>
+<p><strong>Results</strong> (1-2 paragraphs + 1-2 visualizations): - <strong>What did you find?</strong> (report numbers, cite tables/figures) - <strong>No interpretation yet</strong>—save for Discussion</p>
+<p><strong>Example</strong>: &gt; Figure 1 shows the 10 linguistic features with largest effect sizes distinguishing Austen from Brontë (LR &gt; 0.4). Austen uses significantly more first-person pronouns (5.2 vs.&nbsp;3.1 per 100 tokens, LR = 0.52, p &lt; 0.001) and present tense verbs (8.7 vs.&nbsp;6.1, LR = 0.48, p &lt; 0.001). Brontë shows higher rates of past tense (12.3 vs.&nbsp;9.4, LR = 0.44, p &lt; 0.01).</p>
+<hr>
+<p><strong>Discussion</strong> (2-3 paragraphs—the heart of CBE #3):</p>
+<ol type="1">
+<li><strong>Interpretation of pilot findings</strong>:
+<ul>
+<li>What might these patterns mean?</li>
+<li>Provisional explanations (it’s okay to speculate)</li>
+</ul></li>
+<li><strong>Limitations and lessons learned</strong>:
+<ul>
+<li>What didn’t work as expected?</li>
+<li>Technical challenges encountered</li>
+<li>What would you do differently?</li>
+</ul></li>
+<li><strong>Path to final project</strong>:
+<ul>
+<li>How will you scale up?</li>
+<li>What adjustments to methods/questions?</li>
+<li>What additional analyses will you add?</li>
+</ul></li>
+</ol>
+<p><strong>Example</strong> (combining all three): &gt; The pilot revealed that Austen’s high use of first-person pronouns and present tense likely reflects her narrative style—free indirect discourse bringing readers into characters’ immediate consciousness (Moretti, 2013). Brontë’s past-tense dominance suggests more traditional retrospective narration. However, our sample of 5 novels per author is too small to confidently generalize. For the final project, we’ll expand to 50 novels across 10 Victorian authors and use Multi-Dimensional Analysis to test if “narrative immediacy” (pronouns + present tense) forms a coherent dimension distinguishing authors beyond these individual features. We’ll also add temporal metadata to test if narrative style evolved across the century. Technically, we learned that pybiber processing is efficient (15 novels in 20 minutes), but we need to manually verify proper noun vs.&nbsp;common noun distinctions, as spaCy occasionally misclassifies character names.</p>
+<hr>
+<p><strong>Conclusion</strong> (optional for CBE, but useful): - Brief summary of pilot outcomes - Reaffirm feasibility and next steps</p>
+<hr>
+<p><strong>Acknowledgments</strong>: - Generative AI use (if any—be specific) - Team member contributions - Data sources</p>
+</section>
+<section id="tables-and-figures" class="level3">
+<h3 class="anchored" data-anchor-id="tables-and-figures">Tables and Figures</h3>
+<p><strong>Minimum required:</strong></p>
+<ol type="1">
+<li><strong>Table 1: Corpus composition</strong> (from Mini Lab 5 approach)</li>
+<li><strong>Figure 1: Main result visualization</strong> (keyness plot, frequency comparison, etc.)</li>
+</ol>
+<p><strong>Optional additions:</strong></p>
+<ul>
+<li>Table 2: Descriptive statistics (means, SDs by group)</li>
+<li>Figure 2: Secondary finding (correlation heatmap, cluster dendrogram, etc.)</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Quality Over Quantity
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Two well-explained visualizations &gt; five poorly labeled ones.</p>
+<p>Each figure/table should: - Have a descriptive caption - Be referenced in text - Add substantive information (not decorative)</p>
+</div>
+</div>
+</section>
+<section id="citations-and-bibliography" class="level3">
+<h3 class="anchored" data-anchor-id="citations-and-bibliography">Citations and Bibliography</h3>
+<p><strong>Minimum citations:</strong></p>
+<ul>
+<li><strong>Methods</strong>: Cite software packages (spaCy, polars, pybiber)</li>
+<li><strong>Theory</strong>: 1-2 sources establishing context (prior research, linguistic theory)</li>
+<li><strong>Data</strong>: If using published corpus, cite it</li>
+</ul>
+<p><strong>Finding relevant citations:</strong></p>
+<ul>
+<li><strong>Tutorials</strong>: Check “Further Reading” sections for foundational sources</li>
+<li><strong>Packages</strong>: Most have citation guidance (e.g., pybiber documentation)</li>
+<li><strong>Google Scholar</strong>: Search your topic + “corpus linguistics” or “computational text analysis”</li>
+</ul>
+<p><strong>BibTeX from course materials:</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bibtex code-with-copy"><code class="sourceCode bibtex"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="va">@article</span>{<span class="ot">biber1988variation</span>,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">title</span>={Variation across speech and writing},</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">author</span>={Biber, Douglas},</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">year</span>={1988},</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">publisher</span>={Cambridge University Press}</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="part-7-team-collaboration-strategies" class="level2">
+<h2 class="anchored" data-anchor-id="part-7-team-collaboration-strategies">Part 7: Team Collaboration Strategies</h2>
+<section id="dividing-pilot-study-work" class="level3">
+<h3 class="anchored" data-anchor-id="dividing-pilot-study-work">Dividing Pilot Study Work</h3>
+<p><strong>Week 1: Setup and data collection</strong> - <strong>Manager</strong>: Creates Overleaf project, assigns roles - <strong>Data collector</strong>: Gathers texts, creates corpus DataFrame - <strong>Technical lead</strong>: Tests processing pipeline on 2-3 sample texts</p>
+<p><strong>Week 2: Analysis and writing</strong> - <strong>Analyst 1</strong>: Runs main analysis, generates tables/figures - <strong>Analyst 2</strong>: Runs secondary analysis or validates results - <strong>Writer 1</strong>: Drafts Introduction and Methods - <strong>Writer 2</strong>: Drafts Results and Discussion</p>
+<p><strong>Week 3: Revision and finalization</strong> - <strong>Everyone</strong>: Reviews complete draft, adds comments - <strong>Manager</strong>: Integrates revisions, ensures coherence - <strong>All</strong>: Final proofreading and compilation</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Pair Programming for Pilots
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Consider working in pairs for technical components: - One person writes code, other reviews in real-time - Switch roles every 30 minutes - Catches errors early, shares knowledge</p>
+</div>
+</div>
+</section>
+<section id="managing-iteration-and-pivots" class="level3">
+<h3 class="anchored" data-anchor-id="managing-iteration-and-pivots">Managing Iteration and Pivots</h3>
+<p><strong>If your initial plan isn’t working:</strong></p>
+<ol type="1">
+<li><strong>Team meeting</strong> (virtual or in-person): What’s the problem?</li>
+<li><strong>Quick brainstorm</strong> (15 minutes): What are alternatives?</li>
+<li><strong>Decision</strong>: Pick one pivot, commit for 24 hours</li>
+<li><strong>Reassess</strong>: Did the pivot work?</li>
+</ol>
+<p><strong>Example pivot:</strong> - <strong>Original plan</strong>: Topic modeling 30 speeches - <strong>Problem</strong>: Topics incoherent (perplexity too high) - <strong>Pivot</strong>: Switch to clustering + keyness - <strong>Decision point</strong>: 24 hours later, check if clusters are interpretable - <strong>Outcome</strong>: Clusters work, proceed with this method</p>
+<p><strong>Document the pivot in your Discussion</strong>—it’s valuable learning, not failure.</p>
+</section>
+</section>
+<section id="part-8-from-cbe-3-to-final-project-proposal" class="level2">
+<h2 class="anchored" data-anchor-id="part-8-from-cbe-3-to-final-project-proposal">Part 8: From CBE #3 to Final Project Proposal</h2>
+<section id="using-cbe-3-to-write-your-proposal" class="level3">
+<h3 class="anchored" data-anchor-id="using-cbe-3-to-write-your-proposal">Using CBE #3 to Write Your Proposal</h3>
+<p>Your final project proposal should build directly on CBE #3 findings:</p>
+<p><strong>Research Question</strong> (refined): - <strong>Before CBE #3</strong>: “I want to study gender in novels” - <strong>After CBE #3</strong>: “Building on pilot findings that female authors use 40% more emotion words (LR = 0.58), I will test if this pattern holds across 200 Victorian novels and whether it correlates with critical reception.”</p>
+<p><strong>Methods</strong> (validated): - <strong>Before</strong>: “I’ll probably use topic modeling or something” - <strong>After</strong>: “Pilot showed MDA is computationally feasible (30 novels in 45 minutes) and reveals interpretable dimensions. I’ll use MDA with 67 Biber features, validated by pilot’s successful extraction and preliminary factor structure (KMO = 0.72).”</p>
+<p><strong>Feasibility</strong> (demonstrated): - <strong>Before</strong>: “I assume I can find the data somewhere” - <strong>After</strong>: “Pilot confirmed Project Gutenberg has sufficient texts (identified 250 candidate novels). Processing pipeline tested and working. Estimated timeline: data collection (2 weeks), processing (3 days), analysis (1 week).”</p>
+<p><strong>Expected Outcomes</strong> (grounded): - <strong>Before</strong>: “I expect to find differences” - <strong>After</strong>: “Pilot suggested Dimension 1 (emotional vs.&nbsp;restrained) will distinguish female from male authors (η² ≈ 0.25 in pilot). Full project will test this with adequate power (200 novels) and add temporal analysis (1800-1900) to see if gender patterns evolved.”</p>
+</section>
+<section id="timeline-for-final-project" class="level3">
+<h3 class="anchored" data-anchor-id="timeline-for-final-project">Timeline for Final Project</h3>
+<p><strong>Based on CBE #3 pilot lessons:</strong></p>
+<p><strong>Week 1-2: Data collection</strong> (adjusted based on pilot challenges) <strong>Week 3: Processing</strong> (using validated pipeline from pilot) <strong>Week 4: Analysis</strong> (main method tested in pilot, plus extensions) <strong>Week 5: Writing</strong> (structure similar to CBE #3, but more polished) <strong>Week 6: Revision and finalization</strong></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Build Buffer Time
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If pilot processing took 2 hours for 30 texts, estimate 20 hours for 300 texts (not 20 hours exactly—add 25% buffer for unexpected issues).</p>
+<p>If pilot analysis revealed data quality problems in 10% of texts, expect 10% of full corpus will need manual cleaning.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="reflection-questions" class="level2">
+<h2 class="anchored" data-anchor-id="reflection-questions">Reflection Questions</h2>
+<p>After completing CBE #3, consider:</p>
+<ol type="1">
+<li><p><strong>Feasibility</strong>: Is your final project viable given what you learned? Do you need to adjust scope or methods?</p></li>
+<li><p><strong>Surprises</strong>: What did you learn from the pilot that you didn’t expect? (Data quality issues? Patterns stronger/weaker than anticipated?)</p></li>
+<li><p><strong>Methods</strong>: Did your chosen analytical method work well for your research question? Would a different approach be better?</p></li>
+<li><p><strong>Iteration</strong>: How many times did you pivot or adjust your approach? What did each iteration teach you?</p></li>
+<li><p><strong>Collaboration</strong>: How did team dynamics shape the pilot? What worked well? What needs adjustment for the final project?</p></li>
+<li><p><strong>Timeline</strong>: How accurate were your time estimates? (Data collection, processing, analysis) What will you adjust for the final project?</p></li>
+<li><p><strong>Findings</strong>: Even if preliminary, did the pilot reveal anything interesting enough to pursue further?</p></li>
+</ol>
+</section>
+<section id="final-project-preview-whats-next" class="level2">
+<h2 class="anchored" data-anchor-id="final-project-preview-whats-next">Final Project Preview: What’s Next?</h2>
+<p><strong>After CBE #3, you should have:</strong></p>
+<p>✅ A tested data collection and processing pipeline<br>
+✅ Preliminary findings suggesting your research question is viable<br>
+✅ Realistic understanding of computational requirements<br>
+✅ Identified technical challenges and solutions<br>
+✅ Refined research question based on empirical evidence<br>
+✅ Clear plan for scaling up to full project</p>
+<p><strong>Your final project will:</strong></p>
+<ul>
+<li>Expand corpus to sufficient size (based on method requirements)</li>
+<li>Add depth to analysis (secondary methods, validation, robustness checks)</li>
+<li>Produce polished visualizations and tables</li>
+<li>Provide thorough interpretation grounded in theory</li>
+<li>Demonstrate scholarly rigor in methods and reporting</li>
+</ul>
+<p><strong>CBE #3 is your safety net</strong>—better to discover problems with 30 texts than 300 texts.</p>
+</section>
+<section id="works-cited" class="level2">
+<h2 class="anchored" data-anchor-id="works-cited">Works Cited</h2>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../reports/cbe_02.html" class="pagination-link" aria-label="Coffee Break Experiment #2: From Results to Research">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Coffee Break Experiment #2: From Results to Research</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../reports/final-project.html" class="pagination-link" aria-label="Final Project: Independent Corpus Analysis">
+        <span class="nav-page-text">Final Project: Independent Corpus Analysis</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/browndw/humanities_analytics/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

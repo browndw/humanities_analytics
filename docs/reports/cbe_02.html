@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.557">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Methods in Humanities Analytics - Coffee Break Experiment #2: From Results to Research</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../reports/cbe_03.html" rel="next">
+<link href="../reports/cbe_01.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../images/text_analysis.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Methods in Humanities Analytics</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/browndw/humanities_analytics" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reports/cbe_01.html">Reports</a></li><li class="breadcrumb-item"><a href="../reports/cbe_02.html">Coffee Break Experiment #2: From Results to Research</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/sentiment-and-syuzhet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Texts, Algorithms, and Black-Boxes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/corpus-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Corpus Basics: Tokenization and Processing Pipelines</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/spacy-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NLP Processing with spaCy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/frequency-and-distributions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Distributions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Core Methods</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/keyness.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Keyness</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/collocations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Collocations and N-grams</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/time-series.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Time Series Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/topic-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Topic Modeling</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Advanced Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/categorical-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">ANOVA and R²: Comparing Groups and Explaining Variance</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/cluster-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Clustering Methods</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/correlations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Correlation and Multi-Collinearity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/multi-dimensional-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Multi-Dimensional Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/contextual-embeddings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Contextual Embeddings and Transformers</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/classification-federalist-papers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Classification &amp; Authorship Attribution</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Reports</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #1: From Curiosity to Visualization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_02.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Coffee Break Experiment #2: From Results to Research</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #3: Final Project Pilot Study</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/final-project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Final Project: Independent Corpus Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/statistical-reporting-guide.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Statistical Reporting Guide</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Course Resources</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/using-colab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Using Google Colab</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../resources/packages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Python Packages for This Course</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../resources/data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Course Data Resources</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#part-1-getting-started-with-overleaf" id="toc-part-1-getting-started-with-overleaf" class="nav-link active" data-scroll-target="#part-1-getting-started-with-overleaf">Part 1: Getting Started with Overleaf</a>
+  <ul class="collapse">
+  <li><a href="#understanding-the-template-structure" id="toc-understanding-the-template-structure" class="nav-link" data-scroll-target="#understanding-the-template-structure">Understanding the Template Structure</a></li>
+  <li><a href="#setting-up-your-team-report" id="toc-setting-up-your-team-report" class="nav-link" data-scroll-target="#setting-up-your-team-report">Setting Up Your Team Report</a></li>
+  </ul></li>
+  <li><a href="#part-2-integrating-results-from-mini-lab-5" id="toc-part-2-integrating-results-from-mini-lab-5" class="nav-link" data-scroll-target="#part-2-integrating-results-from-mini-lab-5">Part 2: Integrating Results from Mini Lab 5</a>
+  <ul class="collapse">
+  <li><a href="#adding-your-corpus-composition-table" id="toc-adding-your-corpus-composition-table" class="nav-link" data-scroll-target="#adding-your-corpus-composition-table">Adding Your Corpus Composition Table</a></li>
+  <li><a href="#adding-your-visualization" id="toc-adding-your-visualization" class="nav-link" data-scroll-target="#adding-your-visualization">Adding Your Visualization</a></li>
+  </ul></li>
+  <li><a href="#part-3-from-data-to-interpretation" id="toc-part-3-from-data-to-interpretation" class="nav-link" data-scroll-target="#part-3-from-data-to-interpretation">Part 3: From Data to Interpretation</a>
+  <ul class="collapse">
+  <li><a href="#writing-the-results-section" id="toc-writing-the-results-section" class="nav-link" data-scroll-target="#writing-the-results-section">Writing the Results Section</a></li>
+  <li><a href="#developing-your-discussion" id="toc-developing-your-discussion" class="nav-link" data-scroll-target="#developing-your-discussion">Developing Your Discussion</a></li>
+  <li><a href="#sketching-your-exploratory-path" id="toc-sketching-your-exploratory-path" class="nav-link" data-scroll-target="#sketching-your-exploratory-path">Sketching Your Exploratory Path</a></li>
+  </ul></li>
+  <li><a href="#part-4-citation-and-academic-integrity" id="toc-part-4-citation-and-academic-integrity" class="nav-link" data-scroll-target="#part-4-citation-and-academic-integrity">Part 4: Citation and Academic Integrity</a>
+  <ul class="collapse">
+  <li><a href="#adding-sources-to-your-bibliography" id="toc-adding-sources-to-your-bibliography" class="nav-link" data-scroll-target="#adding-sources-to-your-bibliography">Adding Sources to Your Bibliography</a></li>
+  <li><a href="#using-generative-ai-responsibly" id="toc-using-generative-ai-responsibly" class="nav-link" data-scroll-target="#using-generative-ai-responsibly">Using Generative AI Responsibly</a></li>
+  </ul></li>
+  <li><a href="#part-5-team-workflow-and-collaboration" id="toc-part-5-team-workflow-and-collaboration" class="nav-link" data-scroll-target="#part-5-team-workflow-and-collaboration">Part 5: Team Workflow and Collaboration</a>
+  <ul class="collapse">
+  <li><a href="#division-of-labor" id="toc-division-of-labor" class="nav-link" data-scroll-target="#division-of-labor">Division of Labor</a></li>
+  <li><a href="#overleaf-collaboration-features" id="toc-overleaf-collaboration-features" class="nav-link" data-scroll-target="#overleaf-collaboration-features">Overleaf Collaboration Features</a></li>
+  <li><a href="#quick-checklist" id="toc-quick-checklist" class="nav-link" data-scroll-target="#quick-checklist">Quick Checklist</a></li>
+  </ul></li>
+  <li><a href="#reflection-questions" id="toc-reflection-questions" class="nav-link" data-scroll-target="#reflection-questions">Reflection Questions</a></li>
+  <li><a href="#works-cited" id="toc-works-cited" class="nav-link" data-scroll-target="#works-cited">Works Cited</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/browndw/humanities_analytics/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reports/cbe_01.html">Reports</a></li><li class="breadcrumb-item"><a href="../reports/cbe_02.html">Coffee Break Experiment #2: From Results to Research</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Coffee Break Experiment #2: From Results to Research</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This assignment is designed as a <strong>quick, exploratory exercise</strong>—not a polished final paper. The goal is to practice moving from computational results to provisional interpretations, learning the workflow of collaborative academic writing with Overleaf.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+This is a Coffee Break Experiment
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You have limited time, so focus on: - <strong>Finding something interesting</strong> in your data - <strong>Forming a provisional interpretation</strong> (even if incomplete) - <strong>Sketching what you’d do next</strong> if this were a full project</p>
+<p>Don’t get stuck perfecting details. Sketch, explore, and move forward.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Template Access
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Read-only template</strong>: <a href="https://www.overleaf.com/read/sfhmdxyqftzf#ad72b5" class="uri">https://www.overleaf.com/read/sfhmdxyqftzf#ad72b5</a></p>
+<p>Your team manager will make a copy of this template and share it with team members.</p>
+</div>
+</div>
+<section id="part-1-getting-started-with-overleaf" class="level2">
+<h2 class="anchored" data-anchor-id="part-1-getting-started-with-overleaf">Part 1: Getting Started with Overleaf</h2>
+<section id="understanding-the-template-structure" class="level3">
+<h3 class="anchored" data-anchor-id="understanding-the-template-structure">Understanding the Template Structure</h3>
+<p>The Coffee Break Experiment template provides a basic academic paper structure. Here’s what you need to know:</p>
+<p><strong>Main Files:</strong></p>
+<ul>
+<li><code>main.tex</code> - The primary document (this is where you write)</li>
+<li><code>main.bib</code> - Bibliography database</li>
+<li><code>tables/</code> - Put your table files here</li>
+<li><code>figures/</code> - Put your images here</li>
+</ul>
+<p><strong>Essential LaTeX Commands:</strong></p>
+<ol type="1">
+<li><strong>Sections</strong>: <code>\section{Title}</code> creates a new section</li>
+<li><strong>References</strong>: <code>Table~\ref{tbl:composition}</code> links to your table</li>
+<li><strong>Citations</strong>: <code>\cite{authorYEAR}</code> cites a source</li>
+<li><strong>Including files</strong>: <code>\input{tables/filename}</code> brings in a table</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Don’t Worry About LaTeX Perfection
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If something doesn’t compile perfectly, focus on getting your ideas down. You can fix formatting later (or leave it imperfect for this exploratory exercise).</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Collaborative Editing
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Multiple team members can edit simultaneously in Overleaf. You’ll see each other’s cursors in real-time. Use the <strong>comment feature</strong> (add comment icon) to discuss changes without editing the text directly.</p>
+</div>
+</div>
+</section>
+<section id="setting-up-your-team-report" class="level3">
+<h3 class="anchored" data-anchor-id="setting-up-your-team-report">Setting Up Your Team Report</h3>
+<p><strong>Step-by-Step Setup:</strong></p>
+<ol type="1">
+<li><strong>Manager creates the project</strong>:
+<ul>
+<li>Click “Copy Project” on the template</li>
+<li>Rename: “CBE 2: [Your Topic]” (e.g., “CBE 2: ChatGPT vs Human Academic Writing”)</li>
+</ul></li>
+<li><strong>Share with team</strong>:
+<ul>
+<li>Click “Share” button (top right)</li>
+<li>Add team members’ email addresses</li>
+<li>Set permissions to “Can Edit”</li>
+</ul></li>
+<li><strong>Customize the front matter</strong>:
+<ul>
+<li>Update <code>\title{CBE Title}</code> with your actual title</li>
+<li>Replace <code>Author One</code>, <code>Author Two</code> with your names</li>
+<li>Update department affiliations if needed</li>
+</ul></li>
+<li><strong>Create your first file</strong>:
+<ul>
+<li>Go to <code>tables/</code> folder</li>
+<li>Click three dots → New File</li>
+<li>Name it descriptively: <code>hape_composition.tex</code></li>
+</ul></li>
+</ol>
+</section>
+</section>
+<section id="part-2-integrating-results-from-mini-lab-5" class="level2">
+<h2 class="anchored" data-anchor-id="part-2-integrating-results-from-mini-lab-5">Part 2: Integrating Results from Mini Lab 5</h2>
+<section id="adding-your-corpus-composition-table" class="level3">
+<h3 class="anchored" data-anchor-id="adding-your-corpus-composition-table">Adding Your Corpus Composition Table</h3>
+<p>From Mini Lab 5, you generated LaTeX code using <code>great_tables</code>. Here’s how to integrate it:</p>
+<p><strong>In your Colab notebook:</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This generates LaTeX code</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    GT(pl.concat([mini_total, grand_summary_row]))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    .fmt_integer(columns<span class="op">=</span>pl.exclude(<span class="st">"Author"</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>).as_latex()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Steps to add the table:</strong></p>
+<ol type="1">
+<li><p><strong>Copy the LaTeX output</strong> from the notebook cell</p></li>
+<li><p><strong>Paste into new table file</strong> (<code>tables/hape_composition.tex</code>)</p></li>
+<li><p><strong>Add caption and label</strong>:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">table</span>}[!t]</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">\caption</span>{Composition of the HAP-E mini corpus by author type.}</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">\label</span>{<span class="ex">tbl:hape-composition</span>}</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">% ...rest of your table code...</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">table</span>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>Reference in main.tex</strong>:</p>
+<ul>
+<li>Find the Data section</li>
+<li>Replace <code>\input{tables/corpus_composition}</code> with <code>\input{tables/hape_composition}</code></li>
+<li>Update the reference: <code>Table~\ref{tbl:hape-composition} shows...</code></li>
+</ul></li>
+</ol>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Common LaTeX Table Issues
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>Overfull boxes</strong>: If your table is too wide, the compiler will warn you. Consider reducing font size with <code>\footnotesize</code> before <code>\begin{tabular}</code></li>
+<li><strong>Column alignment</strong>: <code>l</code> = left, <code>r</code> = right, <code>c</code> = center</li>
+<li><strong>Special characters</strong>: Use <code>\%</code> for percent signs, <code>\_</code> for underscores</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="adding-your-visualization" class="level3">
+<h3 class="anchored" data-anchor-id="adding-your-visualization">Adding Your Visualization</h3>
+<p><strong>Preparing your figure:</strong></p>
+<ol type="1">
+<li><p><strong>Save from Colab</strong> with appropriate filename:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">'gpt_vs_human_keyness.png'</span>, </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>            bbox_inches<span class="op">=</span><span class="st">'tight'</span>, </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>            dpi<span class="op">=</span><span class="dv">300</span>)  <span class="co"># High resolution for publication</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>Download from Google Drive</strong></p></li>
+<li><p><strong>Upload to Overleaf</strong>:</p>
+<ul>
+<li>Navigate to <code>figures/</code> folder</li>
+<li>Click “Upload” icon</li>
+<li>Select your PNG file</li>
+</ul></li>
+<li><p><strong>Add to document</strong>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">figure</span>}[!t]</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">\centering</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">\includegraphics</span>[width=0.8<span class="fu">\textwidth</span>]{<span class="ex">figures/gpt_vs_human_keyness.png</span>}</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">\caption</span>{DocuScope categories showing highest effect sizes </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    (LR &gt; 0.5) distinguishing ChatGPT-generated text from </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    human-written text in the HAP-E corpus.}</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">\label</span>{<span class="ex">fig:keyness</span>}</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">figure</span>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>Reference the figure</strong>: <code>As shown in Figure~\ref{fig:keyness}, the Positive category...</code></p></li>
+</ol>
+</section>
+</section>
+<section id="part-3-from-data-to-interpretation" class="level2">
+<h2 class="anchored" data-anchor-id="part-3-from-data-to-interpretation">Part 3: From Data to Interpretation</h2>
+<section id="writing-the-results-section" class="level3">
+<h3 class="anchored" data-anchor-id="writing-the-results-section">Writing the Results Section</h3>
+<p>The Results section <strong>reports what you found</strong>—keep it brief and descriptive:</p>
+<p><strong>What to include:</strong></p>
+<ol type="1">
+<li><strong>Direct description of patterns</strong>:
+<ul>
+<li>“ChatGPT-generated texts used Positive language 5.2 times per 100 tokens compared to 3.1 in human texts (LR = 0.67, LL = 423.5, p &lt; 0.001)”</li>
+<li>Report actual numbers from your tables</li>
+<li>Include effect sizes (LR) and significance (LL, p-values)</li>
+</ul></li>
+<li><strong>Reference your visualizations</strong>:
+<ul>
+<li>“Figure 1 shows the five DocuScope categories with the largest effect sizes…”</li>
+<li>Guide readers through what they’re seeing</li>
+</ul></li>
+<li><strong>Avoid interpretation</strong> (save that for Discussion):
+<ul>
+<li>❌ “This suggests ChatGPT is overly optimistic”</li>
+<li>✅ “ChatGPT texts contain 67% more Positive language”</li>
+</ul></li>
+</ol>
+<p><strong>Quick example</strong> (yours doesn’t need to be this polished):</p>
+<blockquote class="blockquote">
+<p>We analyzed 150 texts from the HAP-E corpus (see Table 1). Figure 2 shows the five DocuScope categories that most strongly distinguish ChatGPT from human writing (LR &gt; 0.5). The Positive category shows the largest difference: ChatGPT uses it 5.2 times per 100 tokens versus 3.1 in human texts (LR = 0.67, p &lt; 0.001).</p>
+</blockquote>
+</section>
+<section id="developing-your-discussion" class="level3">
+<h3 class="anchored" data-anchor-id="developing-your-discussion">Developing Your Discussion</h3>
+<p>This is the <strong>exploratory heart</strong> of the CBE. The Discussion is where you: - <strong>Speculate</strong> about what the patterns might mean - <strong>Propose</strong> provisional explanations (even if you can’t fully test them) - <strong>Sketch</strong> what you’d investigate next</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Think Out Loud
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Don’t worry about having a complete argument. Coffee break experiments are about <strong>exploration</strong>: - What caught your attention in the data? - What might explain it? - What questions does it raise? - If you had more time, what would you do next?</p>
+</div>
+</div>
+<p><strong>Quick framework for provisional interpretation:</strong></p>
+<ol type="1">
+<li><strong>What did you notice?</strong>
+<ul>
+<li>Look at your KWIC concordances—what patterns jumped out?</li>
+<li>Example: “resilience,” “opportunity,” “beneficial” cluster together</li>
+</ul></li>
+<li><strong>Why might this be happening?</strong>
+<ul>
+<li>Brainstorm possibilities (training data? instruction-following? genre conventions?)</li>
+<li>You don’t need definitive answers—provisional explanations are fine</li>
+</ul></li>
+<li><strong>What would you do next?</strong>
+<ul>
+<li>If this were a full project, what would you investigate?</li>
+<li>More data? Different comparisons? Qualitative analysis?</li>
+</ul></li>
+<li><strong>What didn’t work?</strong>
+<ul>
+<li>It’s okay if your initial approach didn’t pan out</li>
+<li>Explain what you tried and why it didn’t reveal what you expected</li>
+</ul></li>
+</ol>
+<p><strong>Example Discussion paragraph</strong> (exploratory tone):</p>
+<blockquote class="blockquote">
+<p>What caught our attention was how often ChatGPT uses words like “resilience,” “opportunity,” and “beneficial”—always in optimistic contexts. Looking at the concordances, ChatGPT seems to avoid hedging or acknowledging limitations, which is common in human academic writing. Why? Maybe it’s trained on motivational content, or maybe when you prompt it to “explain” something, it defaults to positive framing. We’re not sure, but it makes us wonder about using AI for academic writing—students might need to consciously add critical perspective. If we had more time, we’d compare different prompts (“critique” vs.&nbsp;“explain”) to see if instruction affects tone.</p>
+</blockquote>
+</section>
+<section id="sketching-your-exploratory-path" class="level3">
+<h3 class="anchored" data-anchor-id="sketching-your-exploratory-path">Sketching Your Exploratory Path</h3>
+<p>Your CBE should tell a story of <strong>discovery</strong>, not present a finished argument:</p>
+<p><strong>Introduction</strong> → What made you curious?<br>
+<strong>Data</strong> → What did you look at?<br>
+<strong>Methods</strong> → What did you try?<br>
+<strong>Results</strong> → What did you find?<br>
+<strong>Discussion</strong> → What might it mean? What’s next?</p>
+<p><strong>Example discovery path:</strong></p>
+<ul>
+<li><strong>Curiosity</strong>: We wondered if AI writing sounds different from human writing</li>
+<li><strong>Data</strong>: Used HAP-E corpus to compare</li>
+<li><strong>Method</strong>: Tried keyness analysis to find distinctive features</li>
+<li><strong>Finding</strong>: ChatGPT uses way more “Positive” language</li>
+<li><strong>Speculation</strong>: Maybe it’s too optimistic? Lacks critical stance?</li>
+<li><strong>Next steps</strong>: Would test different prompts, look at other AI models, read more about training data</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Embrace the Provisional
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>It’s okay to say: - “We’re not sure, but…”<br>
+- “This might suggest…”<br>
+- “If we had more time, we’d…”<br>
+- “This didn’t work as expected because…”</p>
+<p>CBEs are about the <strong>process of exploration</strong>, not the final answer.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="part-4-citation-and-academic-integrity" class="level2">
+<h2 class="anchored" data-anchor-id="part-4-citation-and-academic-integrity">Part 4: Citation and Academic Integrity</h2>
+<section id="adding-sources-to-your-bibliography" class="level3">
+<h3 class="anchored" data-anchor-id="adding-sources-to-your-bibliography">Adding Sources to Your Bibliography</h3>
+<p>The template includes <code>main.bib</code> with sample citations. Add your own sources:</p>
+<p><strong>BibTeX format:</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bibtex code-with-copy"><code class="sourceCode bibtex"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="va">@article</span>{<span class="ot">uniquekey2024</span>,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">title</span>={Article Title},</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">author</span>={Last, First and Last, First},</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">journal</span>={Journal Name},</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">volume</span>={10},</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">number</span>={2},</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">pages</span>={100--125},</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">year</span>={2024},</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">publisher</span>={Publisher Name}</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Finding BibTeX citations:</strong></p>
+<ul>
+<li>Google Scholar: Click “Cite” → “BibTeX”</li>
+<li>Zotero: Right-click item → Export → BibTeX</li>
+</ul>
+<p><strong>Citing in text:</strong></p>
+<ul>
+<li><code>\cite{uniquekey2024}</code> → “(Last, 2024)”</li>
+<li><code>\citet{uniquekey2024}</code> → “Last (2024)” (with natbib package)</li>
+</ul>
+</section>
+<section id="using-generative-ai-responsibly" class="level3">
+<h3 class="anchored" data-anchor-id="using-generative-ai-responsibly">Using Generative AI Responsibly</h3>
+<p>The template includes an Acknowledgments section for disclosing AI use. Be specific:</p>
+<p><strong>Acceptable disclosure:</strong> &gt; “We used ChatGPT-4 (OpenAI) to generate initial drafts of the Introduction and Methods sections, which we then substantially revised for accuracy and clarity. We also used it to suggest alternative phrasings for complex statistical descriptions in the Results section. We found it helpful for overcoming initial drafting inertia, but the AI-generated prose often lacked discipline-specific precision and required significant editing.”</p>
+<p><strong>What to disclose:</strong></p>
+<ul>
+<li>Which AI tool(s) you used (name and version)</li>
+<li>What specific tasks (drafting, revising, paraphrasing)</li>
+<li>How you modified the output</li>
+<li>Your evaluation of its usefulness</li>
+</ul>
+</section>
+</section>
+<section id="part-5-team-workflow-and-collaboration" class="level2">
+<h2 class="anchored" data-anchor-id="part-5-team-workflow-and-collaboration">Part 5: Team Workflow and Collaboration</h2>
+<section id="division-of-labor" class="level3">
+<h3 class="anchored" data-anchor-id="division-of-labor">Division of Labor</h3>
+<p>Assign clear responsibilities:</p>
+<p><strong>Manager</strong>: - Creates and shares project - Manages final compilation - Ensures all sections connect</p>
+<p><strong>Data Analyst</strong>: - Runs Mini Lab 5 analyses - Generates tables and figures - Writes Methods section</p>
+<p><strong>Writer 1</strong>: - Introduction and Data sections - Bibliography management</p>
+<p><strong>Writer 2</strong>: - Results and Discussion sections - Caption writing</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Everyone Reviews Everything
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Even with assigned sections, all team members should read and comment on the complete draft. Fresh eyes catch inconsistencies and unclear explanations.</p>
+</div>
+</div>
+</section>
+<section id="overleaf-collaboration-features" class="level3">
+<h3 class="anchored" data-anchor-id="overleaf-collaboration-features">Overleaf Collaboration Features</h3>
+<p><strong>Track Changes:</strong> - Review → Track Changes → On - All edits appear highlighted - Accept/reject individual changes</p>
+<p><strong>Comments:</strong> - Highlight text → Comment icon - Use for questions, suggestions, citations to add</p>
+<p><strong>Chat:</strong> - Bottom left icon - For quick coordination - Not preserved in final document</p>
+<p><strong>Version History:</strong> - Clock icon (top right) - See all changes over time - Revert to earlier versions if needed</p>
+</section>
+<section id="quick-checklist" class="level3">
+<h3 class="anchored" data-anchor-id="quick-checklist">Quick Checklist</h3>
+<p>Before submitting (don’t obsess over perfection):</p>
+<ul class="task-list">
+<li><label><input type="checkbox">Names and title updated</label></li>
+<li><label><input type="checkbox">Your table and figure are included</label></li>
+<li><label><input type="checkbox">Placeholder “Lorem ipsum” text replaced with your writing</label></li>
+<li><label><input type="checkbox">PDF compiles and downloads</label></li>
+<li><label><input type="checkbox">All team members have read it</label></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Good Enough Is Good Enough
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If a table is slightly too wide, or you have a citation warning, or your figure caption could be better—that’s fine. Focus your limited time on <strong>thinking through your interpretation</strong>, not perfecting LaTeX formatting.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="reflection-questions" class="level2">
+<h2 class="anchored" data-anchor-id="reflection-questions">Reflection Questions</h2>
+<p>After completing CBE #2, consider:</p>
+<ol type="1">
+<li><p><strong>Discovery</strong>: What surprised you most in your data? Did your initial expectations match what you found?</p></li>
+<li><p><strong>Interpretation</strong>: How did you move from “ChatGPT uses more Positive language” to “this might mean X”? What made that leap difficult or easy?</p></li>
+<li><p><strong>Next steps</strong>: If you had another week, what would you investigate next? What questions remain unanswered?</p></li>
+<li><p><strong>Limitations</strong>: What didn’t work as planned? What would you change about your approach?</p></li>
+<li><p><strong>Collaborative exploration</strong>: How did working as a team help (or hinder) the exploratory process? Did you generate ideas together or divide and conquer?</p></li>
+</ol>
+</section>
+<section id="works-cited" class="level2">
+<h2 class="anchored" data-anchor-id="works-cited">Works Cited</h2>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../reports/cbe_01.html" class="pagination-link" aria-label="Coffee Break Experiment #1: From Curiosity to Visualization">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Coffee Break Experiment #1: From Curiosity to Visualization</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../reports/cbe_03.html" class="pagination-link" aria-label="Coffee Break Experiment #3: Final Project Pilot Study">
+        <span class="nav-page-text">Coffee Break Experiment #3: Final Project Pilot Study</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/browndw/humanities_analytics/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

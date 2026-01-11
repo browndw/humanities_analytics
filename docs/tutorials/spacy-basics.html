@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.557">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Methods in Humanities Analytics - 3&nbsp; NLP Processing with spaCy</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../tutorials/frequency-and-distributions.html" rel="next">
+<link href="../tutorials/corpus-basics.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../images/text_analysis.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Methods in Humanities Analytics</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/browndw/humanities_analytics" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorials/sentiment-and-syuzhet.html">Foundations</a></li><li class="breadcrumb-item"><a href="../tutorials/spacy-basics.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NLP Processing with spaCy</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/sentiment-and-syuzhet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Texts, Algorithms, and Black-Boxes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/corpus-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Corpus Basics: Tokenization and Processing Pipelines</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/spacy-basics.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NLP Processing with spaCy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/frequency-and-distributions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Distributions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Core Methods</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/keyness.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Keyness</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/collocations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Collocations and N-grams</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/time-series.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Time Series Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/topic-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Topic Modeling</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Advanced Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/categorical-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">ANOVA and R²: Comparing Groups and Explaining Variance</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/cluster-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Clustering Methods</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/correlations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Correlation and Multi-Collinearity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/multi-dimensional-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Multi-Dimensional Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/contextual-embeddings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Contextual Embeddings and Transformers</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/classification-federalist-papers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Classification &amp; Authorship Attribution</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Reports</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #1: From Curiosity to Visualization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #2: From Results to Research</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #3: Final Project Pilot Study</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/final-project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Final Project: Independent Corpus Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/statistical-reporting-guide.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Statistical Reporting Guide</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Course Resources</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/using-colab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Using Google Colab</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../resources/packages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Python Packages for This Course</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../resources/data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Course Data Resources</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">3.1</span> Introduction</a></li>
+  <li><a href="#understanding-the-spacy-pipeline" id="toc-understanding-the-spacy-pipeline" class="nav-link" data-scroll-target="#understanding-the-spacy-pipeline"><span class="header-section-number">3.2</span> Understanding the spaCy Pipeline</a>
+  <ul class="collapse">
+  <li><a href="#what-happens-when-you-process-text" id="toc-what-happens-when-you-process-text" class="nav-link" data-scroll-target="#what-happens-when-you-process-text"><span class="header-section-number">3.2.1</span> What Happens When You Process Text?</a></li>
+  <li><a href="#models-and-sizes" id="toc-models-and-sizes" class="nav-link" data-scroll-target="#models-and-sizes"><span class="header-section-number">3.2.2</span> Models and Sizes</a></li>
+  </ul></li>
+  <li><a href="#loading-and-pre-processing-texts" id="toc-loading-and-pre-processing-texts" class="nav-link" data-scroll-target="#loading-and-pre-processing-texts"><span class="header-section-number">3.3</span> Loading and Pre-processing Texts</a>
+  <ul class="collapse">
+  <li><a href="#the-importance-of-pre-processing" id="toc-the-importance-of-pre-processing" class="nav-link" data-scroll-target="#the-importance-of-pre-processing"><span class="header-section-number">3.3.1</span> The Importance of Pre-processing</a></li>
+  <li><a href="#parsing-the-texts" id="toc-parsing-the-texts" class="nav-link" data-scroll-target="#parsing-the-texts"><span class="header-section-number">3.3.2</span> Parsing the Texts</a></li>
+  </ul></li>
+  <li><a href="#token-level-analysis" id="toc-token-level-analysis" class="nav-link" data-scroll-target="#token-level-analysis"><span class="header-section-number">3.4</span> Token-Level Analysis</a>
+  <ul class="collapse">
+  <li><a href="#basic-token-operations" id="toc-basic-token-operations" class="nav-link" data-scroll-target="#basic-token-operations"><span class="header-section-number">3.4.1</span> Basic Token Operations</a></li>
+  <li><a href="#frequency-distributions" id="toc-frequency-distributions" class="nav-link" data-scroll-target="#frequency-distributions"><span class="header-section-number">3.4.2</span> Frequency Distributions</a></li>
+  <li><a href="#visualizing-token-distributions" id="toc-visualizing-token-distributions" class="nav-link" data-scroll-target="#visualizing-token-distributions"><span class="header-section-number">3.4.3</span> Visualizing Token Distributions</a></li>
+  </ul></li>
+  <li><a href="#sentence-level-analysis" id="toc-sentence-level-analysis" class="nav-link" data-scroll-target="#sentence-level-analysis"><span class="header-section-number">3.5</span> Sentence-Level Analysis</a>
+  <ul class="collapse">
+  <li><a href="#sentence-segmentation" id="toc-sentence-segmentation" class="nav-link" data-scroll-target="#sentence-segmentation"><span class="header-section-number">3.5.1</span> Sentence Segmentation</a></li>
+  <li><a href="#sentence-length-analysis" id="toc-sentence-length-analysis" class="nav-link" data-scroll-target="#sentence-length-analysis"><span class="header-section-number">3.5.2</span> Sentence Length Analysis</a></li>
+  <li><a href="#finding-extreme-sentences" id="toc-finding-extreme-sentences" class="nav-link" data-scroll-target="#finding-extreme-sentences"><span class="header-section-number">3.5.3</span> Finding Extreme Sentences</a></li>
+  </ul></li>
+  <li><a href="#named-entity-recognition-ner" id="toc-named-entity-recognition-ner" class="nav-link" data-scroll-target="#named-entity-recognition-ner"><span class="header-section-number">3.6</span> Named Entity Recognition (NER)</a>
+  <ul class="collapse">
+  <li><a href="#extracting-entity-types" id="toc-extracting-entity-types" class="nav-link" data-scroll-target="#extracting-entity-types"><span class="header-section-number">3.6.1</span> Extracting Entity Types</a></li>
+  <li><a href="#counting-specific-entities" id="toc-counting-specific-entities" class="nav-link" data-scroll-target="#counting-specific-entities"><span class="header-section-number">3.6.2</span> Counting Specific Entities</a></li>
+  <li><a href="#validating-ner-with-context" id="toc-validating-ner-with-context" class="nav-link" data-scroll-target="#validating-ner-with-context"><span class="header-section-number">3.6.3</span> Validating NER with Context</a></li>
+  </ul></li>
+  <li><a href="#part-of-speech-tagging" id="toc-part-of-speech-tagging" class="nav-link" data-scroll-target="#part-of-speech-tagging"><span class="header-section-number">3.7</span> Part-of-Speech Tagging</a>
+  <ul class="collapse">
+  <li><a href="#understanding-pos-categories" id="toc-understanding-pos-categories" class="nav-link" data-scroll-target="#understanding-pos-categories"><span class="header-section-number">3.7.1</span> Understanding POS Categories</a></li>
+  <li><a href="#pos-distribution-analysis" id="toc-pos-distribution-analysis" class="nav-link" data-scroll-target="#pos-distribution-analysis"><span class="header-section-number">3.7.2</span> POS Distribution Analysis</a></li>
+  <li><a href="#filtering-by-pos" id="toc-filtering-by-pos" class="nav-link" data-scroll-target="#filtering-by-pos"><span class="header-section-number">3.7.3</span> Filtering by POS</a></li>
+  </ul></li>
+  <li><a href="#dependency-parsing" id="toc-dependency-parsing" class="nav-link" data-scroll-target="#dependency-parsing"><span class="header-section-number">3.8</span> Dependency Parsing</a>
+  <ul class="collapse">
+  <li><a href="#understanding-syntax-trees" id="toc-understanding-syntax-trees" class="nav-link" data-scroll-target="#understanding-syntax-trees"><span class="header-section-number">3.8.1</span> Understanding Syntax Trees</a></li>
+  <li><a href="#visualizing-parse-trees" id="toc-visualizing-parse-trees" class="nav-link" data-scroll-target="#visualizing-parse-trees"><span class="header-section-number">3.8.2</span> Visualizing Parse Trees</a></li>
+  <li><a href="#extracting-syntactic-patterns" id="toc-extracting-syntactic-patterns" class="nav-link" data-scroll-target="#extracting-syntactic-patterns"><span class="header-section-number">3.8.3</span> Extracting Syntactic Patterns</a></li>
+  </ul></li>
+  <li><a href="#word-embeddings-and-semantic-similarity" id="toc-word-embeddings-and-semantic-similarity" class="nav-link" data-scroll-target="#word-embeddings-and-semantic-similarity"><span class="header-section-number">3.9</span> Word Embeddings and Semantic Similarity</a>
+  <ul class="collapse">
+  <li><a href="#pre-trained-word-vectors" id="toc-pre-trained-word-vectors" class="nav-link" data-scroll-target="#pre-trained-word-vectors"><span class="header-section-number">3.9.1</span> Pre-trained Word Vectors</a></li>
+  <li><a href="#visualizing-word-embeddings" id="toc-visualizing-word-embeddings" class="nav-link" data-scroll-target="#visualizing-word-embeddings"><span class="header-section-number">3.9.2</span> Visualizing Word Embeddings</a></li>
+  </ul></li>
+  <li><a href="#document-level-analysis" id="toc-document-level-analysis" class="nav-link" data-scroll-target="#document-level-analysis"><span class="header-section-number">3.10</span> Document-Level Analysis</a>
+  <ul class="collapse">
+  <li><a href="#document-similarity" id="toc-document-similarity" class="nav-link" data-scroll-target="#document-similarity"><span class="header-section-number">3.10.1</span> Document Similarity</a></li>
+  <li><a href="#tf-idf-vectorization" id="toc-tf-idf-vectorization" class="nav-link" data-scroll-target="#tf-idf-vectorization"><span class="header-section-number">3.10.2</span> TF-IDF Vectorization</a></li>
+  </ul></li>
+  <li><a href="#choosing-the-right-tool-for-your-question" id="toc-choosing-the-right-tool-for-your-question" class="nav-link" data-scroll-target="#choosing-the-right-tool-for-your-question"><span class="header-section-number">3.11</span> Choosing the Right Tool for Your Question</a></li>
+  <li><a href="#when-to-use-nlp-pipelines" id="toc-when-to-use-nlp-pipelines" class="nav-link" data-scroll-target="#when-to-use-nlp-pipelines"><span class="header-section-number">3.12</span> When to Use NLP Pipelines</a></li>
+  <li><a href="#common-pitfalls" id="toc-common-pitfalls" class="nav-link" data-scroll-target="#common-pitfalls"><span class="header-section-number">3.13</span> Common Pitfalls</a></li>
+  <li><a href="#what-to-do-after-processing" id="toc-what-to-do-after-processing" class="nav-link" data-scroll-target="#what-to-do-after-processing"><span class="header-section-number">3.14</span> What to Do After Processing</a>
+  <ul class="collapse">
+  <li><a href="#connect-to-literary-analysis" id="toc-connect-to-literary-analysis" class="nav-link" data-scroll-target="#connect-to-literary-analysis"><span class="header-section-number">3.14.1</span> Connect to Literary Analysis</a></li>
+  <li><a href="#connect-to-linguistic-analysis" id="toc-connect-to-linguistic-analysis" class="nav-link" data-scroll-target="#connect-to-linguistic-analysis"><span class="header-section-number">3.14.2</span> Connect to Linguistic Analysis</a></li>
+  <li><a href="#connect-to-distant-reading" id="toc-connect-to-distant-reading" class="nav-link" data-scroll-target="#connect-to-distant-reading"><span class="header-section-number">3.14.3</span> Connect to Distant Reading</a></li>
+  <li><a href="#methodological-triangulation" id="toc-methodological-triangulation" class="nav-link" data-scroll-target="#methodological-triangulation"><span class="header-section-number">3.14.4</span> Methodological Triangulation</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">3.15</span> Conclusion</a></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also"><span class="header-section-number">3.16</span> See Also</a></li>
+  <li><a href="#works-cited" id="toc-works-cited" class="nav-link" data-scroll-target="#works-cited"><span class="header-section-number">3.17</span> Works Cited</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/browndw/humanities_analytics/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorials/sentiment-and-syuzhet.html">Foundations</a></li><li class="breadcrumb-item"><a href="../tutorials/spacy-basics.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NLP Processing with spaCy</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NLP Processing with spaCy</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><a target="_blank" href="https://colab.research.google.com/github/browndw/humanities_analytics/blob/main/mini_labs/Mini_Lab_08_All_Things_spaCy.ipynb"> <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"> </a></p>
+<section id="introduction" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">3.1</span> Introduction</h2>
+<p>Most text analysis workflows follow a similar pattern: read text → process text → extract features → analyze features → interpret results. The middle steps—processing and feature extraction—often involve the same computational operations: tokenization, part-of-speech tagging, parsing, and entity recognition. Instead of reinventing these steps for every project, <strong>NLP processing pipelines</strong> automate them.</p>
+<p><strong>spaCy</strong> is an industrial-strength NLP library that provides a complete pipeline architecture. Unlike tools designed for teaching (NLTK) or experimental research (Stanford CoreNLP), spaCy prioritizes speed, accuracy, and production readiness. It’s the engine behind many commercial NLP applications and can process millions of words per second on modern hardware.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Why Processing Pipelines Matter
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A good pipeline:</p>
+<ul>
+<li><strong>Standardizes preprocessing</strong>: Everyone on a team gets the same tokenization, the same POS tags, the same parses</li>
+<li><strong>Enables reproducibility</strong>: Save the pipeline configuration and get identical results later</li>
+<li><strong>Supports complex workflows</strong>: Chain operations (tokenize → tag → parse → extract) without manual coordination</li>
+<li><strong>Facilitates reuse</strong>: Train custom components (NER, text classification) and plug them into existing pipelines</li>
+<li><strong>Improves efficiency</strong>: Process once, extract many features (tokens, lemmas, dependencies, entities) in one pass</li>
+</ul>
+</div>
+</div>
+<p><strong>Research questions spaCy can help answer</strong>:</p>
+<ul>
+<li>How do sentence structures differ between genres or time periods?</li>
+<li>Which characters are described with which adjectives across a novel?</li>
+<li>Where do key thematic words cluster in a narrative?</li>
+<li>How do authors distribute place names or temporal references?</li>
+<li>Which documents in a corpus share similar vocabulary profiles?</li>
+</ul>
+<p>This tutorial covers:</p>
+<ol type="1">
+<li><strong>Pipeline architecture</strong>: What spaCy does automatically when you process text</li>
+<li><strong>Token-level analysis</strong>: Exploring word attributes, frequencies, and distributions</li>
+<li><strong>Sentence-level analysis</strong>: Segmentation and structural patterns</li>
+<li><strong>Named entity recognition</strong>: Extracting people, places, organizations, and events</li>
+<li><strong>Part-of-speech tagging</strong>: Identifying grammatical categories and stylistic patterns</li>
+<li><strong>Dependency parsing</strong>: Understanding grammatical relationships</li>
+<li><strong>Word embeddings</strong>: Semantic similarity from pre-trained vectors</li>
+<li><strong>Document vectorization</strong>: Comparing texts numerically</li>
+</ol>
+</section>
+<section id="understanding-the-spacy-pipeline" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="understanding-the-spacy-pipeline"><span class="header-section-number">3.2</span> Understanding the spaCy Pipeline</h2>
+<section id="what-happens-when-you-process-text" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="what-happens-when-you-process-text"><span class="header-section-number">3.2.1</span> What Happens When You Process Text?</h3>
+<p>When you run <code>doc = nlp(text)</code>, spaCy executes a multi-stage pipeline:</p>
+<p><strong>1. Tokenization</strong>: Splits text into words, punctuation, numbers</p>
+<p><strong>2. Part-of-speech tagging</strong>: Assigns grammatical categories (noun, verb, adjective, etc.)</p>
+<p><strong>3. Lemmatization</strong>: Reduces words to dictionary forms (“running” → “run”)</p>
+<p><strong>4. Dependency parsing</strong>: Identifies grammatical relationships between words</p>
+<p><strong>5. Named entity recognition (NER)</strong>: Labels spans as people, organizations, locations, etc.</p>
+<p><strong>6. (Optional) Additional components</strong>: Sentiment analysis, text classification, custom extractors</p>
+<p>All of these happen <strong>in one pass</strong> over the text. The result is a <code>Doc</code> object containing the original text plus all linguistic annotations.</p>
+</section>
+<section id="models-and-sizes" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="models-and-sizes"><span class="header-section-number">3.2.2</span> Models and Sizes</h3>
+<p>spaCy’s English models come in three sizes:</p>
+<ul>
+<li><strong><code>en_core_web_sm</code></strong> (small, ~12 MB): No word vectors, faster, less accurate</li>
+<li><strong><code>en_core_web_md</code></strong> (medium, ~40 MB): 300-dimensional word vectors, balanced speed/accuracy</li>
+<li><strong><code>en_core_web_lg</code></strong> (large, ~560 MB): More vectors, highest accuracy, slower</li>
+</ul>
+<p>For this tutorial, we use <code>en_core_web_md</code>—large enough for meaningful semantic analysis, small enough for quick processing.</p>
+</section>
+</section>
+<section id="loading-and-pre-processing-texts" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="loading-and-pre-processing-texts"><span class="header-section-number">3.3</span> Loading and Pre-processing Texts</h2>
+<p>We’ll analyze two texts: <em>Monty Python and the Holy Grail</em> (1975 screenplay) and Jane Austen’s <em>Pride and Prejudice</em> (1813 novel).</p>
+<div id="90ba7c33" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load texts from GitHub</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>grail_url <span class="op">=</span> <span class="st">'https://github.com/browndw/humanities_analytics/raw/refs/heads/main/data/data_text/grail.txt'</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>pride_url <span class="op">=</span> <span class="st">'https://github.com/browndw/humanities_analytics/raw/refs/heads/main/data/data_text/pride.txt'</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> urllib.request.urlopen(grail_url) <span class="im">as</span> response:</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    grail_raw <span class="op">=</span> response.read().decode(<span class="st">'utf-8'</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> urllib.request.urlopen(pride_url) <span class="im">as</span> response:</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    pride_raw <span class="op">=</span> response.read().decode(<span class="st">'utf-8'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="the-importance-of-pre-processing" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="the-importance-of-pre-processing"><span class="header-section-number">3.3.1</span> The Importance of Pre-processing</h3>
+<p>The <em>Monty Python</em> script includes character names, stage directions, and formatting. Let’s peek:</p>
+<div id="ac5c8da6" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>grail_raw[:<span class="dv">500</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>'SCENE 1: [wind] [clop clop clop] \nKING ARTHUR: Whoa there!  [clop clop clop] \nSOLDIER #1: Halt!  Who goes there?\nARTHUR: It is I, Arthur, son of Uther Pendragon, from the castle of Camelot.  King of the Britons, defeator of the Saxons, sovereign of all England!\nSOLDIER #1: Pull the other one!\nARTHUR: I am, ...  and this is my trusty servant Patsy.  We have ridden the length and breadth of the land in search of knights who will join me in my court at Camelot.  I must speak with your lord and mast'</code></pre>
+</div>
+</div>
+<p><strong>Question</strong>: Should we keep this metadata?</p>
+<p><strong>Answer depends on your research question</strong>:</p>
+<ul>
+<li>Studying dialogue style → remove character names and stage directions</li>
+<li>Analyzing narrative structure → keep stage directions (they describe action)</li>
+<li>Examining character-specific language → keep character labels, analyze per-character</li>
+</ul>
+<p>For this tutorial, we’ll extract just the dialogue:</p>
+<div id="2dc4b261" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove character names (anything before a colon at line start)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>grail_raw <span class="op">=</span> re.sub(<span class="vs">r'\n.*?: '</span>, <span class="st">' '</span>, grail_raw)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>grail_raw <span class="op">=</span> re.sub(<span class="vs">r'^.*?: '</span>, <span class="st">' '</span>, grail_raw)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove stage directions in brackets</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>grail_raw <span class="op">=</span> re.sub(<span class="vs">r'\[.*?\]'</span>, <span class="st">' '</span>, grail_raw)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize whitespace</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>grail_raw <span class="op">=</span> <span class="st">" "</span>.join(grail_raw.split()).strip()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="ae866cdb" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pride &amp; Prejudice needs only whitespace normalization</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>pride_raw <span class="op">=</span> <span class="st">" "</span>.join(pride_raw.split()).strip()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="parsing-the-texts" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="parsing-the-texts"><span class="header-section-number">3.3.2</span> Parsing the Texts</h3>
+<p>Now we pass the cleaned texts through the pipeline:</p>
+<div id="e7940691" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>grail <span class="op">=</span> nlp(grail_raw)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>pride <span class="op">=</span> nlp(pride_raw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This takes ~20-30 seconds for <em>Pride and Prejudice</em> (~120K words). Each word is now annotated with POS tags, lemmas, dependency labels, and entity types.</p>
+</section>
+</section>
+<section id="token-level-analysis" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="token-level-analysis"><span class="header-section-number">3.4</span> Token-Level Analysis</h2>
+<section id="basic-token-operations" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="basic-token-operations"><span class="header-section-number">3.4.1</span> Basic Token Operations</h3>
+<p>A <code>Doc</code> object is an iterable sequence of <code>Token</code> objects:</p>
+<div id="2b7c600d" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First 10 tokens</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pride[:<span class="dv">10</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>It is a truth universally acknowledged, that a single</code></pre>
+</div>
+</div>
+<div id="1699a8a7" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Total token count (includes punctuation)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(pride)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>143771</code></pre>
+</div>
+</div>
+<p>Tokens have rich attributes:</p>
+<div id="67e0c2af" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Examine a single token</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>token <span class="op">=</span> pride[<span class="dv">4</span>]  <span class="co"># "universally"</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Text: </span><span class="sc">{</span>token<span class="sc">.</span>text<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Lemma: </span><span class="sc">{</span>token<span class="sc">.</span>lemma_<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"POS: </span><span class="sc">{</span>token<span class="sc">.</span>pos_<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Tag: </span><span class="sc">{</span>token<span class="sc">.</span>tag_<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Index: </span><span class="sc">{</span>token<span class="sc">.</span>i<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Character index: </span><span class="sc">{</span>token<span class="sc">.</span>idx<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Is punctuation?: </span><span class="sc">{</span>token<span class="sc">.</span>is_punct<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Is stop word?: </span><span class="sc">{</span>token<span class="sc">.</span>is_stop<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Text: universally
+Lemma: universally
+POS: ADV
+Tag: RB
+Index: 4
+Character index: 14
+Is punctuation?: False
+Is stop word?: False</code></pre>
+</div>
+</div>
+<p><strong>Key attributes</strong>:</p>
+<ul>
+<li><code>.text</code>: Original word form</li>
+<li><code>.lemma_</code>: Dictionary form (“running” → “run”)</li>
+<li><code>.pos_</code>: Coarse part-of-speech (NOUN, VERB, ADJ, etc.)</li>
+<li><code>.tag_</code>: Fine-grained tag (NN, VBG, JJ, etc. from Penn Treebank)</li>
+<li><code>.i</code>: Token index in document</li>
+<li><code>.is_punct</code>, <code>.is_stop</code>, <code>.is_alpha</code>: Boolean flags</li>
+<li><code>.ent_type_</code>: Named entity label (if applicable)</li>
+</ul>
+</section>
+<section id="frequency-distributions" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="frequency-distributions"><span class="header-section-number">3.4.2</span> Frequency Distributions</h3>
+<p>Count word frequencies with <code>Counter</code>:</p>
+<div id="401eaea8" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>pride_counts <span class="op">=</span> Counter([tok.text <span class="cf">for</span> tok <span class="kw">in</span> pride])</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>pride_counts.most_common(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>[(',', 9125),
+ ('.', 5021),
+ ('to', 4110),
+ ('the', 4058),
+ ('of', 3597),
+ ('"', 3521),
+ ('and', 3426),
+ ('her', 2137),
+ ('I', 2067),
+ ('a', 1905)]</code></pre>
+</div>
+</div>
+<p>Unsurprisingly, function words dominate. Filter for content words:</p>
+<div id="6bcc9688" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Count only nouns, verbs, adjectives</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>content_words <span class="op">=</span> [tok.lemma_.lower() <span class="cf">for</span> tok <span class="kw">in</span> pride </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                 <span class="cf">if</span> tok.pos_ <span class="kw">in</span> [<span class="st">'NOUN'</span>, <span class="st">'VERB'</span>, <span class="st">'ADJ'</span>] <span class="kw">and</span> <span class="kw">not</span> tok.is_stop]</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>Counter(content_words).most_common(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>[('say', 450),
+ ('know', 389),
+ ('think', 332),
+ ('sister', 294),
+ ('come', 254),
+ ('see', 245),
+ ('good', 226),
+ ('time', 223),
+ ('go', 187),
+ ('great', 186)]</code></pre>
+</div>
+</div>
+</section>
+<section id="visualizing-token-distributions" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="visualizing-token-distributions"><span class="header-section-number">3.4.3</span> Visualizing Token Distributions</h3>
+<p>Use token indices (<code>.i</code>) to plot word locations across narrative time:</p>
+<div id="be88b5d8" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find all instances of "love" and plot their positions</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>love_indices <span class="op">=</span> [word.i <span class="cf">for</span> word <span class="kw">in</span> pride <span class="cf">if</span> word.text.lower() <span class="op">==</span> <span class="st">'love'</span>]</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">3</span>))</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>plt.hist(love_indices, bins<span class="op">=</span><span class="dv">50</span>, color<span class="op">=</span><span class="st">'skyblue'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Token Position'</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Frequency'</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Distribution of "love" in Pride and Prejudice'</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="spacy-basics_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Interpretation</strong>: Where does “love” cluster? Early, middle, or late in the novel? Clusters might correspond to romantic turning points.</p>
+<p>Compare multiple words:</p>
+<div id="1663a5b0" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_histogram(word, doc, bins<span class="op">=</span><span class="dv">50</span>):</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    indices <span class="op">=</span> [tok.i <span class="cf">for</span> tok <span class="kw">in</span> doc <span class="cf">if</span> tok.text.lower() <span class="op">==</span> word.lower()]</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    hist, bin_edges <span class="op">=</span> np.histogram(indices, bins<span class="op">=</span>bins, <span class="bu">range</span><span class="op">=</span>(<span class="dv">0</span>, <span class="bu">len</span>(doc)))</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> hist</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>words <span class="op">=</span> [<span class="st">'love'</span>, <span class="st">'hate'</span>, <span class="st">'pride'</span>, <span class="st">'prejudice'</span>]</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>word_hists <span class="op">=</span> [get_histogram(w, pride) <span class="cf">for</span> w <span class="kw">in</span> words]</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>words_df <span class="op">=</span> pd.DataFrame(word_hists, index<span class="op">=</span>words).T</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>words_df.plot(subplots<span class="op">=</span><span class="va">True</span>, figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">8</span>), legend<span class="op">=</span><span class="va">False</span>, color<span class="op">=</span>[<span class="st">'steelblue'</span>, <span class="st">'darkred'</span>, <span class="st">'green'</span>, <span class="st">'purple'</span>])</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">'Narrative Arcs of Key Words in Pride and Prejudice'</span>)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="spacy-basics_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Computational Reasoning: From Patterns to Interpretation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Finding that “pride” appears more in early chapters and “love” more in later chapters is <strong>description</strong>. Interpreting this as reflecting the novel’s thematic arc from social judgment to romantic resolution is <strong>interpretation</strong>.</p>
+<p>Computational methods provide patterns; literary knowledge explains them. Always ask:</p>
+<ol type="1">
+<li><strong>What does this pattern show?</strong> (Description)</li>
+<li><strong>Why does it matter?</strong> (Interpretation)</li>
+<li><strong>What alternative explanations exist?</strong> (Critique)</li>
+<li><strong>How would I validate this with close reading?</strong> (Triangulation)</li>
+</ol>
+</div>
+</div>
+</section>
+</section>
+<section id="sentence-level-analysis" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="sentence-level-analysis"><span class="header-section-number">3.5</span> Sentence-Level Analysis</h2>
+<section id="sentence-segmentation" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="sentence-segmentation"><span class="header-section-number">3.5.1</span> Sentence Segmentation</h3>
+<p>spaCy automatically segments text into sentences:</p>
+<div id="1175f6a9" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Count sentences</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>pride_sents <span class="op">=</span> <span class="bu">list</span>(pride.sents)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(pride_sents)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>5844</code></pre>
+</div>
+</div>
+<div id="2363cd15" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First sentence</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">next</span>(pride.sents)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.</code></pre>
+</div>
+</div>
+<div id="5d6dcc64" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Last sentence</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>pride_sents[<span class="op">-</span><span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>Darcy, as well as Elizabeth, really loved them; and they were both ever sensible of the warmest gratitude towards the persons who, by bringing her into Derbyshire, had been the means of uniting them.</code></pre>
+</div>
+</div>
+</section>
+<section id="sentence-length-analysis" class="level3" data-number="3.5.2">
+<h3 data-number="3.5.2" class="anchored" data-anchor-id="sentence-length-analysis"><span class="header-section-number">3.5.2</span> Sentence Length Analysis</h3>
+<p>Average sentence length is a basic stylometric measure:</p>
+<div id="07d96663" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>pride_sent_lengths <span class="op">=</span> [<span class="bu">len</span>(sent) <span class="cf">for</span> sent <span class="kw">in</span> pride_sents]</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>avg_length <span class="op">=</span> np.mean(pride_sent_lengths)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Average sentence length: </span><span class="sc">{</span>avg_length<span class="sc">:.2f}</span><span class="ss"> tokens"</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Longest sentence: </span><span class="sc">{</span><span class="bu">max</span>(pride_sent_lengths)<span class="sc">}</span><span class="ss"> tokens"</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Shortest sentence: </span><span class="sc">{</span><span class="bu">min</span>(pride_sent_lengths)<span class="sc">}</span><span class="ss"> tokens"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Average sentence length: 24.60 tokens
+Longest sentence: 200 tokens
+Shortest sentence: 2 tokens</code></pre>
+</div>
+</div>
+<p>Plot the distribution:</p>
+<div id="c8165a14" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>plt.hist(pride_sent_lengths, bins<span class="op">=</span><span class="dv">50</span>, color<span class="op">=</span><span class="st">'skyblue'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Sentence Length (tokens)'</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Frequency'</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Sentence Length Distribution in Pride and Prejudice'</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>plt.axvline(avg_length, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="ss">f'Mean: </span><span class="sc">{</span>avg_length<span class="sc">:.1f}</span><span class="ss">'</span>)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="spacy-basics_files/figure-html/cell-19-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Compare across texts or time periods</strong>: Are 19th-century novels more syntactically complex than 20th-century screenplays? Do sentence lengths correlate with narrative tension?</p>
+</section>
+<section id="finding-extreme-sentences" class="level3" data-number="3.5.3">
+<h3 data-number="3.5.3" class="anchored" data-anchor-id="finding-extreme-sentences"><span class="header-section-number">3.5.3</span> Finding Extreme Sentences</h3>
+<p>Longest sentence:</p>
+<div id="e50aadbd" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>longest_sent <span class="op">=</span> <span class="bu">max</span>(pride_sents, key<span class="op">=</span><span class="bu">len</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Length: </span><span class="sc">{</span><span class="bu">len</span>(longest_sent)<span class="sc">}</span><span class="ss"> tokens"</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(longest_sent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Length: 200 tokens
+Every lingering struggle in his favour grew fainter and fainter; and in farther justification of Mr. Darcy, she could not but allow that Mr. Bingley, when questioned by Jane, had long ago asserted his blamelessness in the affair; that proud and repulsive as were his manners, she had never, in the whole course of their acquaintance--an acquaintance which had latterly brought them much together, and given her a sort of intimacy with his ways--seen anything that betrayed him to be unprincipled or unjust--anything that spoke him of irreligious or immoral habits; that among his own connections he was esteemed and valued--that even Wickham had allowed him merit as a brother, and that she had often heard him speak so affectionately of his sister as to prove him capable of some amiable feeling; that had his actions been what Mr. Wickham represented them, so gross a violation of everything right could hardly have been concealed from the world; and that friendship between a person capable of it, and such an amiable man as Mr. Bingley, was incomprehensible.</code></pre>
+</div>
+</div>
+<p>Shortest non-trivial sentence:</p>
+<div id="de524ffe" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>short_sents <span class="op">=</span> [sent <span class="cf">for</span> sent <span class="kw">in</span> pride_sents <span class="cf">if</span> <span class="bu">len</span>(sent) <span class="op">&gt;</span> <span class="dv">2</span>]</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>shortest_sent <span class="op">=</span> <span class="bu">min</span>(short_sents, key<span class="op">=</span><span class="bu">len</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Length: </span><span class="sc">{</span><span class="bu">len</span>(shortest_sent)<span class="sc">}</span><span class="ss"> tokens"</span>)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(shortest_sent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Length: 3 tokens
+"Oh!</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="named-entity-recognition-ner" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="named-entity-recognition-ner"><span class="header-section-number">3.6</span> Named Entity Recognition (NER)</h2>
+<section id="extracting-entity-types" class="level3" data-number="3.6.1">
+<h3 data-number="3.6.1" class="anchored" data-anchor-id="extracting-entity-types"><span class="header-section-number">3.6.1</span> Extracting Entity Types</h3>
+<p>Named entities are accessible via <code>doc.ents</code>:</p>
+<div id="11455e58" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># What entity types appear in Monty Python?</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>grail_entity_types <span class="op">=</span> <span class="bu">set</span>([ent.label_ <span class="cf">for</span> ent <span class="kw">in</span> grail.ents])</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>grail_entity_types</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<pre><code>{'CARDINAL',
+ 'DATE',
+ 'FAC',
+ 'GPE',
+ 'LANGUAGE',
+ 'LAW',
+ 'LOC',
+ 'NORP',
+ 'ORDINAL',
+ 'ORG',
+ 'PERSON',
+ 'PRODUCT',
+ 'QUANTITY',
+ 'TIME',
+ 'WORK_OF_ART'}</code></pre>
+</div>
+</div>
+<p><strong>Common entity labels</strong>:</p>
+<ul>
+<li><code>PERSON</code>: People, including fictional characters</li>
+<li><code>GPE</code>: Geopolitical entities (countries, cities, states)</li>
+<li><code>ORG</code>: Organizations, companies, institutions</li>
+<li><code>DATE</code>: Absolute or relative dates</li>
+<li><code>WORK_OF_ART</code>: Titles of books, songs, etc.</li>
+<li><code>NORP</code>: Nationalities, religious or political groups</li>
+<li><code>EVENT</code>: Named events (wars, hurricanes, etc.)</li>
+</ul>
+</section>
+<section id="counting-specific-entities" class="level3" data-number="3.6.2">
+<h3 data-number="3.6.2" class="anchored" data-anchor-id="counting-specific-entities"><span class="header-section-number">3.6.2</span> Counting Specific Entities</h3>
+<p>Extract place names:</p>
+<div id="5ab28e25" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>pride_places <span class="op">=</span> Counter([ent.text <span class="cf">for</span> ent <span class="kw">in</span> pride.ents <span class="cf">if</span> ent.label_ <span class="op">==</span> <span class="st">'GPE'</span>])</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>pride_places.most_common(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<pre><code>[('Charlotte', 73),
+ ('London', 54),
+ ('Hertfordshire', 41),
+ ('Brighton', 23),
+ ('Lucases', 12),
+ ('Georgiana', 12),
+ ('Scotland', 8),
+ ('Lambton', 7),
+ ('Wickham', 5),
+ ('England', 4)]</code></pre>
+</div>
+</div>
+<p><strong>Note limitations</strong>: NER works best on standard modern English. Historical texts, dialect, and creative spelling cause errors. Always inspect results critically.</p>
+<p>Extract people:</p>
+<div id="a0d30498" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>pride_people <span class="op">=</span> Counter([ent.text <span class="cf">for</span> ent <span class="kw">in</span> pride.ents <span class="cf">if</span> ent.label_ <span class="op">==</span> <span class="st">'PERSON'</span>])</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>pride_people.most_common(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<pre><code>[('Elizabeth', 625),
+ ('Darcy', 407),
+ ('Jane', 289),
+ ('Bennet', 268),
+ ('Bingley', 207),
+ ('Wickham', 180),
+ ('Collins', 179),
+ ('Lydia', 154),
+ ('Lizzy', 95),
+ ('Gardiner', 94)]</code></pre>
+</div>
+</div>
+</section>
+<section id="validating-ner-with-context" class="level3" data-number="3.6.3">
+<h3 data-number="3.6.3" class="anchored" data-anchor-id="validating-ner-with-context"><span class="header-section-number">3.6.3</span> Validating NER with Context</h3>
+<p>NER isn’t perfect. Check context when uncertain:</p>
+<div id="77aa4c83" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find sentences mentioning "Bennet"</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>bennet_sents <span class="op">=</span> [ent.sent <span class="cf">for</span> ent <span class="kw">in</span> pride.ents </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> ent.label_ <span class="op">==</span> <span class="st">'PERSON'</span> <span class="kw">and</span> <span class="st">'Bennet'</span> <span class="kw">in</span> ent.text]</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>bennet_sents[:<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<pre><code>["My dear Mr. Bennet," said his lady to him one day, "have you heard that Netherfield Park is let at last?",
+ Mr. Bennet replied that he had not.,
+ Mr. Bennet made no answer.]</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="part-of-speech-tagging" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="part-of-speech-tagging"><span class="header-section-number">3.7</span> Part-of-Speech Tagging</h2>
+<section id="understanding-pos-categories" class="level3" data-number="3.7.1">
+<h3 data-number="3.7.1" class="anchored" data-anchor-id="understanding-pos-categories"><span class="header-section-number">3.7.1</span> Understanding POS Categories</h3>
+<p>Part-of-speech (POS) tagging assigns grammatical categories to each word. spaCy uses two tag sets:</p>
+<ul>
+<li><strong>Coarse tags</strong> (<code>.pos_</code>): Universal Dependencies tagset (NOUN, VERB, ADJ, ADV, etc.)</li>
+<li><strong>Fine-grained tags</strong> (<code>.tag_</code>): Penn Treebank tagset (NN, VBZ, JJ, RB, etc.)</li>
+</ul>
+<div id="8da1acb1" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Examine POS tags in a sentence</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>sent <span class="op">=</span> <span class="bu">list</span>(pride.sents)[<span class="dv">0</span>]</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> token <span class="kw">in</span> sent:</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> token.is_punct:</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>token<span class="sc">.</span>text<span class="sc">:15}</span><span class="ss"> </span><span class="sc">{</span>token<span class="sc">.</span>pos_<span class="sc">:8}</span><span class="ss"> </span><span class="sc">{</span>token<span class="sc">.</span>tag_<span class="sc">:6}</span><span class="ss"> (</span><span class="sc">{</span>spacy<span class="sc">.</span>explain(token.tag_)<span class="sc">}</span><span class="ss">)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>It              PRON     PRP    (pronoun, personal)
+is              AUX      VBZ    (verb, 3rd person singular present)
+a               DET      DT     (determiner)
+truth           NOUN     NN     (noun, singular or mass)
+universally     ADV      RB     (adverb)
+acknowledged    VERB     VBD    (verb, past tense)
+that            SCONJ    IN     (conjunction, subordinating or preposition)
+a               DET      DT     (determiner)
+single          ADJ      JJ     (adjective (English), other noun-modifier (Chinese))
+man             NOUN     NN     (noun, singular or mass)
+in              ADP      IN     (conjunction, subordinating or preposition)
+possession      NOUN     NN     (noun, singular or mass)
+of              ADP      IN     (conjunction, subordinating or preposition)
+a               DET      DT     (determiner)
+good            ADJ      JJ     (adjective (English), other noun-modifier (Chinese))
+fortune         NOUN     NN     (noun, singular or mass)
+must            AUX      MD     (verb, modal auxiliary)
+be              AUX      VB     (verb, base form)
+in              ADP      IN     (conjunction, subordinating or preposition)
+want            NOUN     NN     (noun, singular or mass)
+of              ADP      IN     (conjunction, subordinating or preposition)
+a               DET      DT     (determiner)
+wife            NOUN     NN     (noun, singular or mass)</code></pre>
+</div>
+</div>
+</section>
+<section id="pos-distribution-analysis" class="level3" data-number="3.7.2">
+<h3 data-number="3.7.2" class="anchored" data-anchor-id="pos-distribution-analysis"><span class="header-section-number">3.7.2</span> POS Distribution Analysis</h3>
+<p>Compare POS distributions across texts to detect stylistic differences:</p>
+<div id="1ba1ac56" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_pos_distribution(doc):</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Calculate POS tag frequencies as proportions."""</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    pos_counts <span class="op">=</span> Counter([tok.pos_ <span class="cf">for</span> tok <span class="kw">in</span> doc <span class="cf">if</span> <span class="kw">not</span> tok.is_punct <span class="kw">and</span> <span class="kw">not</span> tok.is_space])</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    total <span class="op">=</span> <span class="bu">sum</span>(pos_counts.values())</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {pos: count<span class="op">/</span>total <span class="cf">for</span> pos, count <span class="kw">in</span> pos_counts.items()}</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>pride_pos <span class="op">=</span> get_pos_distribution(pride)</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>grail_pos <span class="op">=</span> get_pos_distribution(grail)</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare distributions</span></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>pos_df <span class="op">=</span> pd.DataFrame({<span class="st">'Pride &amp; Prejudice'</span>: pride_pos, <span class="st">'Monty Python'</span>: grail_pos}).fillna(<span class="dv">0</span>)</span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>pos_df <span class="op">=</span> pos_df.sort_values(<span class="st">'Pride &amp; Prejudice'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>pos_df.plot(kind<span class="op">=</span><span class="st">'bar'</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">5</span>))</span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'POS Distribution Comparison'</span>)</span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Part of Speech'</span>)</span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Proportion'</span>)</span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="spacy-basics_files/figure-html/cell-27-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Interpretation</strong>: Novels typically have higher proportions of nouns (scene-setting, character description), while dialogue-heavy screenplays may show more verbs and pronouns (action, direct address).</p>
+</section>
+<section id="filtering-by-pos" class="level3" data-number="3.7.3">
+<h3 data-number="3.7.3" class="anchored" data-anchor-id="filtering-by-pos"><span class="header-section-number">3.7.3</span> Filtering by POS</h3>
+<p>Extract all adjectives to analyze descriptive language:</p>
+<div id="d82c2d3b" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>pride_adjectives <span class="op">=</span> [tok.lemma_.lower() <span class="cf">for</span> tok <span class="kw">in</span> pride </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span> tok.pos_ <span class="op">==</span> <span class="st">'ADJ'</span> <span class="kw">and</span> <span class="kw">not</span> tok.is_stop]</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>Counter(pride_adjectives).most_common(<span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<pre><code>[('good', 219),
+ ('great', 186),
+ ('little', 176),
+ ('young', 172),
+ ('dear', 141),
+ ('sure', 102),
+ ('happy', 96),
+ ('well', 56),
+ ('possible', 56),
+ ('certain', 55),
+ ('able', 54),
+ ('ill', 51),
+ ('general', 49),
+ ('present', 49),
+ ('agreeable', 45),
+ ('handsome', 44),
+ ('impossible', 44),
+ ('short', 44),
+ ('fine', 38),
+ ('glad', 37)]</code></pre>
+</div>
+</div>
+<p><strong>Stylometric question</strong>: Do certain authors favor particular adjective types (evaluative vs.&nbsp;physical, subjective vs.&nbsp;objective)?</p>
+</section>
+</section>
+<section id="dependency-parsing" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="dependency-parsing"><span class="header-section-number">3.8</span> Dependency Parsing</h2>
+<section id="understanding-syntax-trees" class="level3" data-number="3.8.1">
+<h3 data-number="3.8.1" class="anchored" data-anchor-id="understanding-syntax-trees"><span class="header-section-number">3.8.1</span> Understanding Syntax Trees</h3>
+<p>Dependency parsing reveals grammatical structure—which words modify which, what role each word plays (subject, object, modifier).</p>
+<p>Each token has:</p>
+<ul>
+<li><code>.dep_</code>: Dependency relation (e.g., “nsubj” = nominal subject, “dobj” = direct object)</li>
+<li><code>.head</code>: The word this token modifies or depends on</li>
+<li><code>.children</code>: Words that modify this token</li>
+</ul>
+<div id="b31d6734" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyze a sentence</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>sent <span class="op">=</span> <span class="bu">list</span>(pride.sents)[<span class="dv">10</span>]</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sent)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> token <span class="kw">in</span> sent:</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>token<span class="sc">.</span>text<span class="sc">:15}</span><span class="ss"> </span><span class="sc">{</span>token<span class="sc">.</span>dep_<span class="sc">:10}</span><span class="ss"> </span><span class="sc">{</span>token<span class="sc">.</span>head<span class="sc">.</span>text<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>"What is his name?"
+
+"               punct      is
+What            attr       is
+is              ROOT       is
+his             poss       name
+name            nsubj      is
+?               punct      is
+"               punct      is</code></pre>
+</div>
+</div>
+</section>
+<section id="visualizing-parse-trees" class="level3" data-number="3.8.2">
+<h3 data-number="3.8.2" class="anchored" data-anchor-id="visualizing-parse-trees"><span class="header-section-number">3.8.2</span> Visualizing Parse Trees</h3>
+<p>spaCy’s <code>displacy</code> renders dependency trees:</p>
+<div id="b99641a3" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> SVG, display</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Render a short sentence</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>short_sent <span class="op">=</span> <span class="bu">list</span>(pride.sents)[<span class="dv">5</span>]</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>svg <span class="op">=</span> spacy.displacy.render(short_sent, style<span class="op">=</span><span class="st">'dep'</span>, jupyter<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Display inline</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>display(SVG(svg))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="spacy-basics_files/figure-html/cell-30-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Reading the tree</strong>:</p>
+<ul>
+<li>Arrows point from <strong>head</strong> to <strong>dependent</strong></li>
+<li>Labels describe the relationship (nsubj, dobj, amod, etc.)</li>
+<li>The <strong>root</strong> is the main verb</li>
+</ul>
+</section>
+<section id="extracting-syntactic-patterns" class="level3" data-number="3.8.3">
+<h3 data-number="3.8.3" class="anchored" data-anchor-id="extracting-syntactic-patterns"><span class="header-section-number">3.8.3</span> Extracting Syntactic Patterns</h3>
+<p>Find adjectives modifying character names:</p>
+<div id="dda73d31" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> adjectives_for_character(doc, character):</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Find adjectives that modify a character name."""</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    adjectives <span class="op">=</span> []</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> sent <span class="kw">in</span> doc.sents:</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> word <span class="kw">in</span> sent:</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> character <span class="kw">in</span> word.text:</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> child <span class="kw">in</span> word.children:</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span> child.pos_ <span class="op">==</span> <span class="st">'ADJ'</span>:</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>                        adjectives.append(child.text)</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Counter(adjectives).most_common(<span class="dv">10</span>)</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>adjectives_for_character(pride, <span class="st">'Darcy'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="30">
+<pre><code>[('late', 7),
+ ('superior', 1),
+ ('abominable', 1),
+ ('poor', 1),
+ ('disagreeable', 1)]</code></pre>
+</div>
+</div>
+<p><strong>Interpretation</strong>: “Fine”, “handsome”, “great” describe Darcy—but what’s the context? Are these narrator descriptions, Elizabeth’s perceptions, or other characters’ opinions? Always verify with close reading.</p>
+<p>Find verbs associated with characters:</p>
+<div id="eb02fe8d" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> verbs_for_character(doc, character):</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Find verbs where the character is the subject."""</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>    verbs <span class="op">=</span> []</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>    char_tokens <span class="op">=</span> [tok <span class="cf">for</span> sent <span class="kw">in</span> doc.sents <span class="cf">for</span> tok <span class="kw">in</span> sent </span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>                   <span class="cf">if</span> character <span class="kw">in</span> tok.text]</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> token <span class="kw">in</span> char_tokens:</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Walk up the dependency tree to find governing verbs</span></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> ancestor <span class="kw">in</span> token.ancestors:</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> ancestor.pos_ <span class="op">==</span> <span class="st">'VERB'</span>:</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>                verbs.append(ancestor.lemma_)</span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>                <span class="cf">break</span>  <span class="co"># Take only the first verb ancestor</span></span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Counter(verbs).most_common(<span class="dv">20</span>)</span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>elizabeth_verbs <span class="op">=</span> verbs_for_character(pride, <span class="st">'Elizabeth'</span>)</span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>elizabeth_verbs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="31">
+<pre><code>[('say', 55),
+ ('cry', 24),
+ ('reply', 21),
+ ('have', 20),
+ ('see', 18),
+ ('look', 13),
+ ('feel', 13),
+ ('make', 10),
+ ('find', 9),
+ ('think', 8),
+ ('receive', 8),
+ ('go', 8),
+ ('listen', 7),
+ ('take', 7),
+ ('help', 7),
+ ('give', 7),
+ ('hear', 6),
+ ('speak', 6),
+ ('begin', 5),
+ ('ask', 5)]</code></pre>
+</div>
+</div>
+<p><strong>Computational reasoning question</strong>: Do character-verb associations reveal agency? If Elizabeth is the subject of active verbs (“say,” “ask,” “feel”) more than passive constructions, does that signal narrative focalization or character autonomy?</p>
+</section>
+</section>
+<section id="word-embeddings-and-semantic-similarity" class="level2" data-number="3.9">
+<h2 data-number="3.9" class="anchored" data-anchor-id="word-embeddings-and-semantic-similarity"><span class="header-section-number">3.9</span> Word Embeddings and Semantic Similarity</h2>
+<section id="pre-trained-word-vectors" class="level3" data-number="3.9.1">
+<h3 data-number="3.9.1" class="anchored" data-anchor-id="pre-trained-word-vectors"><span class="header-section-number">3.9.1</span> Pre-trained Word Vectors</h3>
+<p>The <code>en_core_web_md</code> model includes 300-dimensional word vectors trained on web text using the GloVe algorithm. These vectors capture semantic relationships: words with similar meanings have similar vectors.</p>
+<div id="4d10844f" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare word similarities</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>peanut <span class="op">=</span> nlp(<span class="st">'peanut'</span>)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>horse <span class="op">=</span> nlp(<span class="st">'horse'</span>)</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>mockingbird <span class="op">=</span> nlp(<span class="st">'mockingbird'</span>)</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"peanut ↔ horse: </span><span class="sc">{</span>peanut<span class="sc">.</span>similarity(horse)<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"peanut ↔ mockingbird: </span><span class="sc">{</span>peanut<span class="sc">.</span>similarity(mockingbird)<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"horse ↔ mockingbird: </span><span class="sc">{</span>horse<span class="sc">.</span>similarity(mockingbird)<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>peanut ↔ horse: 0.640
+peanut ↔ mockingbird: 0.036
+horse ↔ mockingbird: 0.096</code></pre>
+</div>
+</div>
+<p><strong>Interpretation</strong>: Similarity scores range from -1 (opposite) to 1 (identical). Higher scores = more semantically related.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Critical Limitation: Generic vs.&nbsp;Contextual Embeddings
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>spaCy’s default word vectors are <strong>pre-trained and fixed</strong>. They capture general semantic relationships from a large web corpus, NOT context-specific meanings in your texts.</p>
+<p><strong>Example</strong>: “Bank” in “river bank” vs.&nbsp;“bank account” gets the same vector—a blend of both meanings. The model doesn’t distinguish word senses.</p>
+<p><strong>Implication</strong>: Word similarities reflect broad semantic fields, not specific usage in <em>Pride and Prejudice</em> or <em>Monty Python</em>. To analyze local collocational patterns, use frequency-based methods (Mini Lab 6) or train custom embeddings.</p>
+</div>
+</div>
+</section>
+<section id="visualizing-word-embeddings" class="level3" data-number="3.9.2">
+<h3 data-number="3.9.2" class="anchored" data-anchor-id="visualizing-word-embeddings"><span class="header-section-number">3.9.2</span> Visualizing Word Embeddings</h3>
+<p>Extract nouns from <em>Pride and Prejudice</em> and reduce dimensions for 2D plotting:</p>
+<div id="636d6e2b" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get first 150 nouns</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>pride_nouns <span class="op">=</span> [tok <span class="cf">for</span> tok <span class="kw">in</span> pride <span class="cf">if</span> tok.pos_ <span class="op">==</span> <span class="st">'NOUN'</span>][:<span class="dv">150</span>]</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>pride_noun_vecs <span class="op">=</span> [tok.vector <span class="cf">for</span> tok <span class="kw">in</span> pride_nouns]</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>pride_noun_labels <span class="op">=</span> [tok.text <span class="cf">for</span> tok <span class="kw">in</span> pride_nouns]</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Reduce from 300 to 2 dimensions using SVD</span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> TruncatedSVD</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>lsa <span class="op">=</span> TruncatedSVD(n_components<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>noun_2d <span class="op">=</span> lsa.fit_transform(pride_noun_vecs)</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">8</span>))</span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, label <span class="kw">in</span> <span class="bu">enumerate</span>(pride_noun_labels):</span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>    x, y <span class="op">=</span> noun_2d[i]</span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>    plt.scatter(x, y, alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>    plt.annotate(label, (x, y), fontsize<span class="op">=</span><span class="dv">8</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-18"><a href="#cb54-18" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Semantic Space of Nouns in Pride and Prejudice (Pre-trained Embeddings)'</span>)</span>
+<span id="cb54-19"><a href="#cb54-19" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Component 1'</span>)</span>
+<span id="cb54-20"><a href="#cb54-20" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Component 2'</span>)</span>
+<span id="cb54-21"><a href="#cb54-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="spacy-basics_files/figure-html/cell-34-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>What this shows</strong>: Semantic neighborhoods from GloVe, not Austen-specific usage. Character names, family terms, and social concepts may cluster based on general semantic similarity, not narrative relationships.</p>
+</section>
+</section>
+<section id="document-level-analysis" class="level2" data-number="3.10">
+<h2 data-number="3.10" class="anchored" data-anchor-id="document-level-analysis"><span class="header-section-number">3.10</span> Document-Level Analysis</h2>
+<section id="document-similarity" class="level3" data-number="3.10.1">
+<h3 data-number="3.10.1" class="anchored" data-anchor-id="document-similarity"><span class="header-section-number">3.10.1</span> Document Similarity</h3>
+<p>spaCy can compute similarity between entire documents using averaged word vectors:</p>
+<div id="b028601c" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load a few inaugural speeches</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'inaugural'</span>, quiet<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> inaugural</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Get two speeches</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>obama_2009 <span class="op">=</span> nlp(inaugural.raw(<span class="st">'2009-Obama.txt'</span>))</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>trump_2017 <span class="op">=</span> nlp(inaugural.raw(<span class="st">'2017-Trump.txt'</span>))</span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>reagan_1981 <span class="op">=</span> nlp(inaugural.raw(<span class="st">'1981-Reagan.txt'</span>))</span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Obama 2009 ↔ Trump 2017: </span><span class="sc">{</span>obama_2009<span class="sc">.</span>similarity(trump_2017)<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Obama 2009 ↔ Reagan 1981: </span><span class="sc">{</span>obama_2009<span class="sc">.</span>similarity(reagan_1981)<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Trump 2017 ↔ Reagan 1981: </span><span class="sc">{</span>trump_2017<span class="sc">.</span>similarity(reagan_1981)<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Obama 2009 ↔ Trump 2017: 0.996
+Obama 2009 ↔ Reagan 1981: 0.999
+Trump 2017 ↔ Reagan 1981: 0.997</code></pre>
+</div>
+</div>
+<p><strong>Interpretation</strong>: Higher scores = more semantically similar vocabulary and themes. But similarity doesn’t capture tone, political ideology, or rhetorical strategy—only word choice.</p>
+</section>
+<section id="tf-idf-vectorization" class="level3" data-number="3.10.2">
+<h3 data-number="3.10.2" class="anchored" data-anchor-id="tf-idf-vectorization"><span class="header-section-number">3.10.2</span> TF-IDF Vectorization</h3>
+<p>For more nuanced document comparison, use TF-IDF (term frequency-inverse document frequency) to weight words by distinctiveness:</p>
+<div id="b01480b4" class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare inaugural speeches from 20th century onward</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>inaugural_files <span class="op">=</span> [f <span class="cf">for</span> f <span class="kw">in</span> inaugural.fileids() <span class="cf">if</span> <span class="bu">int</span>(f[:<span class="dv">4</span>]) <span class="op">&gt;=</span> <span class="dv">1900</span>]</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>inaugural_texts <span class="op">=</span> [inaugural.raw(f) <span class="cf">for</span> f <span class="kw">in</span> inaugural_files]</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>inaugural_labels <span class="op">=</span> [f[:<span class="op">-</span><span class="dv">4</span>] <span class="cf">for</span> f <span class="kw">in</span> inaugural_files]</span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Vectorize</span></span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>tfidf <span class="op">=</span> TfidfVectorizer(stop_words<span class="op">=</span><span class="st">'english'</span>, max_features<span class="op">=</span><span class="dv">1000</span>)</span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>tfidf_matrix <span class="op">=</span> tfidf.fit_transform(inaugural_texts)</span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Reduce dimensions for visualization</span></span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>lsa <span class="op">=</span> TruncatedSVD(n_components<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a>doc_2d <span class="op">=</span> lsa.fit_transform(tfidf_matrix.toarray())</span>
+<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-16"><a href="#cb57-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb57-17"><a href="#cb57-17" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">8</span>))</span>
+<span id="cb57-18"><a href="#cb57-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, label <span class="kw">in</span> <span class="bu">enumerate</span>(inaugural_labels):</span>
+<span id="cb57-19"><a href="#cb57-19" aria-hidden="true" tabindex="-1"></a>    x, y <span class="op">=</span> doc_2d[i]</span>
+<span id="cb57-20"><a href="#cb57-20" aria-hidden="true" tabindex="-1"></a>    plt.scatter(x, y, s<span class="op">=</span><span class="dv">100</span>, alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb57-21"><a href="#cb57-21" aria-hidden="true" tabindex="-1"></a>    plt.annotate(label, (x, y), fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb57-22"><a href="#cb57-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-23"><a href="#cb57-23" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Inaugural Addresses Semantic Space (TF-IDF + LSA)'</span>)</span>
+<span id="cb57-24"><a href="#cb57-24" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Component 1'</span>)</span>
+<span id="cb57-25"><a href="#cb57-25" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Component 2'</span>)</span>
+<span id="cb57-26"><a href="#cb57-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="spacy-basics_files/figure-html/cell-36-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Interpretation</strong>: Documents that cluster together use similar distinctive vocabulary. Time periods, political parties, or thematic concerns might drive clustering.</p>
+</section>
+</section>
+<section id="choosing-the-right-tool-for-your-question" class="level2" data-number="3.11">
+<h2 data-number="3.11" class="anchored" data-anchor-id="choosing-the-right-tool-for-your-question"><span class="header-section-number">3.11</span> Choosing the Right Tool for Your Question</h2>
+<p>Not every research question requires the full spaCy pipeline. Here’s how to decide which components you need:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 36%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Research Question</th>
+<th>spaCy Features to Use</th>
+<th>Why These Features?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Track character mentions across chapters</td>
+<td><strong>NER</strong> (entities)</td>
+<td>Automatically identifies person names</td>
+</tr>
+<tr class="even">
+<td>Compare sentence complexity over time</td>
+<td><strong>Tokenization</strong>, <strong>sentence segmentation</strong></td>
+<td>Measures syntactic structure</td>
+</tr>
+<tr class="odd">
+<td>Find verb-object patterns (e.g., “seek justice”)</td>
+<td><strong>Dependency parsing</strong></td>
+<td>Reveals grammatical relationships</td>
+</tr>
+<tr class="even">
+<td>Identify which texts discuss similar themes</td>
+<td><strong>Word embeddings</strong>, <strong>TF-IDF</strong></td>
+<td>Captures semantic similarity</td>
+</tr>
+<tr class="odd">
+<td>Analyze pronoun usage (“I” vs.&nbsp;“we” vs.&nbsp;“you”)</td>
+<td><strong>POS tagging</strong></td>
+<td>Distinguishes grammatical categories</td>
+</tr>
+<tr class="even">
+<td>Map place names in travel narratives</td>
+<td><strong>NER</strong> (GPE entities)</td>
+<td>Extracts location references</td>
+</tr>
+<tr class="odd">
+<td>Measure lexical diversity</td>
+<td><strong>Tokenization</strong>, <strong>lemmatization</strong></td>
+<td>Counts unique word forms</td>
+</tr>
+<tr class="even">
+<td>Compare dialogue vs.&nbsp;narration</td>
+<td><strong>Custom sentence filtering</strong></td>
+<td>Requires preprocessing choices</td>
+</tr>
+</tbody>
+</table>
+<p><strong>General principle</strong>: Start simple. Use basic tokenization and frequencies before moving to complex parsing. Add pipeline components only when they answer questions your current tools can’t.</p>
+</section>
+<section id="when-to-use-nlp-pipelines" class="level2" data-number="3.12">
+<h2 data-number="3.12" class="anchored" data-anchor-id="when-to-use-nlp-pipelines"><span class="header-section-number">3.12</span> When to Use NLP Pipelines</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Well-Suited Research Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>Syntactic analysis</strong>: Comparing sentence structures, finding grammatical patterns</li>
+<li><strong>Entity extraction</strong>: Tracking characters, places, organizations across texts</li>
+<li><strong>Dependency-based collocations</strong>: Finding verb-object pairs, adjective-noun pairs</li>
+<li><strong>Stylometric comparison</strong>: Sentence length, POS distributions, lexical diversity</li>
+<li><strong>Large-scale processing</strong>: Annotating thousands of texts consistently</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Limitations and Alternatives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>When pipelines struggle</strong>:</p>
+<ul>
+<li><strong>Historical texts</strong>: Pre-1900 English differs enough to cause POS and NER errors</li>
+<li><strong>Creative language</strong>: Poetry, experimental fiction, and non-standard syntax confuse parsers</li>
+<li><strong>Domain-specific terminology</strong>: Medical, legal, technical texts need specialized models</li>
+<li><strong>Word sense disambiguation</strong>: Fixed embeddings can’t distinguish polysemy</li>
+</ul>
+<p><strong>Alternative approaches</strong>:</p>
+<ul>
+<li><strong>Manual annotation</strong>: For small corpora, human coding may be more accurate</li>
+<li><strong>Rule-based extraction</strong>: Regular expressions for highly structured patterns</li>
+<li><strong>Custom model training</strong>: Train spaCy on domain-specific data</li>
+<li><strong>Contextual embeddings</strong>: Use transformer models (BERT, GPT) for sense-aware vectors</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="common-pitfalls" class="level2" data-number="3.13">
+<h2 data-number="3.13" class="anchored" data-anchor-id="common-pitfalls"><span class="header-section-number">3.13</span> Common Pitfalls</h2>
+<p><strong>1. Trusting NER blindly</strong></p>
+<p>Always inspect entity extractions. NER models make systematic errors on non-standard text. A character named “England” in a fantasy novel might be tagged as <code>GPE</code> (place).</p>
+<p><strong>2. Ignoring preprocessing choices</strong></p>
+<p>Removing stage directions, character names, or chapter headings changes results. Document what you remove and why.</p>
+<p><strong>3. Conflating description with interpretation</strong></p>
+<p>Finding that “Darcy” co-occurs with “proud” is a fact. Claiming this reflects his character arc requires close reading of context.</p>
+<p><strong>4. Overinterpreting embeddings</strong></p>
+<p>Pre-trained vectors show general semantic neighborhoods, not text-specific meanings. Don’t claim “love” and “marriage” are thematically linked in <em>Pride and Prejudice</em> based on GloVe similarity—check their actual collocational patterns.</p>
+<p><strong>5. Scalability assumptions</strong></p>
+<p>Processing one novel takes 30 seconds. Processing 10,000 novels takes hours or days. Plan compute resources accordingly.</p>
+<p><strong>6. Ignoring model limitations</strong></p>
+<p>spaCy is trained on modern web text. Apply to historical corpora with caution. Check accuracy on a sample before processing thousands of documents.</p>
+</section>
+<section id="what-to-do-after-processing" class="level2" data-number="3.14">
+<h2 data-number="3.14" class="anchored" data-anchor-id="what-to-do-after-processing"><span class="header-section-number">3.14</span> What to Do After Processing</h2>
+<p>spaCy extracts features—what you do with them depends on your discipline and research questions.</p>
+<section id="connect-to-literary-analysis" class="level3" data-number="3.14.1">
+<h3 data-number="3.14.1" class="anchored" data-anchor-id="connect-to-literary-analysis"><span class="header-section-number">3.14.1</span> Connect to Literary Analysis</h3>
+<p><strong>Character networks</strong>: Use dependency parsing to extract character-verb relationships, then analyze who performs which actions. Does agency correlate with narrative arc?</p>
+<p><strong>Narrative structure</strong>: Plot word distributions across text positions (Mini Lab 8’s narrative time analysis). Do clusters reveal plot structure?</p>
+<p><strong>Focalization</strong>: Track whose perspective dominates via subject-verb patterns. Whose verbs of perception (“saw,” “heard,” “felt”) appear most?</p>
+</section>
+<section id="connect-to-linguistic-analysis" class="level3" data-number="3.14.2">
+<h3 data-number="3.14.2" class="anchored" data-anchor-id="connect-to-linguistic-analysis"><span class="header-section-number">3.14.2</span> Connect to Linguistic Analysis</h3>
+<p><strong>Register variation</strong>: Compare POS distributions between dialogue and narration. Do characters speak differently than the narrator describes?</p>
+<p><strong>Diachronic change</strong>: Process texts across decades. How do sentence lengths, pronoun ratios, or entity types shift?</p>
+<p><strong>Genre markers</strong>: Use TF-IDF to identify distinctive vocabulary. What words characterize detective fiction vs.&nbsp;romance?</p>
+</section>
+<section id="connect-to-distant-reading" class="level3" data-number="3.14.3">
+<h3 data-number="3.14.3" class="anchored" data-anchor-id="connect-to-distant-reading"><span class="header-section-number">3.14.3</span> Connect to Distant Reading</h3>
+<p><strong>Clustering</strong>: Group documents by similarity (embeddings or TF-IDF). Do clusters align with known genres, time periods, or authors?</p>
+<p><strong>Outlier detection</strong>: Which texts have unusual POS distributions, sentence lengths, or entity densities? What makes them anomalous?</p>
+<p><strong>Hypothesis generation</strong>: Let computational patterns suggest close reading targets. Why does “pride” cluster early while “love” clusters late?</p>
+</section>
+<section id="methodological-triangulation" class="level3" data-number="3.14.4">
+<h3 data-number="3.14.4" class="anchored" data-anchor-id="methodological-triangulation"><span class="header-section-number">3.14.4</span> Methodological Triangulation</h3>
+<ol type="1">
+<li><strong>Start computational</strong>: Use spaCy to find patterns across large corpora</li>
+<li><strong>Zoom to close reading</strong>: Examine actual sentences where patterns appear</li>
+<li><strong>Contextualize historically</strong>: Check if patterns align with known historical events, genre conventions, or authorial biography</li>
+<li><strong>Iterate</strong>: Let close reading refine computational categories; let computation test interpretive hunches</li>
+</ol>
+<p><strong>Remember</strong>: spaCy is infrastructure. The humanities questions—why does this pattern matter? what does it reveal about culture, power, or aesthetics?—require domain expertise, not just code.</p>
+</section>
+</section>
+<section id="conclusion" class="level2" data-number="3.15">
+<h2 data-number="3.15" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">3.15</span> Conclusion</h2>
+<p>NLP pipelines transform raw text into structured, analyzable data. spaCy automates the boring parts (tokenization, POS tagging, parsing) so you can focus on the interesting parts (patterns, interpretations, arguments).</p>
+<p><strong>The workflow</strong>:</p>
+<ol type="1">
+<li><strong>Preprocess thoughtfully</strong> (clean text, but document what you remove)</li>
+<li><strong>Process with pipelines</strong> (let spaCy handle linguistic annotation)</li>
+<li><strong>Extract features</strong> (tokens, entities, dependencies, embeddings)</li>
+<li><strong>Analyze patterns</strong> (frequencies, distributions, relationships)</li>
+<li><strong>Interpret critically</strong> (connect computational patterns to domain knowledge)</li>
+<li><strong>Validate qualitatively</strong> (read actual examples, check errors)</li>
+</ol>
+<p>Remember: pipelines provide <strong>infrastructure</strong>, not <strong>answers</strong>. They standardize preprocessing and feature extraction. What you build on that foundation—whether stylometric comparison, character network analysis, or historical linguistic change—depends on your research questions and disciplinary expertise.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Connecting to Mini Lab 8
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><a href="../mini_labs/Mini_Lab_08_All_Things_spaCy.ipynb">Mini Lab 8: All Things spaCy</a> provides extensive hands-on practice with all the techniques covered here, plus advanced examples like character-verb extraction, narrative time correlation matrices, and document clustering. The mini lab uses <em>Pride and Prejudice</em>, <em>Monty Python</em>, and the inaugural corpus to demonstrate practical workflows.</p>
+<p><strong>Attribution</strong>: Mini Lab 8 is adapted from materials by Jonathan Reeve (Group for Experimental Methods in Humanities, Columbia University), shared under the MIT License.</p>
+</div>
+</div>
+</section>
+<section id="see-also" class="level2" data-number="3.16">
+<h2 data-number="3.16" class="anchored" data-anchor-id="see-also"><span class="header-section-number">3.16</span> See Also</h2>
+<p><strong>spaCy Documentation</strong>: <a href="https://spacy.io">spacy.io</a> — Official guides, API reference, model documentation</p>
+<p><strong>Textacy</strong>: A higher-level library built on spaCy for text analysis workflows, adding corpus management and feature extraction (<a href="https://textacy.readthedocs.io">textacy.readthedocs.io</a>)</p>
+<p><strong>Tutorial: NLP for Literary Text Analysis</strong>: Jonathan Reeve’s materials at <a href="https://github.com/JonathanReeve/advanced-text-analysis-workshop-2017">github.com/JonathanReeve/advanced-text-analysis-workshop-2017</a></p>
+<p><strong>Contextual Embeddings</strong>: For sense-aware word vectors, explore Hugging Face’s transformer models (<a href="https://huggingface.co/models">huggingface.co/models</a>)</p>
+<p><strong>Related Mini Labs</strong>: - <a href="../mini_labs/Mini_Lab_06_Collocations.ipynb">Mini Lab 6: Collocations</a> — Frequency-based word associations - <a href="../mini_labs/Mini_Lab_09_Topic_Modeling.ipynb">Mini Lab 9: Topic Modeling</a> — Unsupervised theme discovery - <a href="../mini_labs/Mini_Lab_10_MultidimensionalAnalysis.ipynb">Mini Lab 10: Multidimensional Analysis</a> — Register variation</p>
+</section>
+<section id="works-cited" class="level2" data-number="3.17">
+<h2 data-number="3.17" class="anchored" data-anchor-id="works-cited"><span class="header-section-number">3.17</span> Works Cited</h2>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../tutorials/corpus-basics.html" class="pagination-link" aria-label="Corpus Basics: Tokenization and Processing Pipelines">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Corpus Basics: Tokenization and Processing Pipelines</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../tutorials/frequency-and-distributions.html" class="pagination-link" aria-label="Distributions">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Distributions</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/browndw/humanities_analytics/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

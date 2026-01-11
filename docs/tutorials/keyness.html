@@ -1,0 +1,2684 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.557">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Methods in Humanities Analytics - 5&nbsp; Keyness</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../tutorials/collocations.html" rel="next">
+<link href="../tutorials/frequency-and-distributions.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../images/text_analysis.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Methods in Humanities Analytics</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/browndw/humanities_analytics" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorials/keyness.html">Core Methods</a></li><li class="breadcrumb-item"><a href="../tutorials/keyness.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Keyness</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/sentiment-and-syuzhet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Texts, Algorithms, and Black-Boxes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/corpus-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Corpus Basics: Tokenization and Processing Pipelines</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/spacy-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NLP Processing with spaCy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/frequency-and-distributions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Distributions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Core Methods</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/keyness.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Keyness</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/collocations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Collocations and N-grams</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/time-series.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Time Series Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/topic-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Topic Modeling</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Advanced Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/categorical-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">ANOVA and R²: Comparing Groups and Explaining Variance</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/cluster-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Clustering Methods</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/correlations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Correlation and Multi-Collinearity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/multi-dimensional-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Multi-Dimensional Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/contextual-embeddings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Contextual Embeddings and Transformers</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/classification-federalist-papers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Classification &amp; Authorship Attribution</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Reports</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #1: From Curiosity to Visualization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #2: From Results to Research</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #3: Final Project Pilot Study</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/final-project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Final Project: Independent Corpus Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/statistical-reporting-guide.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Statistical Reporting Guide</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Course Resources</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/using-colab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Using Google Colab</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../resources/packages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Python Packages for This Course</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../resources/data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Course Data Resources</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#what-is-keyness" id="toc-what-is-keyness" class="nav-link active" data-scroll-target="#what-is-keyness"><span class="header-section-number">5.1</span> What is keyness?</a>
+  <ul class="collapse">
+  <li><a href="#the-mathematics" id="toc-the-mathematics" class="nav-link" data-scroll-target="#the-mathematics"><span class="header-section-number">5.1.1</span> The mathematics</a></li>
+  </ul></li>
+  <li><a href="#prepare-a-corpus" id="toc-prepare-a-corpus" class="nav-link" data-scroll-target="#prepare-a-corpus"><span class="header-section-number">5.2</span> Prepare a corpus</a>
+  <ul class="collapse">
+  <li><a href="#load-the-needed-packages" id="toc-load-the-needed-packages" class="nav-link" data-scroll-target="#load-the-needed-packages"><span class="header-section-number">5.2.1</span> Load the needed packages</a></li>
+  <li><a href="#load-the-corpus" id="toc-load-the-corpus" class="nav-link" data-scroll-target="#load-the-corpus"><span class="header-section-number">5.2.2</span> Load the corpus</a></li>
+  <li><a href="#process-the-corpus" id="toc-process-the-corpus" class="nav-link" data-scroll-target="#process-the-corpus"><span class="header-section-number">5.2.3</span> Process the corpus</a></li>
+  </ul></li>
+  <li><a href="#corpus-composition-table" id="toc-corpus-composition-table" class="nav-link" data-scroll-target="#corpus-composition-table"><span class="header-section-number">5.3</span> Corpus composition table</a></li>
+  <li><a href="#research-workflow-from-question-to-keyness" id="toc-research-workflow-from-question-to-keyness" class="nav-link" data-scroll-target="#research-workflow-from-question-to-keyness"><span class="header-section-number">5.4</span> Research workflow: From question to keyness</a></li>
+  <li><a href="#choosing-target-and-reference-corpora" id="toc-choosing-target-and-reference-corpora" class="nav-link" data-scroll-target="#choosing-target-and-reference-corpora"><span class="header-section-number">5.5</span> Choosing target and reference corpora</a></li>
+  <li><a href="#creating-frequency-tables" id="toc-creating-frequency-tables" class="nav-link" data-scroll-target="#creating-frequency-tables"><span class="header-section-number">5.6</span> Creating frequency tables</a></li>
+  <li><a href="#creating-a-keyness-table" id="toc-creating-a-keyness-table" class="nav-link" data-scroll-target="#creating-a-keyness-table"><span class="header-section-number">5.7</span> Creating a keyness table</a>
+  <ul class="collapse">
+  <li><a href="#interpreting-the-results" id="toc-interpreting-the-results" class="nav-link" data-scroll-target="#interpreting-the-results"><span class="header-section-number">5.7.1</span> Interpreting the results</a></li>
+  </ul></li>
+  <li><a href="#comparing-tags-instead-of-tokens" id="toc-comparing-tags-instead-of-tokens" class="nav-link" data-scroll-target="#comparing-tags-instead-of-tokens"><span class="header-section-number">5.8</span> Comparing tags instead of tokens</a></li>
+  <li><a href="#effect-size" id="toc-effect-size" class="nav-link" data-scroll-target="#effect-size"><span class="header-section-number">5.9</span> Effect size</a>
+  <ul class="collapse">
+  <li><a href="#log-ratio-lr" id="toc-log-ratio-lr" class="nav-link" data-scroll-target="#log-ratio-lr"><span class="header-section-number">5.9.1</span> Log Ratio (LR)</a></li>
+  </ul></li>
+  <li><a href="#p-values-and-statistical-significance" id="toc-p-values-and-statistical-significance" class="nav-link" data-scroll-target="#p-values-and-statistical-significance"><span class="header-section-number">5.10</span> P-values and statistical significance</a></li>
+  <li><a href="#visualizing-keyness" id="toc-visualizing-keyness" class="nav-link" data-scroll-target="#visualizing-keyness"><span class="header-section-number">5.11</span> Visualizing keyness</a>
+  <ul class="collapse">
+  <li><a href="#finding-representative-examples" id="toc-finding-representative-examples" class="nav-link" data-scroll-target="#finding-representative-examples"><span class="header-section-number">5.11.1</span> Finding representative examples</a></li>
+  <li><a href="#visualizing-the-patterns" id="toc-visualizing-the-patterns" class="nav-link" data-scroll-target="#visualizing-the-patterns"><span class="header-section-number">5.11.2</span> Visualizing the patterns</a></li>
+  <li><a href="#a-practical-example" id="toc-a-practical-example" class="nav-link" data-scroll-target="#a-practical-example"><span class="header-section-number">5.11.3</span> A practical example</a></li>
+  </ul></li>
+  <li><a href="#what-to-do-after-keyness-analysis" id="toc-what-to-do-after-keyness-analysis" class="nav-link" data-scroll-target="#what-to-do-after-keyness-analysis"><span class="header-section-number">5.12</span> What to do after keyness analysis</a>
+  <ul class="collapse">
+  <li><a href="#examine-keywords-in-context" id="toc-examine-keywords-in-context" class="nav-link" data-scroll-target="#examine-keywords-in-context"><span class="header-section-number">5.12.1</span> 1. Examine keywords in context</a></li>
+  <li><a href="#investigate-collocations" id="toc-investigate-collocations" class="nav-link" data-scroll-target="#investigate-collocations"><span class="header-section-number">5.12.2</span> 2. Investigate collocations</a></li>
+  <li><a href="#build-a-feature-set-for-classification" id="toc-build-a-feature-set-for-classification" class="nav-link" data-scroll-target="#build-a-feature-set-for-classification"><span class="header-section-number">5.12.3</span> 3. Build a feature set for classification</a></li>
+  <li><a href="#compare-multiple-subcorpora" id="toc-compare-multiple-subcorpora" class="nav-link" data-scroll-target="#compare-multiple-subcorpora"><span class="header-section-number">5.12.4</span> 4. Compare multiple subcorpora</a></li>
+  <li><a href="#validate-with-qualitative-analysis" id="toc-validate-with-qualitative-analysis" class="nav-link" data-scroll-target="#validate-with-qualitative-analysis"><span class="header-section-number">5.12.5</span> 5. Validate with qualitative analysis</a></li>
+  </ul></li>
+  <li><a href="#when-to-use-keyness-and-when-not-to" id="toc-when-to-use-keyness-and-when-not-to" class="nav-link" data-scroll-target="#when-to-use-keyness-and-when-not-to"><span class="header-section-number">5.13</span> When to use keyness (and when not to)</a></li>
+  <li><a href="#common-pitfalls" id="toc-common-pitfalls" class="nav-link" data-scroll-target="#common-pitfalls"><span class="header-section-number">5.14</span> Common Pitfalls</a>
+  <ul class="collapse">
+  <li><a href="#a-cautionary-example" id="toc-a-cautionary-example" class="nav-link" data-scroll-target="#a-cautionary-example"><span class="header-section-number">5.14.1</span> A cautionary example</a></li>
+  </ul></li>
+  <li><a href="#discussion-questions" id="toc-discussion-questions" class="nav-link" data-scroll-target="#discussion-questions"><span class="header-section-number">5.15</span> Discussion Questions</a></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways"><span class="header-section-number">5.16</span> Key Takeaways</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">5.17</span> Further Reading</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/browndw/humanities_analytics/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorials/keyness.html">Core Methods</a></li><li class="breadcrumb-item"><a href="../tutorials/keyness.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Keyness</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Keyness</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><a target="_blank" href="https://colab.research.google.com/github/browndw/humanities_analytics/blob/main/mini_labs/Mini_Lab_04_Keywords.ipynb"> <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"> </a></p>
+<section id="what-is-keyness" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="what-is-keyness"><span class="header-section-number">5.1</span> What is keyness?</h2>
+<p>Keyness is a generic term for various statistical tests that compare observed vs.&nbsp;expected frequencies in text corpora.</p>
+<p>The most commonly used measure (though not the only option) is called <strong>log-likelihood</strong> in corpus linguistics, but you will see it elsewhere called a <strong>G-test</strong> of goodness-of-fit.</p>
+<p>The calculation is based on a 2 × 2 contingency table. It is similar to a chi-square test, but performs better when corpora are unequally sized—which is almost always the case in real research.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Why Keyness Matters
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Keyness helps us answer a fundamental question in corpus linguistics: <strong>What makes this corpus distinctive?</strong></p>
+<ul>
+<li><strong>Comparing genres</strong>: What words characterize academic writing vs.&nbsp;fiction?</li>
+<li><strong>Author attribution</strong>: What lexical choices distinguish Author A from Author B?</li>
+<li><strong>Temporal change</strong>: How has language use shifted over time?</li>
+<li><strong>Register analysis</strong>: What features mark formal vs.&nbsp;informal language?</li>
+</ul>
+<p>Keyness provides statistical evidence for claims like “academic writing uses more passive voice” or “this author prefers certain vocabulary.”</p>
+</div>
+</div>
+<section id="the-mathematics" class="level3" data-number="5.1.1">
+<h3 data-number="5.1.1" class="anchored" data-anchor-id="the-mathematics"><span class="header-section-number">5.1.1</span> The mathematics</h3>
+<p>Expected frequencies are based on the relative size of each corpus (in total number of words N<sub>i</sub>) and the total number of observed frequencies:</p>
+<p><span class="math display">\[
+E_i = \sum_i O_i \times \frac{N_i}{\sum_i N_i}
+\]</span></p>
+<p>And log-likelihood is calculated according to the formula:</p>
+<p><span class="math display">\[
+LL = 2 \times \sum_i O_i \ln \frac{O_i}{E_i}
+\]</span></p>
+<p>A good explanation of its implementation in linguistics can be found here: <a href="http://ucrel.lancs.ac.uk/llwizard.html" class="uri">http://ucrel.lancs.ac.uk/llwizard.html</a></p>
+<p>You don’t need to worry about the math, but you should understand what is happening conceptually and what the results show:</p>
+<blockquote class="blockquote">
+<p>Keyness measures the frequency we observe in a target corpus vs.&nbsp;what we would expect if our target corpus and our reference corpus were part of the same distribution. In other words: pool both corpora together and calculate expected frequencies based on overall proportions.</p>
+</blockquote>
+<p>Importantly, keyness measures <strong>how much evidence we have for an effect</strong>. It doesn’t make much sense to claim, for example, that one token is “more key” than another based solely on LL values.</p>
+</section>
+</section>
+<section id="prepare-a-corpus" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="prepare-a-corpus"><span class="header-section-number">5.2</span> Prepare a corpus</h2>
+<section id="load-the-needed-packages" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="load-the-needed-packages"><span class="header-section-number">5.2.1</span> Load the needed packages</h3>
+<div id="42ca3a79" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> docuscospacy.corpus_analysis <span class="im">as</span> ds</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> great_tables <span class="im">import</span> GT</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="load-the-corpus" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="load-the-corpus"><span class="header-section-number">5.2.2</span> Load the corpus</h3>
+<div id="b554889c" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://github.com/browndw/humanities_analytics/raw/refs/heads/main/data/data_tables/sample_corpus.parquet"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pl.read_parquet(url)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s peek at the data:</p>
+<div id="cd2df4cb" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 2)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">doc_id</th>
+<th data-quarto-table-cell-role="th">text</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"acad_01"</td>
+<td>"Teachers and other school pers…</td>
+</tr>
+<tr class="even">
+<td>"acad_02"</td>
+<td>"Abstract Does the conflict in …</td>
+</tr>
+<tr class="odd">
+<td>"acad_03"</td>
+<td>"January 17, 1993, will mark th…</td>
+</tr>
+<tr class="even">
+<td>"acad_04"</td>
+<td>"Thirty years have passed since…</td>
+</tr>
+<tr class="odd">
+<td>"acad_05"</td>
+<td>"ABSTRACT -- A common property …</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>For this tutorial, it’s useful to note what text categories are encoded in the <code>doc_id</code>:</p>
+<div id="84b0cbb6" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df.get_column(<span class="st">"doc_id"</span>).<span class="bu">str</span>.extract(<span class="vs">r"^([a-z]+)"</span>, <span class="dv">1</span>).unique().sort().to_list()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>['acad', 'blog', 'fic', 'mag', 'news', 'spok', 'tvm', 'web']</code></pre>
+</div>
+</div>
+</section>
+<section id="process-the-corpus" class="level3" data-number="5.2.3">
+<h3 data-number="5.2.3" class="anchored" data-anchor-id="process-the-corpus"><span class="header-section-number">5.2.3</span> Process the corpus</h3>
+<p>Load the spaCy model and process the corpus:</p>
+<div id="f8e06de9" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>nlp <span class="op">=</span> spacy.load(<span class="st">"en_docusco_spacy"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ds_tokens <span class="op">=</span> ds.docuscope_parse(df, nlp_model<span class="op">=</span>nlp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Performance: Corpus processing completed in 68.40s</code></pre>
+</div>
+</div>
+<p>Check the result:</p>
+<div id="ff1886d6" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ds_tokens.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 6)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">doc_id</th>
+<th data-quarto-table-cell-role="th">token</th>
+<th data-quarto-table-cell-role="th">pos_tag</th>
+<th data-quarto-table-cell-role="th">ds_tag</th>
+<th data-quarto-table-cell-role="th">pos_id</th>
+<th data-quarto-table-cell-role="th">ds_id</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>u32</th>
+<th>u32</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"acad_01"</td>
+<td>"Teachers "</td>
+<td>"NN2"</td>
+<td>"Character"</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>"acad_01"</td>
+<td>"and "</td>
+<td>"CC"</td>
+<td>"Untagged"</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>"acad_01"</td>
+<td>"other "</td>
+<td>"JJ"</td>
+<td>"InformationTopics"</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>"acad_01"</td>
+<td>"school "</td>
+<td>"NN1"</td>
+<td>"InformationTopics"</td>
+<td>4</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>"acad_01"</td>
+<td>"personnel "</td>
+<td>"NN2"</td>
+<td>"Character"</td>
+<td>5</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="corpus-composition-table" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="corpus-composition-table"><span class="header-section-number">5.3</span> Corpus composition table</h2>
+<p>It is conventional to report the composition of the corpus or corpora you are using for your study. Let’s create a table showing texts and tokens by text type:</p>
+<div id="3f712e17" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>corpus_comp <span class="op">=</span> (</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    df</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    .with_columns(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">"doc_id"</span>).<span class="bu">str</span>.extract(<span class="vs">r"^([a-z]+)"</span>, <span class="dv">1</span>).alias(<span class="st">"text_type"</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    .group_by(<span class="st">"text_type"</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    .agg([</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        pl.count().alias(<span class="st">"Texts"</span>),</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">"text"</span>).<span class="bu">str</span>.len_chars().<span class="bu">sum</span>().alias(<span class="st">"Characters"</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    ])</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    .sort(<span class="st">"text_type"</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/tmp/ipykernel_2829/541498524.py:8: DeprecationWarning: `pl.count()` is deprecated. Please use `pl.len()` instead.
+(Deprecated in version 0.20.5)
+  pl.count().alias("Texts"),</code></pre>
+</div>
+</div>
+<p>Display as a formatted table:</p>
+<div id="0eb894de" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>GT(corpus_comp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div id="xoyvnubmfj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>
+#xoyvnubmfj table {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+#xoyvnubmfj thead, tbody, tfoot, tr, td, th { border-style: none; }
+ tr { background-color: transparent; }
+#xoyvnubmfj p { margin: 0; padding: 0; }
+ #xoyvnubmfj .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #xoyvnubmfj .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #xoyvnubmfj .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #xoyvnubmfj .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #xoyvnubmfj .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #xoyvnubmfj .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #xoyvnubmfj .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #xoyvnubmfj .gt_col_heading { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #xoyvnubmfj .gt_column_spanner_outer { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #xoyvnubmfj .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #xoyvnubmfj .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #xoyvnubmfj .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #xoyvnubmfj .gt_spanner_row { border-bottom-style: hidden; }
+ #xoyvnubmfj .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #xoyvnubmfj .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #xoyvnubmfj .gt_from_md> :first-child { margin-top: 0; }
+ #xoyvnubmfj .gt_from_md> :last-child { margin-bottom: 0; }
+ #xoyvnubmfj .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #xoyvnubmfj .gt_stub { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #xoyvnubmfj .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #xoyvnubmfj .gt_row_group_first td { border-top-width: 2px; }
+ #xoyvnubmfj .gt_row_group_first th { border-top-width: 2px; }
+ #xoyvnubmfj .gt_striped { color: #333333; background-color: #F4F4F4; }
+ #xoyvnubmfj .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #xoyvnubmfj .gt_grand_summary_row { color: #333333; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #xoyvnubmfj .gt_first_grand_summary_row_bottom { border-top-style: double; border-top-width: 6px; border-top-color: #D3D3D3; }
+ #xoyvnubmfj .gt_last_grand_summary_row_top { border-bottom-style: double; border-bottom-width: 6px; border-bottom-color: #D3D3D3; }
+ #xoyvnubmfj .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #xoyvnubmfj .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #xoyvnubmfj .gt_left { text-align: left; }
+ #xoyvnubmfj .gt_center { text-align: center; }
+ #xoyvnubmfj .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #xoyvnubmfj .gt_font_normal { font-weight: normal; }
+ #xoyvnubmfj .gt_font_bold { font-weight: bold; }
+ #xoyvnubmfj .gt_font_italic { font-style: italic; }
+ #xoyvnubmfj .gt_super { font-size: 65%; }
+ #xoyvnubmfj .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #xoyvnubmfj .gt_asterisk { font-size: 100%; vertical-align: 0; }
+ 
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="text_type" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">text_type</th>
+<th id="Texts" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Texts</th>
+<th id="Characters" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Characters</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left">acad</td>
+<td class="gt_row gt_right">50</td>
+<td class="gt_row gt_right">800127</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">blog</td>
+<td class="gt_row gt_right">50</td>
+<td class="gt_row gt_right">713929</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">fic</td>
+<td class="gt_row gt_right">50</td>
+<td class="gt_row gt_right">702355</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">mag</td>
+<td class="gt_row gt_right">50</td>
+<td class="gt_row gt_right">746641</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">news</td>
+<td class="gt_row gt_right">50</td>
+<td class="gt_row gt_right">753216</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">spok</td>
+<td class="gt_row gt_right">50</td>
+<td class="gt_row gt_right">691963</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">tvm</td>
+<td class="gt_row gt_right">50</td>
+<td class="gt_row gt_right">661891</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">web</td>
+<td class="gt_row gt_right">50</td>
+<td class="gt_row gt_right">724367</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+        
+</div>
+</div>
+<p>This gives us context for interpreting keyness results—we know the relative sizes and composition of each text type.</p>
+</section>
+<section id="research-workflow-from-question-to-keyness" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="research-workflow-from-question-to-keyness"><span class="header-section-number">5.4</span> Research workflow: From question to keyness</h2>
+<p>Keyness analysis is not a fishing expedition—it should be guided by research questions. Here’s a practical workflow:</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Computational Reasoning: The Keyness Workflow
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>1. Start with a research question</strong></p>
+<ul>
+<li>❌ Bad: “What are the keywords in my corpus?”</li>
+<li>✅ Good: “How does academic writing differ lexically from other registers?”</li>
+<li>✅ Good: “What linguistic features distinguish Author A from Author B?”</li>
+</ul>
+<p><strong>2. Choose your target and reference thoughtfully</strong></p>
+<ul>
+<li><strong>Target</strong>: The corpus you want to characterize (e.g., academic texts)</li>
+<li><strong>Reference</strong>: The baseline for comparison (e.g., all other text types)</li>
+<li><strong>Critical question</strong>: What claims can you make based on this comparison?</li>
+</ul>
+<p><strong>3. Decide on your unit of analysis</strong></p>
+<ul>
+<li>Individual tokens (most common)</li>
+<li>POS tags (grammatical patterns)</li>
+<li>DocuScope categories (rhetorical patterns)</li>
+<li>N-grams (multi-word expressions)</li>
+</ul>
+<p><strong>4. Set appropriate thresholds</strong></p>
+<ul>
+<li>Larger corpora → stricter p-value thresholds (p &lt; 0.001 instead of 0.05)</li>
+<li>Consider both LL and LR when filtering</li>
+<li>Check dispersion (Range) to avoid document-specific artifacts</li>
+</ul>
+<p><strong>5. Interpret results in context</strong></p>
+<ul>
+<li>Don’t just list keywords—explain what they reveal</li>
+<li>Consider negative keywords (what’s absent)</li>
+<li>Connect to your research question</li>
+<li>Look for patterns, not just individual words</li>
+</ul>
+<p><strong>6. Validate and iterate</strong></p>
+<ul>
+<li>Do the keywords align with your domain knowledge?</li>
+<li>Check concordances to see words in context</li>
+<li>Refine your corpus boundaries if needed</li>
+<li>Consider multiple comparisons to triangulate findings</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="choosing-target-and-reference-corpora" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="choosing-target-and-reference-corpora"><span class="header-section-number">5.5</span> Choosing target and reference corpora</h2>
+<p>The first step in carrying out a keyness calculation is to decide what you’re comparing to what. This choice has clear implications for what you can claim based on your results.</p>
+<p>What would it show, for example, to compare television and movie scripts to blogs? What’s the research question? What do you hope to learn?</p>
+<p>Let’s start by comparing the academic texts to the other text types. We’ll use polars’ <code>filter()</code> function. Note that the tilde (<code>~</code>) is a negator (so “does not contain”):</p>
+<div id="38e54188" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> ds_tokens.<span class="bu">filter</span>(pl.col(<span class="st">"doc_id"</span>).<span class="bu">str</span>.contains(<span class="st">"acad"</span>))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>reference <span class="op">=</span> ds_tokens.<span class="bu">filter</span>(<span class="op">~</span>pl.col(<span class="st">"doc_id"</span>).<span class="bu">str</span>.contains(<span class="st">"acad"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Check the results:</p>
+<div id="c5b95ad5" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>target.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 6)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">doc_id</th>
+<th data-quarto-table-cell-role="th">token</th>
+<th data-quarto-table-cell-role="th">pos_tag</th>
+<th data-quarto-table-cell-role="th">ds_tag</th>
+<th data-quarto-table-cell-role="th">pos_id</th>
+<th data-quarto-table-cell-role="th">ds_id</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>u32</th>
+<th>u32</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"acad_01"</td>
+<td>"Teachers "</td>
+<td>"NN2"</td>
+<td>"Character"</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>"acad_01"</td>
+<td>"and "</td>
+<td>"CC"</td>
+<td>"Untagged"</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>"acad_01"</td>
+<td>"other "</td>
+<td>"JJ"</td>
+<td>"InformationTopics"</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>"acad_01"</td>
+<td>"school "</td>
+<td>"NN1"</td>
+<td>"InformationTopics"</td>
+<td>4</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>"acad_01"</td>
+<td>"personnel "</td>
+<td>"NN2"</td>
+<td>"Character"</td>
+<td>5</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="3c2524db" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>reference.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 6)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">doc_id</th>
+<th data-quarto-table-cell-role="th">token</th>
+<th data-quarto-table-cell-role="th">pos_tag</th>
+<th data-quarto-table-cell-role="th">ds_tag</th>
+<th data-quarto-table-cell-role="th">pos_id</th>
+<th data-quarto-table-cell-role="th">ds_id</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>u32</th>
+<th>u32</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"blog_01"</td>
+<td>"unpleasant"</td>
+<td>"JJ"</td>
+<td>"Negative"</td>
+<td>146154</td>
+<td>122236</td>
+</tr>
+<tr class="even">
+<td>"blog_01"</td>
+<td>", "</td>
+<td>"Y"</td>
+<td>"Untagged"</td>
+<td>146155</td>
+<td>122237</td>
+</tr>
+<tr class="odd">
+<td>"blog_01"</td>
+<td>"and "</td>
+<td>"CC"</td>
+<td>"Narrative"</td>
+<td>146156</td>
+<td>122238</td>
+</tr>
+<tr class="even">
+<td>"blog_01"</td>
+<td>"then "</td>
+<td>"RT"</td>
+<td>"Narrative"</td>
+<td>146157</td>
+<td>122238</td>
+</tr>
+<tr class="odd">
+<td>"blog_01"</td>
+<td>"you "</td>
+<td>"PPY"</td>
+<td>"Untagged"</td>
+<td>146158</td>
+<td>122239</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="creating-frequency-tables" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="creating-frequency-tables"><span class="header-section-number">5.6</span> Creating frequency tables</h2>
+<p>The docuscospacy package has a function called <code>keyness_table()</code> that will calculate all of the statistical information we need.</p>
+<p>See here: <a href="https://docuscospacy.readthedocs.io/en/latest/corpus_analysis.html#Keyword-tables" class="uri">https://docuscospacy.readthedocs.io/en/latest/corpus_analysis.html#Keyword-tables</a></p>
+<p>The function requires us to first create frequency tables for our target and our reference:</p>
+<div id="885f6a26" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>wc_target <span class="op">=</span> ds.frequency_table(target)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>wc_ref <span class="op">=</span> ds.frequency_table(reference)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="creating-a-keyness-table" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="creating-a-keyness-table"><span class="header-section-number">5.7</span> Creating a keyness table</h2>
+<p>Now we can generate our keyness table:</p>
+<div id="71cd00ee" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>kw <span class="op">=</span> ds.keyness_table(wc_target, wc_ref)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Check the table:</p>
+<div id="c6cf503c" class="cell" data-execution_count="14">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>kw.head(<span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (20, 11)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Token</th>
+<th data-quarto-table-cell-role="th">Tag</th>
+<th data-quarto-table-cell-role="th">LL</th>
+<th data-quarto-table-cell-role="th">LR</th>
+<th data-quarto-table-cell-role="th">PV</th>
+<th data-quarto-table-cell-role="th">…</th>
+<th data-quarto-table-cell-role="th">RF_Ref</th>
+<th data-quarto-table-cell-role="th">AF</th>
+<th data-quarto-table-cell-role="th">AF_Ref</th>
+<th data-quarto-table-cell-role="th">Range</th>
+<th data-quarto-table-cell-role="th">Range_Ref</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>str</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>…</th>
+<th>f64</th>
+<th>u32</th>
+<th>u32</th>
+<th>f64</th>
+<th>f64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"of"</td>
+<td>"IO"</td>
+<td>1548.592131</td>
+<td>0.98328</td>
+<td>0.0</td>
+<td>…</td>
+<td>19509.930701</td>
+<td>4872</td>
+<td>17652</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"the"</td>
+<td>"AT"</td>
+<td>691.134509</td>
+<td>0.472652</td>
+<td>2.5327e-152</td>
+<td>…</td>
+<td>47249.577241</td>
+<td>8282</td>
+<td>42750</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"social"</td>
+<td>"JJ"</td>
+<td>458.52448</td>
+<td>3.499488</td>
+<td>1.0069e-101</td>
+<td>…</td>
+<td>146.998685</td>
+<td>210</td>
+<td>133</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"studies"</td>
+<td>"NN2"</td>
+<td>391.557242</td>
+<td>3.97618</td>
+<td>3.7920e-87</td>
+<td>…</td>
+<td>78.472982</td>
+<td>156</td>
+<td>71</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"in"</td>
+<td>"II"</td>
+<td>340.508149</td>
+<td>0.587222</td>
+<td>4.9454e-76</td>
+<td>…</td>
+<td>14338.450656</td>
+<td>2721</td>
+<td>12973</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"study"</td>
+<td>"NN1"</td>
+<td>335.543027</td>
+<td>3.51295</td>
+<td>5.9640e-75</td>
+<td>…</td>
+<td>106.104314</td>
+<td>153</td>
+<td>96</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"perfectionism"</td>
+<td>"NN1"</td>
+<td>300.378833</td>
+<td>9.049978</td>
+<td>2.7242e-67</td>
+<td>…</td>
+<td>1.105253</td>
+<td>74</td>
+<td>1</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"by"</td>
+<td>"II"</td>
+<td>296.287372</td>
+<td>1.082657</td>
+<td>2.1215e-66</td>
+<td>…</td>
+<td>2945.499961</td>
+<td>788</td>
+<td>2665</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"practice"</td>
+<td>"NN1"</td>
+<td>265.747035</td>
+<td>3.623427</td>
+<td>9.5907e-60</td>
+<td>…</td>
+<td>75.157222</td>
+<td>117</td>
+<td>68</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"science"</td>
+<td>"NN1"</td>
+<td>257.2121</td>
+<td>3.494349</td>
+<td>6.9538e-58</td>
+<td>…</td>
+<td>82.893995</td>
+<td>118</td>
+<td>75</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"students"</td>
+<td>"NN2"</td>
+<td>241.996508</td>
+<td>2.801531</td>
+<td>1.4434e-54</td>
+<td>…</td>
+<td>165.78799</td>
+<td>146</td>
+<td>150</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"changes"</td>
+<td>"NN2"</td>
+<td>240.217168</td>
+<td>3.296903</td>
+<td>3.5266e-54</td>
+<td>…</td>
+<td>95.051781</td>
+<td>118</td>
+<td>86</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"learning"</td>
+<td>"NN1"</td>
+<td>238.915772</td>
+<td>5.019849</td>
+<td>6.7783e-54</td>
+<td>…</td>
+<td>18.789306</td>
+<td>77</td>
+<td>17</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"patients"</td>
+<td>"NN2"</td>
+<td>238.835566</td>
+<td>4.203095</td>
+<td>7.0568e-54</td>
+<td>…</td>
+<td>38.683864</td>
+<td>90</td>
+<td>35</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"results"</td>
+<td>"NN2"</td>
+<td>236.995138</td>
+<td>3.634074</td>
+<td>1.7779e-53</td>
+<td>…</td>
+<td>66.315196</td>
+<td>104</td>
+<td>60</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"research"</td>
+<td>"NN1"</td>
+<td>226.906408</td>
+<td>2.656493</td>
+<td>2.8185e-51</td>
+<td>…</td>
+<td>184.577296</td>
+<td>147</td>
+<td>167</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"et"</td>
+<td>"RA21"</td>
+<td>220.606438</td>
+<td>5.840525</td>
+<td>6.6697e-50</td>
+<td>…</td>
+<td>8.842026</td>
+<td>64</td>
+<td>8</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"al"</td>
+<td>"RA22"</td>
+<td>220.517562</td>
+<td>5.692968</td>
+<td>6.9741e-50</td>
+<td>…</td>
+<td>9.947279</td>
+<td>65</td>
+<td>9</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"methylation"</td>
+<td>"NN1"</td>
+<td>196.217098</td>
+<td>8.455235</td>
+<td>1.3976e-44</td>
+<td>…</td>
+<td>1.105253</td>
+<td>49</td>
+<td>1</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"education"</td>
+<td>"NN1"</td>
+<td>196.077076</td>
+<td>3.027403</td>
+<td>1.4995e-44</td>
+<td>…</td>
+<td>103.893807</td>
+<td>107</td>
+<td>94</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>The columns are as follows:</p>
+<ol type="1">
+<li><strong>Token</strong>: the token</li>
+<li><strong>Tag</strong>: the POS tag</li>
+<li><strong>LL</strong>: the keyness value or <a href="http://ucrel.lancs.ac.uk/llwizard.html"><strong>log-likelihood</strong></a>, also known as a G² or goodness-of-fit test</li>
+<li><strong>LR</strong>: the effect size, which here is the <a href="http://cass.lancs.ac.uk/log-ratio-an-informal-introduction/"><strong>log ratio</strong></a></li>
+<li><strong>PV</strong>: the <em>p</em>-value associated with the log-likelihood</li>
+<li><strong>RF_Tar</strong>: the relative frequency in the target corpus (per million words)</li>
+<li><strong>RF_Ref</strong>: the relative frequency in the reference corpus (per million words)</li>
+<li><strong>AF_Tar</strong>: the absolute frequency in the target corpus</li>
+<li><strong>AF_Ref</strong>: the absolute frequency in the reference corpus</li>
+<li><strong>Range_Tar</strong>: the percentage of texts in which the token appears in the target corpus</li>
+<li><strong>Range_Ref</strong>: the percentage of texts in which the token appears in the reference corpus</li>
+</ol>
+<section id="interpreting-the-results" class="level3" data-number="5.7.1">
+<h3 data-number="5.7.1" class="anchored" data-anchor-id="interpreting-the-results"><span class="header-section-number">5.7.1</span> Interpreting the results</h3>
+<p>Looking at the top keywords for academic texts:</p>
+<ul>
+<li>High <strong>LL</strong> values indicate strong statistical evidence that the word is more frequent than expected</li>
+<li>Positive <strong>LR</strong> values show the word is overrepresented in the target (academic)</li>
+<li>The <strong>Range</strong> columns show whether a word appears widely or is concentrated in a few texts</li>
+</ul>
+</section>
+</section>
+<section id="comparing-tags-instead-of-tokens" class="level2" data-number="5.8">
+<h2 data-number="5.8" class="anchored" data-anchor-id="comparing-tags-instead-of-tokens"><span class="header-section-number">5.8</span> Comparing tags instead of tokens</h2>
+<p>It can be useful sometimes to compare tags (parts-of-speech or DocuScope categories) instead of individual tokens. For that, the process is the same, but we create tables of tag frequencies:</p>
+<div id="6c4d71a7" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>tag_tar <span class="op">=</span> ds.tags_table(target, count_by<span class="op">=</span><span class="st">'pos'</span>)  <span class="co"># by part-of-speech</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>tag_ref <span class="op">=</span> ds.tags_table(reference, count_by<span class="op">=</span><span class="st">'pos'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And generate a keyness table by setting <code>tags_only=True</code>:</p>
+<div id="ed9cc121" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>kt_pos <span class="op">=</span> ds.keyness_table(tag_tar, tag_ref, tags_only<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Check the result:</p>
+<div id="ad95c21a" class="cell" data-execution_count="17">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>kt_pos.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (10, 10)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Tag</th>
+<th data-quarto-table-cell-role="th">LL</th>
+<th data-quarto-table-cell-role="th">LR</th>
+<th data-quarto-table-cell-role="th">PV</th>
+<th data-quarto-table-cell-role="th">RF</th>
+<th data-quarto-table-cell-role="th">RF_Ref</th>
+<th data-quarto-table-cell-role="th">AF</th>
+<th data-quarto-table-cell-role="th">AF_Ref</th>
+<th data-quarto-table-cell-role="th">Range</th>
+<th data-quarto-table-cell-role="th">Range_Ref</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>u32</th>
+<th>u32</th>
+<th>f64</th>
+<th>f64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"JJ"</td>
+<td>2222.682823</td>
+<td>0.733261</td>
+<td>0.0</td>
+<td>9.354392</td>
+<td>5.627065</td>
+<td>11816</td>
+<td>50912</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"NN2"</td>
+<td>2028.250863</td>
+<td>0.789941</td>
+<td>0.0</td>
+<td>7.459922</td>
+<td>4.314577</td>
+<td>9423</td>
+<td>39037</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"IO"</td>
+<td>1548.592131</td>
+<td>0.98328</td>
+<td>0.0</td>
+<td>3.857024</td>
+<td>1.950993</td>
+<td>4872</td>
+<td>17652</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"NN1"</td>
+<td>1492.093018</td>
+<td>0.415132</td>
+<td>0.0</td>
+<td>18.084155</td>
+<td>13.562231</td>
+<td>22843</td>
+<td>122707</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"AT"</td>
+<td>655.713132</td>
+<td>0.455552</td>
+<td>1.2783e-144</td>
+<td>6.667458</td>
+<td>4.86212</td>
+<td>8422</td>
+<td>43991</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"VVN"</td>
+<td>514.599191</td>
+<td>0.663204</td>
+<td>6.3324e-114</td>
+<td>2.601433</td>
+<td>1.642738</td>
+<td>3286</td>
+<td>14863</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"MC"</td>
+<td>425.963724</td>
+<td>0.578643</td>
+<td>1.2285e-94</td>
+<td>2.769267</td>
+<td>1.854283</td>
+<td>3498</td>
+<td>16777</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"FO"</td>
+<td>317.537151</td>
+<td>1.44874</td>
+<td>4.9816e-71</td>
+<td>0.408503</td>
+<td>0.149651</td>
+<td>516</td>
+<td>1354</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"II"</td>
+<td>234.458124</td>
+<td>0.267098</td>
+<td>6.3554e-53</td>
+<td>6.610458</td>
+<td>5.493219</td>
+<td>8350</td>
+<td>49701</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"RA21"</td>
+<td>220.606438</td>
+<td>5.840525</td>
+<td>6.6697e-50</td>
+<td>0.050667</td>
+<td>0.000884</td>
+<td>64</td>
+<td>8</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>This shows which grammatical categories are key to academic writing (e.g., more nouns, fewer pronouns).</p>
+<p>We can do the same for DocuScope rhetorical categories:</p>
+<div id="3b46f4b2" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>ds_tar <span class="op">=</span> ds.tags_table(target, count_by<span class="op">=</span><span class="st">'ds'</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>ds_ref <span class="op">=</span> ds.tags_table(reference, count_by<span class="op">=</span><span class="st">'ds'</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>kt_ds <span class="op">=</span> ds.keyness_table(ds_tar, ds_ref, tags_only<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="b02a31c8" class="cell" data-execution_count="19">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>kt_ds.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (10, 10)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Tag</th>
+<th data-quarto-table-cell-role="th">LL</th>
+<th data-quarto-table-cell-role="th">LR</th>
+<th data-quarto-table-cell-role="th">PV</th>
+<th data-quarto-table-cell-role="th">RF</th>
+<th data-quarto-table-cell-role="th">RF_Ref</th>
+<th data-quarto-table-cell-role="th">AF</th>
+<th data-quarto-table-cell-role="th">AF_Ref</th>
+<th data-quarto-table-cell-role="th">Range</th>
+<th data-quarto-table-cell-role="th">Range_Ref</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>u32</th>
+<th>u32</th>
+<th>f64</th>
+<th>f64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"AcademicTerms"</td>
+<td>3926.988896</td>
+<td>1.206877</td>
+<td>0.0</td>
+<td>8.53599</td>
+<td>3.697838</td>
+<td>8747</td>
+<td>25636</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"Untagged"</td>
+<td>590.347255</td>
+<td>0.209737</td>
+<td>2.1056e-130</td>
+<td>33.036342</td>
+<td>28.566359</td>
+<td>33853</td>
+<td>198042</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"InformationTopics"</td>
+<td>588.038704</td>
+<td>0.640758</td>
+<td>6.6914e-130</td>
+<td>3.935709</td>
+<td>2.524269</td>
+<td>4033</td>
+<td>17500</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"AcademicWritingMoves"</td>
+<td>545.07555</td>
+<td>2.118669</td>
+<td>1.4834e-120</td>
+<td>0.481107</td>
+<td>0.110779</td>
+<td>493</td>
+<td>768</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"PublicTerms"</td>
+<td>497.706143</td>
+<td>0.783065</td>
+<td>2.9996e-110</td>
+<td>2.311851</td>
+<td>1.343488</td>
+<td>2369</td>
+<td>9314</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"Citation"</td>
+<td>465.831508</td>
+<td>1.303515</td>
+<td>2.5874e-103</td>
+<td>0.889023</td>
+<td>0.360177</td>
+<td>911</td>
+<td>2497</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"InformationChange"</td>
+<td>390.543094</td>
+<td>1.036224</td>
+<td>6.3044e-87</td>
+<td>1.103716</td>
+<td>0.538174</td>
+<td>1131</td>
+<td>3731</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"InformationExposition"</td>
+<td>171.44672</td>
+<td>0.277324</td>
+<td>3.5743e-39</td>
+<td>5.583964</td>
+<td>4.60744</td>
+<td>5722</td>
+<td>31942</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>"Reasoning"</td>
+<td>147.032946</td>
+<td>0.44636</td>
+<td>7.7184e-34</td>
+<td>1.930283</td>
+<td>1.41662</td>
+<td>1978</td>
+<td>9821</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>"InformationChangePositive"</td>
+<td>119.194291</td>
+<td>1.143781</td>
+<td>9.4958e-28</td>
+<td>0.28398</td>
+<td>0.128521</td>
+<td>291</td>
+<td>891</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="effect-size" class="level2" data-number="5.9">
+<h2 data-number="5.9" class="anchored" data-anchor-id="effect-size"><span class="header-section-number">5.9</span> Effect size</h2>
+<p>While the LL value produces one important piece of information (the amount of evidence we have for an effect), it neglects another (the magnitude of the effect). Whenever we report on significance it is <strong>critical</strong> to report <strong>effect size</strong>.</p>
+<p>Some common effect size measures include:</p>
+<ul>
+<li><strong>%DIFF</strong> - see Gabrielatos and Marchi (2011)</li>
+<li><strong>Bayes Factor (BIC)</strong> - see Wilson (2013)</li>
+<li><strong>Effect Size for Log Likelihood (ELL)</strong> - see Johnston et al.&nbsp;(2006)</li>
+<li><strong>Relative Risk</strong></li>
+<li><strong>Odds Ratio</strong></li>
+<li><strong>Log Ratio</strong> - see Andrew Hardie’s CASS blog</li>
+</ul>
+<section id="log-ratio-lr" class="level3" data-number="5.9.1">
+<h3 data-number="5.9.1" class="anchored" data-anchor-id="log-ratio-lr"><span class="header-section-number">5.9.1</span> Log Ratio (LR)</h3>
+<p>The <code>keyness_table()</code> function returns <a href="https://cass.lancs.ac.uk/log-ratio-an-informal-introduction/">Hardie’s Log Ratio</a>, which is easy and intuitive. It is simply the (base 2) logarithm of the ratio of relative frequencies:</p>
+<ul>
+<li><strong>LR = 1</strong>: Token is 2× more frequent in target than reference</li>
+<li><strong>LR = 2</strong>: Token is 4× more frequent in target</li>
+<li><strong>LR = 3</strong>: Token is 8× more frequent in target</li>
+<li><strong>LR = -1</strong>: Token is 2× more frequent in reference than target</li>
+</ul>
+<p>This makes it straightforward to interpret the practical significance of keyness results.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Example Interpretation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If a word has: - <strong>LL = 150</strong> (very high statistical significance) - <strong>LR = 0.5</strong> (only 1.4× more frequent)</p>
+<p>We have strong <em>evidence</em> for a difference, but the <em>magnitude</em> is modest. Both pieces of information matter.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="p-values-and-statistical-significance" class="level2" data-number="5.10">
+<h2 data-number="5.10" class="anchored" data-anchor-id="p-values-and-statistical-significance"><span class="header-section-number">5.10</span> P-values and statistical significance</h2>
+<p>It is important to interpret and report <em>p</em>-values correctly. A p-value represents a threshold (conventionally 0.05, 0.01, or 0.001) at which we can claim a difference is statistically significant.</p>
+<p>The threshold we choose is largely dependent on the size of our corpora. With a corpus of many millions of words, at a <em>p</em>-value &lt; 0.05, an enormous quantity of tokens would reach significance.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Interpreting P-values
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>p &lt; 0.05</strong>: Significant (but with large corpora, may be trivial differences)</li>
+<li><strong>p &lt; 0.01</strong>: More stringent threshold (recommended for larger corpora)</li>
+<li><strong>p &lt; 0.001</strong>: Very stringent (for very large corpora)</li>
+</ul>
+<p>Note that the default threshold in the <code>keyness_table()</code> function is <code>threshold=0.01</code>. In other words, it returns only values below that threshold.</p>
+<p>Avoid phrases like “marginally significant” or “approaching significance”—statistical significance is a threshold, not a continuum.</p>
+</div>
+</div>
+</section>
+<section id="visualizing-keyness" class="level2" data-number="5.11">
+<h2 data-number="5.11" class="anchored" data-anchor-id="visualizing-keyness"><span class="header-section-number">5.11</span> Visualizing keyness</h2>
+<p>To understand the relationship between statistical significance and effect size, let’s examine specific examples that illustrate different scenarios.</p>
+<section id="finding-representative-examples" class="level3" data-number="5.11.1">
+<h3 data-number="5.11.1" class="anchored" data-anchor-id="finding-representative-examples"><span class="header-section-number">5.11.1</span> Finding representative examples</h3>
+<p>We’ll select tokens that represent different combinations of LL (statistical significance) and LR (effect size):</p>
+<div id="7ad84b09" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find examples of different keyness patterns</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># High LL, High LR: truly distinctive keywords</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>high_high <span class="op">=</span> kw.<span class="bu">filter</span>((pl.col(<span class="st">"LL"</span>) <span class="op">&gt;</span> <span class="dv">50</span>) <span class="op">&amp;</span> (pl.col(<span class="st">"LR"</span>) <span class="op">&gt;</span> <span class="dv">2</span>)).head(<span class="dv">3</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># High LL, Low LR: statistically significant but small effect</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>high_low <span class="op">=</span> kw.<span class="bu">filter</span>((pl.col(<span class="st">"LL"</span>) <span class="op">&gt;</span> <span class="dv">20</span>) <span class="op">&amp;</span> (pl.col(<span class="st">"LR"</span>) <span class="op">&lt;</span> <span class="dv">1</span>) <span class="op">&amp;</span> (pl.col(<span class="st">"LR"</span>) <span class="op">&gt;</span> <span class="dv">0</span>)).head(<span class="dv">3</span>)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Moderate LL, High LR: large effect with moderate evidence</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>mod_high <span class="op">=</span> kw.<span class="bu">filter</span>((pl.col(<span class="st">"LL"</span>) <span class="op">&gt;</span> <span class="dv">10</span>) <span class="op">&amp;</span> (pl.col(<span class="st">"LL"</span>) <span class="op">&lt;</span> <span class="dv">30</span>) <span class="op">&amp;</span> (pl.col(<span class="st">"LR"</span>) <span class="op">&gt;</span> <span class="dv">3</span>)).head(<span class="dv">3</span>)</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine for visualization</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>examples <span class="op">=</span> pl.concat([high_high, high_low, mod_high])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s look at these examples:</p>
+<div id="b709c893" class="cell" data-execution_count="21">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>examples.select([<span class="st">"Token"</span>, <span class="st">"LL"</span>, <span class="st">"LR"</span>, <span class="st">"PV"</span>]).head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (9, 4)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Token</th>
+<th data-quarto-table-cell-role="th">LL</th>
+<th data-quarto-table-cell-role="th">LR</th>
+<th data-quarto-table-cell-role="th">PV</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"social"</td>
+<td>458.52448</td>
+<td>3.499488</td>
+<td>1.0069e-101</td>
+</tr>
+<tr class="even">
+<td>"studies"</td>
+<td>391.557242</td>
+<td>3.97618</td>
+<td>3.7920e-87</td>
+</tr>
+<tr class="odd">
+<td>"study"</td>
+<td>335.543027</td>
+<td>3.51295</td>
+<td>5.9640e-75</td>
+</tr>
+<tr class="even">
+<td>"of"</td>
+<td>1548.592131</td>
+<td>0.98328</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td>"the"</td>
+<td>691.134509</td>
+<td>0.472652</td>
+<td>2.5327e-152</td>
+</tr>
+<tr class="even">
+<td>"in"</td>
+<td>340.508149</td>
+<td>0.587222</td>
+<td>4.9454e-76</td>
+</tr>
+<tr class="odd">
+<td>"a."</td>
+<td>29.838973</td>
+<td>4.299957</td>
+<td>4.6946e-8</td>
+</tr>
+<tr class="even">
+<td>"microhardness"</td>
+<td>29.394234</td>
+<td>6.64788</td>
+<td>5.9053e-8</td>
+</tr>
+<tr class="odd">
+<td>"transcendental"</td>
+<td>29.394234</td>
+<td>6.64788</td>
+<td>5.9053e-8</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="visualizing-the-patterns" class="level3" data-number="5.11.2">
+<h3 data-number="5.11.2" class="anchored" data-anchor-id="visualizing-the-patterns"><span class="header-section-number">5.11.2</span> Visualizing the patterns</h3>
+<p>Now we’ll create side-by-side bar plots to show both LL and LR for these examples:</p>
+<div id="ce276767" class="cell" data-execution_count="22">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">5</span>))</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Get tokens and values</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>tokens <span class="op">=</span> examples[<span class="st">"Token"</span>].to_list()</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>ll_values <span class="op">=</span> examples[<span class="st">"LL"</span>].to_list()</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>lr_values <span class="op">=</span> examples[<span class="st">"LR"</span>].to_list()</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot 1: Log-Likelihood (Statistical Significance)</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>colors_ll <span class="op">=</span> [<span class="st">'darkgreen'</span> <span class="cf">if</span> ll <span class="op">&gt;</span> <span class="dv">50</span> <span class="cf">else</span> <span class="st">'orange'</span> <span class="cf">if</span> ll <span class="op">&gt;</span> <span class="dv">20</span> <span class="cf">else</span> <span class="st">'steelblue'</span> <span class="cf">for</span> ll <span class="kw">in</span> ll_values]</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>ax1.barh(tokens, ll_values, color<span class="op">=</span>colors_ll, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>ax1.axvline(x<span class="op">=</span><span class="fl">10.83</span>, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">'p &lt; 0.001'</span>)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>ax1.axvline(x<span class="op">=</span><span class="fl">6.63</span>, color<span class="op">=</span><span class="st">'orange'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">'p &lt; 0.01'</span>)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>ax1.set_xlabel(<span class="st">'Log-Likelihood (LL)'</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">'Statistical Significance'</span>, fontsize<span class="op">=</span><span class="dv">12</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>ax1.legend(fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>ax1.grid(axis<span class="op">=</span><span class="st">'x'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot 2: Log Ratio (Effect Size)</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>colors_lr <span class="op">=</span> [<span class="st">'darkgreen'</span> <span class="cf">if</span> lr <span class="op">&gt;</span> <span class="dv">2</span> <span class="cf">else</span> <span class="st">'orange'</span> <span class="cf">if</span> lr <span class="op">&gt;</span> <span class="dv">1</span> <span class="cf">else</span> <span class="st">'steelblue'</span> <span class="cf">for</span> lr <span class="kw">in</span> lr_values]</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>ax2.barh(tokens, lr_values, color<span class="op">=</span>colors_lr, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>ax2.axvline(x<span class="op">=</span><span class="dv">1</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">'2× more frequent'</span>)</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>ax2.axvline(x<span class="op">=</span><span class="dv">2</span>, color<span class="op">=</span><span class="st">'orange'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">'4× more frequent'</span>)</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>ax2.axvline(x<span class="op">=</span><span class="dv">3</span>, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">'8× more frequent'</span>)</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>ax2.set_xlabel(<span class="st">'Log Ratio (LR)'</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">'Effect Size'</span>, fontsize<span class="op">=</span><span class="dv">12</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>ax2.legend(fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>ax2.grid(axis<span class="op">=</span><span class="st">'x'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="keyness_files/figure-html/cell-23-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Interpreting the Patterns
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Looking at these examples side-by-side reveals important patterns:</p>
+<ul>
+<li><p><strong>Dark green bars</strong> (both plots): These tokens have <em>both</em> high statistical significance and large effect sizes. They are truly distinctive keywords—highly reliable evidence of a substantial difference.</p></li>
+<li><p><strong>Orange bars</strong> (LL high, LR moderate): These tokens are statistically significant but with more modest effect sizes. They’re real differences, but not as dramatic as they might first appear from the LL value alone.</p></li>
+<li><p><strong>Blue bars</strong> (LL moderate, LR high): These tokens show large effect sizes but with less statistical certainty. This often happens with relatively rare words that nonetheless show strong preferences when they do appear.</p></li>
+</ul>
+<p>The key insight: <strong>You need both panels to tell the full story.</strong> Statistical significance alone (LL) doesn’t tell you how big the effect is, and effect size alone (LR) doesn’t tell you how certain we can be about it.</p>
+</div>
+</div>
+</section>
+<section id="a-practical-example" class="level3" data-number="5.11.3">
+<h3 data-number="5.11.3" class="anchored" data-anchor-id="a-practical-example"><span class="header-section-number">5.11.3</span> A practical example</h3>
+<p>Let’s examine one token in detail to see what these numbers actually mean:</p>
+<div id="848c9fc0" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pick the first high LL, high LR example</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>example_token <span class="op">=</span> examples.head(<span class="dv">1</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>example_token.select([<span class="st">"Token"</span>, <span class="st">"LL"</span>, <span class="st">"LR"</span>, <span class="st">"RF"</span>, <span class="st">"RF_Ref"</span>, <span class="st">"PV"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (1, 6)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Token</th>
+<th data-quarto-table-cell-role="th">LL</th>
+<th data-quarto-table-cell-role="th">LR</th>
+<th data-quarto-table-cell-role="th">RF</th>
+<th data-quarto-table-cell-role="th">RF_Ref</th>
+<th data-quarto-table-cell-role="th">PV</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"social"</td>
+<td>458.52448</td>
+<td>3.499488</td>
+<td>1662.510391</td>
+<td>146.998685</td>
+<td>1.0069e-101</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>For the token “<em>social</em>”:</p>
+<ul>
+<li><strong>LL = 458.52</strong>: Extremely strong statistical evidence (p &lt; 0.001) that this is not due to chance</li>
+<li><strong>LR = 3.5</strong>: The word appears approximately <strong>11.3× more frequently</strong> in academic texts than in other text types</li>
+<li><strong>Frequencies</strong>: 1662.51 per million in academic vs.&nbsp;147.0 per million in reference</li>
+</ul>
+<p>This is a truly distinctive keyword—both statistically reliable and practically meaningful.</p>
+</section>
+</section>
+<section id="what-to-do-after-keyness-analysis" class="level2" data-number="5.12">
+<h2 data-number="5.12" class="anchored" data-anchor-id="what-to-do-after-keyness-analysis"><span class="header-section-number">5.12</span> What to do after keyness analysis</h2>
+<p>Identifying keywords is just the beginning. Here’s how keyness connects to downstream analyses:</p>
+<section id="examine-keywords-in-context" class="level3" data-number="5.12.1">
+<h3 data-number="5.12.1" class="anchored" data-anchor-id="examine-keywords-in-context"><span class="header-section-number">5.12.1</span> 1. Examine keywords in context</h3>
+<p>High keyness doesn’t tell you <em>how</em> a word is used. Next steps:</p>
+<div id="1351c1df" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Get top 5 keywords</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>top_keywords <span class="op">=</span> kw.head(<span class="dv">5</span>).select(<span class="st">"Token"</span>).to_series().to_list()</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Top keywords to investigate:"</span>, top_keywords)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Top keywords to investigate: ['of', 'the', 'social', 'studies', 'in']</code></pre>
+</div>
+</div>
+<p><strong>Next:</strong> Use concordancing to see these words in their original contexts. Do they cluster with certain topics? Are they used literally or metaphorically?</p>
+</section>
+<section id="investigate-collocations" class="level3" data-number="5.12.2">
+<h3 data-number="5.12.2" class="anchored" data-anchor-id="investigate-collocations"><span class="header-section-number">5.12.2</span> 2. Investigate collocations</h3>
+<p>Keywords often reveal their significance through their company:</p>
+<ul>
+<li>What words co-occur with your top keywords?</li>
+<li>Are there distinctive multi-word expressions?</li>
+<li>Do certain keywords cluster together thematically?</li>
+</ul>
+<p><strong>Example research question:</strong> If “data” is a keyword in academic writing, what verbs commonly precede it? (“analyze data”, “collect data”, “interpret data”)</p>
+</section>
+<section id="build-a-feature-set-for-classification" class="level3" data-number="5.12.3">
+<h3 data-number="5.12.3" class="anchored" data-anchor-id="build-a-feature-set-for-classification"><span class="header-section-number">5.12.3</span> 3. Build a feature set for classification</h3>
+<p>Keywords can become features for machine learning:</p>
+<div id="721b77d0" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get keywords as a feature list</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>keyword_features <span class="op">=</span> kw.<span class="bu">filter</span>(pl.col(<span class="st">"LR"</span>) <span class="op">&gt;</span> <span class="dv">1</span>).select(<span class="st">"Token"</span>).to_series().to_list()</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Found </span><span class="sc">{</span><span class="bu">len</span>(keyword_features)<span class="sc">}</span><span class="ss"> potential features for classification"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Found 3285 potential features for classification</code></pre>
+</div>
+</div>
+<p><strong>Next:</strong> Use these tokens as features to train a classifier that can automatically categorize new texts.</p>
+</section>
+<section id="compare-multiple-subcorpora" class="level3" data-number="5.12.4">
+<h3 data-number="5.12.4" class="anchored" data-anchor-id="compare-multiple-subcorpora"><span class="header-section-number">5.12.4</span> 4. Compare multiple subcorpora</h3>
+<p>Move beyond binary comparisons:</p>
+<ul>
+<li>Calculate keyness for each text type vs.&nbsp;all others</li>
+<li>Create a “keyword profile” for each category</li>
+<li>Identify words that are key to multiple categories (avoid these as distinguishing features)</li>
+</ul>
+</section>
+<section id="validate-with-qualitative-analysis" class="level3" data-number="5.12.5">
+<h3 data-number="5.12.5" class="anchored" data-anchor-id="validate-with-qualitative-analysis"><span class="header-section-number">5.12.5</span> 5. Validate with qualitative analysis</h3>
+<p>Keyness is quantitative, but interpretation requires qualitative judgment:</p>
+<ul>
+<li>Do the keywords align with your domain expertise?</li>
+<li>Read sample texts from high-keyword documents</li>
+<li>Consider what’s <em>absent</em> (negative keywords)</li>
+<li>Discuss findings with domain experts</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+From Keywords to Insights
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Keyness analysis is most powerful when combined with other methods:</p>
+<ol type="1">
+<li><strong>Keyness</strong> → identifies distinctive tokens</li>
+<li><strong>Concordancing</strong> → shows how those tokens are used</li>
+<li><strong>Collocation</strong> → reveals meaningful phrases</li>
+<li><strong>Close reading</strong> → interprets significance</li>
+<li><strong>Iteration</strong> → refines corpus boundaries and research questions</li>
+</ol>
+<p>This iterative, multi-method approach is at the heart of corpus-assisted discourse analysis.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="when-to-use-keyness-and-when-not-to" class="level2" data-number="5.13">
+<h2 data-number="5.13" class="anchored" data-anchor-id="when-to-use-keyness-and-when-not-to"><span class="header-section-number">5.13</span> When to use keyness (and when not to)</h2>
+<p>Keyness is powerful but not universally applicable. Here’s a decision framework:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Decision Tree: Is Keyness Right for Your Question?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Keyness is WELL-SUITED for:</strong></p>
+<ul>
+<li>✅ <strong>Comparing defined categories</strong>: Academic vs.&nbsp;fiction, Author A vs.&nbsp;Author B</li>
+<li>✅ <strong>Identifying distinctive features</strong>: What makes this corpus unique?</li>
+<li>✅ <strong>Exploratory analysis</strong>: Getting a quick overview of differences</li>
+<li>✅ <strong>Hypothesis generation</strong>: Finding patterns to investigate further</li>
+<li>✅ <strong>Register/genre analysis</strong>: Characterizing text types</li>
+</ul>
+<p><strong>Keyness is POORLY-SUITED for:</strong></p>
+<ul>
+<li>❌ <strong>Continuous variables</strong>: Keyness requires categorical groupings (can’t compare “degree of formality” directly)</li>
+<li>❌ <strong>Temporal trends</strong>: Use time series analysis instead, or bin time into discrete periods</li>
+<li>❌ <strong>Nuanced semantic differences</strong>: Keyness shows frequency, not meaning shifts</li>
+<li>❌ <strong>Small corpora</strong>: Insufficient statistical power (aim for 10,000+ words per subcorpus)</li>
+<li>❌ <strong>Single-text analysis</strong>: Need multiple texts for meaningful comparison</li>
+</ul>
+<p><strong>Consider ALTERNATIVES when:</strong></p>
+<ul>
+<li>You want to understand <strong>how</strong> words are used (not just frequency) → Use concordancing and collocation analysis</li>
+<li>You want to find <strong>topics</strong> or <strong>semantic clusters</strong> → Use topic modeling</li>
+<li>You want to measure <strong>similarity</strong> between texts → Use distance metrics or cluster analysis</li>
+<li>You want to track <strong>change over time</strong> → Use time series or diachronic analysis</li>
+<li>You want to predict <strong>categories</strong> → Use classification algorithms</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="common-pitfalls" class="level2" data-number="5.14">
+<h2 data-number="5.14" class="anchored" data-anchor-id="common-pitfalls"><span class="header-section-number">5.14</span> Common Pitfalls</h2>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Watch Out For
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p><strong>Ignoring Effect Size</strong>: High LL doesn’t mean high importance. Always check LR to see the magnitude of difference.</p></li>
+<li><p><strong>Inappropriate Reference Corpus</strong>: Comparing academic writing to fiction will give different results than comparing to all other text types pooled. Your reference corpus shapes your claims.</p></li>
+<li><p><strong>Multiple Comparisons</strong>: If you run 100 keyness tests, you’ll get ~5 “significant” results by chance at p &lt; 0.05. Consider adjusting thresholds.</p></li>
+<li><p><strong>Corpus Size Imbalance</strong>: While log-likelihood handles this better than chi-square, extreme size differences can still be problematic.</p></li>
+<li><p><strong>Interpreting Range</strong>: A high-frequency, low-range token might be driven by just a few texts. Always check dispersion.</p></li>
+<li><p><strong>Conflating Keyness with Importance</strong>: Keyness tells us what’s statistically distinctive, not necessarily what’s rhetorically, culturally, or theoretically important.</p></li>
+</ol>
+</div>
+</div>
+<section id="a-cautionary-example" class="level3" data-number="5.14.1">
+<h3 data-number="5.14.1" class="anchored" data-anchor-id="a-cautionary-example"><span class="header-section-number">5.14.1</span> A cautionary example</h3>
+<p>Consider this scenario:</p>
+<blockquote class="blockquote">
+<p>A researcher compares 18th-century texts to 21st-century texts and finds that “hath” is a highly significant keyword (LL = 500, LR = 8). They conclude: “This proves that 18th-century authors were more concerned with possession and ownership.”</p>
+</blockquote>
+<p><strong>What’s wrong here?</strong></p>
+<ul>
+<li>❌ Confusing spelling/grammar changes with semantic concerns</li>
+<li>❌ Ignoring historical language change</li>
+<li>❌ Not checking concordances to see how “hath” is used</li>
+<li>❌ Assuming frequency = thematic importance</li>
+</ul>
+<p><strong>Better interpretation:</strong></p>
+<p>“Hath” is key because it’s an archaic verb form, not because of semantic content. To study concerns with possession, we’d need to:</p>
+<ol type="1">
+<li>Normalize for historical spelling differences</li>
+<li>Look at semantic fields related to ownership (property, possess, own, etc.)</li>
+<li>Examine syntactic patterns (who owns what?)</li>
+<li>Read texts closely to understand context</li>
+</ol>
+<p>This example illustrates why <strong>computational methods inform interpretation but don’t replace it</strong>.</p>
+</section>
+</section>
+<section id="discussion-questions" class="level2" data-number="5.15">
+<h2 data-number="5.15" class="anchored" data-anchor-id="discussion-questions"><span class="header-section-number">5.15</span> Discussion Questions</h2>
+<ol type="1">
+<li><p><strong>Target vs.&nbsp;Reference</strong>: How does the choice of reference corpus shape the results and claims we can make? What would change if we compared academic texts to fiction vs.&nbsp;academic texts to news?</p></li>
+<li><p><strong>Statistical vs.&nbsp;Practical Significance</strong>: Can you think of a scenario where a word might be statistically significant (high LL) but not practically important (low LR)? What about the reverse?</p></li>
+<li><p><strong>Negative Keywords</strong>: We’ve focused on positive keywords (overrepresented in target). What might negative keywords (underrepresented in target) tell us about a corpus?</p></li>
+<li><p><strong>POS Tags vs.&nbsp;Tokens</strong>: When would keyness analysis of POS tags be more useful than analysis of individual tokens? What different research questions might each approach answer?</p></li>
+<li><p><strong>Corpus Composition</strong>: How might the internal composition of your target or reference corpus affect keyness results? What if your “academic” corpus includes both hard sciences and humanities?</p></li>
+<li><p><strong>Critical Reflection</strong>: Keyness assumes that statistical distinctiveness equals meaningful difference. When might this assumption be problematic? What contextual factors might keyness measures miss?</p></li>
+</ol>
+</section>
+<section id="key-takeaways" class="level2" data-number="5.16">
+<h2 data-number="5.16" class="anchored" data-anchor-id="key-takeaways"><span class="header-section-number">5.16</span> Key Takeaways</h2>
+<ul>
+<li><strong>Keyness</strong> measures the statistical significance of frequency differences between a target and reference corpus</li>
+<li><strong>Log-likelihood (LL)</strong> quantifies the strength of evidence for a difference</li>
+<li><strong>Log ratio (LR)</strong> quantifies the magnitude or effect size of a difference</li>
+<li><strong>Both metrics are essential</strong>: High LL without high LR indicates a statistically significant but small effect</li>
+<li><strong>P-values</strong> must be interpreted in context of corpus size; larger corpora require more stringent thresholds</li>
+<li><strong>Choice of reference corpus</strong> fundamentally shapes what claims you can make from keyness analysis</li>
+<li><strong>Dispersion matters</strong>: Check Range values to distinguish widespread keywords from concentrated ones</li>
+</ul>
+</section>
+<section id="further-reading" class="level2" data-number="5.17">
+<h2 data-number="5.17" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">5.17</span> Further Reading</h2>
+<ul>
+<li>Gabrielatos, C., &amp; Marchi, A. (2011). “Keyness: Matching metrics to definitions.” <em>Proceedings of Corpus Linguistics</em>.</li>
+<li>Hardie, A. (2014). “Log Ratio: An informal introduction.” CASS Technical Paper.</li>
+<li>Johnston, J. E., Berry, K. J., &amp; Mielke, P. W. (2006). “Measures of effect size for chi-squared and likelihood-ratio goodness-of-fit tests.” <em>Perceptual and Motor Skills</em> 103(2): 412-414.</li>
+<li>Rayson, P., &amp; Garside, R. (2000). “Comparing corpora using frequency profiling.” <em>Proceedings of the Workshop on Comparing Corpora</em> (pp.&nbsp;1-6).</li>
+</ul>
+<hr>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Ready to Practice?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Head to <a href="../mini_labs/Mini_Lab_04_Keywords.ipynb">Mini Lab 04: Keywords</a> to apply these concepts hands-on. You’ll compare different text types, filter keyness tables, experiment with effect size thresholds, and explore both token and tag-level keyness.</p>
+<p>The mini lab includes experimentation prompts to help you develop intuitions about when and how to use keyness analysis effectively.</p>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../tutorials/frequency-and-distributions.html" class="pagination-link" aria-label="Distributions">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Distributions</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../tutorials/collocations.html" class="pagination-link" aria-label="Collocations and N-grams">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Collocations and N-grams</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/browndw/humanities_analytics/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

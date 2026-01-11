@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.557">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Methods in Humanities Analytics - Statistical Reporting Guide</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../tutorials/using-colab.html" rel="next">
+<link href="../reports/final-project.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../images/text_analysis.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Methods in Humanities Analytics</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/browndw/humanities_analytics" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reports/cbe_01.html">Reports</a></li><li class="breadcrumb-item"><a href="../reports/statistical-reporting-guide.html">Statistical Reporting Guide</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/sentiment-and-syuzhet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Texts, Algorithms, and Black-Boxes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/corpus-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Corpus Basics: Tokenization and Processing Pipelines</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/spacy-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NLP Processing with spaCy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/frequency-and-distributions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Distributions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Core Methods</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/keyness.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Keyness</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/collocations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Collocations and N-grams</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/time-series.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Time Series Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/topic-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Topic Modeling</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Advanced Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/categorical-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">ANOVA and R²: Comparing Groups and Explaining Variance</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/cluster-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Clustering Methods</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/correlations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Correlation and Multi-Collinearity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/multi-dimensional-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Multi-Dimensional Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/contextual-embeddings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Contextual Embeddings and Transformers</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/classification-federalist-papers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Classification &amp; Authorship Attribution</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Reports</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #1: From Curiosity to Visualization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #2: From Results to Research</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #3: Final Project Pilot Study</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/final-project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Final Project: Independent Corpus Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/statistical-reporting-guide.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Statistical Reporting Guide</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Course Resources</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/using-colab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Using Google Colab</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../resources/packages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Python Packages for This Course</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../resources/data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Course Data Resources</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#general-principles" id="toc-general-principles" class="nav-link active" data-scroll-target="#general-principles">General Principles</a>
+  <ul class="collapse">
+  <li><a href="#what-to-include" id="toc-what-to-include" class="nav-link" data-scroll-target="#what-to-include">What to Include</a></li>
+  <li><a href="#what-not-to-do" id="toc-what-not-to-do" class="nav-link" data-scroll-target="#what-not-to-do">What NOT to Do</a></li>
+  </ul></li>
+  <li><a href="#formatting-numbers" id="toc-formatting-numbers" class="nav-link" data-scroll-target="#formatting-numbers">Formatting Numbers</a>
+  <ul class="collapse">
+  <li><a href="#decimal-places" id="toc-decimal-places" class="nav-link" data-scroll-target="#decimal-places">Decimal Places</a></li>
+  <li><a href="#italics" id="toc-italics" class="nav-link" data-scroll-target="#italics">Italics</a></li>
+  <li><a href="#reporting-exact-vs.-threshold-p-values" id="toc-reporting-exact-vs.-threshold-p-values" class="nav-link" data-scroll-target="#reporting-exact-vs.-threshold-p-values">Reporting Exact vs.&nbsp;Threshold P-values</a></li>
+  </ul></li>
+  <li><a href="#method-specific-reporting" id="toc-method-specific-reporting" class="nav-link" data-scroll-target="#method-specific-reporting">Method-Specific Reporting</a>
+  <ul class="collapse">
+  <li><a href="#keyness-log-likelihood" id="toc-keyness-log-likelihood" class="nav-link" data-scroll-target="#keyness-log-likelihood">Keyness (Log-Likelihood)</a></li>
+  <li><a href="#t-tests" id="toc-t-tests" class="nav-link" data-scroll-target="#t-tests">T-tests</a></li>
+  <li><a href="#anova-one-way" id="toc-anova-one-way" class="nav-link" data-scroll-target="#anova-one-way">ANOVA (One-Way)</a></li>
+  <li><a href="#correlation" id="toc-correlation" class="nav-link" data-scroll-target="#correlation">Correlation</a></li>
+  <li><a href="#regression-linear" id="toc-regression-linear" class="nav-link" data-scroll-target="#regression-linear">Regression (Linear)</a></li>
+  <li><a href="#classification-machine-learning" id="toc-classification-machine-learning" class="nav-link" data-scroll-target="#classification-machine-learning">Classification (Machine Learning)</a></li>
+  <li><a href="#topic-modeling" id="toc-topic-modeling" class="nav-link" data-scroll-target="#topic-modeling">Topic Modeling</a></li>
+  <li><a href="#clustering" id="toc-clustering" class="nav-link" data-scroll-target="#clustering">Clustering</a></li>
+  <li><a href="#multi-dimensional-analysis-mda" id="toc-multi-dimensional-analysis-mda" class="nav-link" data-scroll-target="#multi-dimensional-analysis-mda">Multi-Dimensional Analysis (MDA)</a></li>
+  <li><a href="#sentiment-analysis" id="toc-sentiment-analysis" class="nav-link" data-scroll-target="#sentiment-analysis">Sentiment Analysis</a></li>
+  </ul></li>
+  <li><a href="#tables-and-figures" id="toc-tables-and-figures" class="nav-link" data-scroll-target="#tables-and-figures">Tables and Figures</a>
+  <ul class="collapse">
+  <li><a href="#table-formatting" id="toc-table-formatting" class="nav-link" data-scroll-target="#table-formatting">Table Formatting</a></li>
+  <li><a href="#figure-formatting" id="toc-figure-formatting" class="nav-link" data-scroll-target="#figure-formatting">Figure Formatting</a></li>
+  </ul></li>
+  <li><a href="#inline-vs.-parenthetical-reporting" id="toc-inline-vs.-parenthetical-reporting" class="nav-link" data-scroll-target="#inline-vs.-parenthetical-reporting">Inline vs.&nbsp;Parenthetical Reporting</a>
+  <ul class="collapse">
+  <li><a href="#inline-sentence-structure-includes-statistics" id="toc-inline-sentence-structure-includes-statistics" class="nav-link" data-scroll-target="#inline-sentence-structure-includes-statistics">Inline (sentence structure includes statistics)</a></li>
+  <li><a href="#parenthetical-statistics-supplementary" id="toc-parenthetical-statistics-supplementary" class="nav-link" data-scroll-target="#parenthetical-statistics-supplementary">Parenthetical (statistics supplementary)</a></li>
+  </ul></li>
+  <li><a href="#common-mistakes-to-avoid" id="toc-common-mistakes-to-avoid" class="nav-link" data-scroll-target="#common-mistakes-to-avoid">Common Mistakes to Avoid</a>
+  <ul class="collapse">
+  <li><a href="#reporting-only-p-values" id="toc-reporting-only-p-values" class="nav-link" data-scroll-target="#reporting-only-p-values">❌ Reporting Only P-values</a></li>
+  <li><a href="#over-precise-reporting" id="toc-over-precise-reporting" class="nav-link" data-scroll-target="#over-precise-reporting">❌ Over-Precise Reporting</a></li>
+  <li><a href="#inconsistent-decimal-places" id="toc-inconsistent-decimal-places" class="nav-link" data-scroll-target="#inconsistent-decimal-places">❌ Inconsistent Decimal Places</a></li>
+  <li><a href="#forgetting-units" id="toc-forgetting-units" class="nav-link" data-scroll-target="#forgetting-units">❌ Forgetting Units</a></li>
+  <li><a href="#screenshots-of-code-or-output" id="toc-screenshots-of-code-or-output" class="nav-link" data-scroll-target="#screenshots-of-code-or-output">❌ Screenshots of Code or Output</a></li>
+  <li><a href="#tablesfigures-without-context" id="toc-tablesfigures-without-context" class="nav-link" data-scroll-target="#tablesfigures-without-context">❌ Tables/Figures Without Context</a></li>
+  </ul></li>
+  <li><a href="#quick-reference-common-statistical-symbols" id="toc-quick-reference-common-statistical-symbols" class="nav-link" data-scroll-target="#quick-reference-common-statistical-symbols">Quick Reference: Common Statistical Symbols</a></li>
+  <li><a href="#software-and-data-citations" id="toc-software-and-data-citations" class="nav-link" data-scroll-target="#software-and-data-citations">Software and Data Citations</a></li>
+  <li><a href="#final-checklist" id="toc-final-checklist" class="nav-link" data-scroll-target="#final-checklist">Final Checklist</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/browndw/humanities_analytics/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reports/cbe_01.html">Reports</a></li><li class="breadcrumb-item"><a href="../reports/statistical-reporting-guide.html">Statistical Reporting Guide</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Statistical Reporting Guide</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This guide provides quick-reference formatting for reporting statistical results in your writing. Follow these conventions to ensure clarity, professionalism, and reproducibility.</p>
+<section id="general-principles" class="level2">
+<h2 class="anchored" data-anchor-id="general-principles">General Principles</h2>
+<section id="what-to-include" class="level3">
+<h3 class="anchored" data-anchor-id="what-to-include">What to Include</h3>
+<p><strong>Every statistical claim should include:</strong></p>
+<ol type="1">
+<li><strong>Descriptive statistics</strong>: Means (M), standard deviations (SD), counts (n)</li>
+<li><strong>Test statistic</strong>: The specific value (t, F, χ², LL, etc.)</li>
+<li><strong>Effect size</strong>: Magnitude of difference (d, η², LL effect size, etc.)</li>
+<li><strong>Significance</strong>: p-value or confidence interval</li>
+<li><strong>Interpretation</strong>: What it means in plain language</li>
+</ol>
+<p><strong>Example</strong>: &gt; Biology papers used significantly more passive constructions (M = 12.3 per 1,000 words, SD = 3.1) than English papers (M = 7.8, SD = 2.4), t(158) = 8.2, p &lt; 0.001, d = 1.62. This large effect suggests passive voice is a core feature of STEM scientific writing.</p>
+</section>
+<section id="what-not-to-do" class="level3">
+<h3 class="anchored" data-anchor-id="what-not-to-do">What NOT to Do</h3>
+<p>❌ <strong>Screenshots of code or output</strong>: Never include screenshots from Jupyter notebooks or Colab<br>
+❌ <strong>Raw Python output</strong>: Don’t paste unformatted print statements<br>
+❌ <strong>Tables without context</strong>: Every table needs a caption and in-text reference<br>
+❌ <strong>Figures without interpretation</strong>: Explain what readers should notice<br>
+❌ <strong>P-values alone</strong>: Always include descriptive statistics and effect sizes</p>
+</section>
+</section>
+<section id="formatting-numbers" class="level2">
+<h2 class="anchored" data-anchor-id="formatting-numbers">Formatting Numbers</h2>
+<section id="decimal-places" class="level3">
+<h3 class="anchored" data-anchor-id="decimal-places">Decimal Places</h3>
+<ul>
+<li><strong>Means and SDs</strong>: 1-2 decimal places (M = 12.3, SD = 3.14)</li>
+<li><strong>Proportions and percentages</strong>: 1 decimal place (23.4%)</li>
+<li><strong>Test statistics</strong>: 2 decimal places (t = 3.45, F = 12.67)</li>
+<li><strong>P-values</strong>: 3 decimal places (p = 0.003) or p &lt; 0.001, p &gt; 0.05</li>
+<li><strong>Effect sizes</strong>: 2 decimal places (d = 0.68, η² = 0.14)</li>
+</ul>
+</section>
+<section id="italics" class="level3">
+<h3 class="anchored" data-anchor-id="italics">Italics</h3>
+<p>Italicize statistical symbols in text:</p>
+<ul>
+<li><em>M</em>, <em>SD</em>, <em>n</em> (descriptive statistics)</li>
+<li><em>t</em>, <em>F</em>, <em>χ²</em>, <em>r</em>, <em>z</em> (test statistics)</li>
+<li><em>p</em>, <em>d</em>, <em>η²</em>, <em>R²</em> (significance and effect sizes)</li>
+<li><em>df</em> (degrees of freedom)</li>
+</ul>
+<p><strong>Example</strong>: “<em>M</em> = 45.2, <em>SD</em> = 12.3, <em>n</em> = 80”</p>
+</section>
+<section id="reporting-exact-vs.-threshold-p-values" class="level3">
+<h3 class="anchored" data-anchor-id="reporting-exact-vs.-threshold-p-values">Reporting Exact vs.&nbsp;Threshold P-values</h3>
+<ul>
+<li><strong>p ≥ 0.001</strong>: Report exact value: <em>p</em> = 0.023, <em>p</em> = 0.187</li>
+<li><strong>p &lt; 0.001</strong>: Use threshold: <em>p</em> &lt; 0.001</li>
+<li><strong>p &gt; 0.05</strong>: Report as <em>p</em> = 0.12 or <em>p</em> &gt; 0.05 (not “ns” or “n.s.”)</li>
+</ul>
+</section>
+</section>
+<section id="method-specific-reporting" class="level2">
+<h2 class="anchored" data-anchor-id="method-specific-reporting">Method-Specific Reporting</h2>
+<section id="keyness-log-likelihood" class="level3">
+<h3 class="anchored" data-anchor-id="keyness-log-likelihood">Keyness (Log-Likelihood)</h3>
+<p><strong>What to report:</strong> - Log-likelihood value (LL) - Effect size (LL effect size or normalized frequency difference) - Direction of difference - Word frequencies in both corpora</p>
+<p><strong>Template</strong>: &gt; The word “cells” was significantly more frequent in Biology papers (45.2 per 1,000 words) than English papers (2.1 per 1,000 words), LL = 156.3, <em>p</em> &lt; 0.001, effect size = 1.2 (large).</p>
+<p><strong>In a table</strong> (from Mini Lab 4):</p>
+<pre><code>| Word      | Biology freq | English freq | LL    | p      | Effect |
+|-----------|--------------|--------------|-------|--------|--------|
+| cells     | 45.2         | 2.1          | 156.3 | &lt;.001  | 1.2    |
+| suggests  | 3.4          | 12.8         | 89.4  | &lt;.001  | 0.8    |</code></pre>
+<p><strong>Effect size interpretation</strong>: - &lt; 0.2: Negligible - 0.2-0.4: Small - 0.4-0.6: Medium - &gt; 0.6: Large</p>
+</section>
+<section id="t-tests" class="level3">
+<h3 class="anchored" data-anchor-id="t-tests">T-tests</h3>
+<p><strong>Independent samples t-test</strong> (comparing two groups):</p>
+<blockquote class="blockquote">
+<p>Biology papers (M = 12.3, SD = 3.1) used significantly more passive voice than English papers (M = 7.8, SD = 2.4), t(158) = 8.2, p &lt; 0.001, d = 1.62.</p>
+</blockquote>
+<p><strong>Components</strong>: - t(<em>df</em>) = value - Degrees of freedom in parentheses - Cohen’s <em>d</em> for effect size</p>
+<p><strong>Cohen’s d interpretation</strong>: - 0.2: Small - 0.5: Medium - 0.8: Large</p>
+</section>
+<section id="anova-one-way" class="level3">
+<h3 class="anchored" data-anchor-id="anova-one-way">ANOVA (One-Way)</h3>
+<p><strong>What to report:</strong> - F-statistic with degrees of freedom - Eta-squared (η²) or partial eta-squared - Post-hoc test results (if significant)</p>
+<p><strong>Template</strong>: &gt; A one-way ANOVA revealed significant differences in nominal density across disciplines, F(2, 237) = 45.3, p &lt; 0.001, η² = 0.28. Post-hoc Tukey HSD tests showed Biology (M = 34.2, SD = 8.1) differed significantly from both English (M = 22.3, SD = 6.4, p &lt; 0.001) and Psychology (M = 28.1, SD = 7.2, p = 0.002), while English and Psychology did not differ significantly (p = 0.15).</p>
+<p><strong>Eta-squared interpretation</strong> (from <a href="../tutorials/categorical-variables.html">ANOVA tutorial</a>): - 0.01: Small - 0.06: Medium - 0.14: Large</p>
+<p><strong>ANOVA table format</strong>:</p>
+<pre><code>| Source    | SS      | df  | MS     | F     | p      | η²   |
+|-----------|---------|-----|--------|-------|--------|------|
+| Between   | 2450.3  | 2   | 1225.2 | 45.3  | &lt;.001  | 0.28 |
+| Within    | 6402.1  | 237 | 27.0   |       |        |      |
+| Total     | 8852.4  | 239 |        |       |        |      |</code></pre>
+</section>
+<section id="correlation" class="level3">
+<h3 class="anchored" data-anchor-id="correlation">Correlation</h3>
+<p><strong>What to report:</strong> - Correlation coefficient (<em>r</em>, <em>ρ</em>, <em>τ</em>) - Sample size - P-value - Direction and strength</p>
+<p><strong>Template</strong>: &gt; First-person pronoun frequency correlated negatively with nominal density, r(158) = -0.52, p &lt; 0.001, indicating that more personal writing tends to use fewer nominalizations.</p>
+<p><strong>Pearson’s r interpretation</strong>: - 0.10-0.29: Small/weak - 0.30-0.49: Medium/moderate - 0.50+: Large/strong</p>
+<p><strong>Correlation matrix</strong> (don’t report full matrix in text—use figure/table):</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create correlation heatmap (from correlation tutorial)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Export as figure, not raw output</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="regression-linear" class="level3">
+<h3 class="anchored" data-anchor-id="regression-linear">Regression (Linear)</h3>
+<p><strong>What to report:</strong> - R² (variance explained) - F-statistic for overall model - β coefficients for predictors - Standard errors and p-values</p>
+<p><strong>Template</strong>: &gt; Linear regression showed that first-person pronouns and hedging significantly predicted disciplinary category, R² = 0.34, F(2, 157) = 40.3, p &lt; 0.001. First-person pronouns were a significant predictor (β = 0.45, SE = 0.08, p &lt; 0.001), as was hedging (β = 0.28, SE = 0.10, p = 0.006).</p>
+<p><strong>Regression table</strong>:</p>
+<pre><code>| Predictor           | β     | SE   | t     | p     | 95% CI        |
+|---------------------|-------|------|-------|-------|---------------|
+| First-person (I/we) | 0.45  | 0.08 | 5.63  | &lt;.001 | [0.29, 0.61]  |
+| Hedging             | 0.28  | 0.10 | 2.80  | .006  | [0.08, 0.48]  |</code></pre>
+</section>
+<section id="classification-machine-learning" class="level3">
+<h3 class="anchored" data-anchor-id="classification-machine-learning">Classification (Machine Learning)</h3>
+<p><strong>What to report:</strong> - Accuracy (overall and per-class) - Precision, recall, F1-score - Confusion matrix - Cross-validation details - Feature importance (top 5-10 features)</p>
+<p><strong>Template</strong>: &gt; Random Forest classification distinguished Biology from English papers with 87% accuracy (10-fold cross-validation). Precision was 0.89 for Biology and 0.85 for English; recall was 0.85 for Biology and 0.89 for English (Table 2). The most important features were passive voice frequency (importance = 0.23), nominal density (0.18), and first-person pronouns (0.15).</p>
+<p><strong>Classification report</strong> (from Mini Lab 12):</p>
+<pre><code>| Class    | Precision | Recall | F1-score | Support |
+|----------|-----------|--------|----------|---------|
+| Biology  | 0.89      | 0.85   | 0.87     | 80      |
+| English  | 0.85      | 0.89   | 0.87     | 80      |
+| Accuracy |           |        | 0.87     | 160     |</code></pre>
+<p><strong>Confusion matrix</strong> (visualize, don’t paste numbers): - Create heatmap with seaborn - Label axes clearly - Include caption</p>
+</section>
+<section id="topic-modeling" class="level3">
+<h3 class="anchored" data-anchor-id="topic-modeling">Topic Modeling</h3>
+<p><strong>What to report:</strong> - Number of topics - Coherence score - Perplexity (optional) - Top words per topic (5-10 words) - Interpretation of each topic</p>
+<p><strong>Template</strong>: &gt; LDA with 8 topics achieved a coherence score of 0.52 (acceptable) and perplexity of 245. Topic 3 (“cellular processes”) was characterized by <em>cells, protein, DNA, membrane, enzyme, receptor</em> and appeared in 34% of Biology papers but only 2% of English papers.</p>
+<p><strong>Topic table</strong>:</p>
+<pre><code>| Topic | Label              | Top Words                                      | % Bio | % Eng |
+|-------|--------------------|------------------------------------------------|-------|-------|
+| 1     | Cellular processes | cells, protein, DNA, membrane, enzyme          | 34%   | 2%    |
+| 2     | Literary analysis  | text, reader, theme, narrative, character      | 3%    | 41%   |</code></pre>
+</section>
+<section id="clustering" class="level3">
+<h3 class="anchored" data-anchor-id="clustering">Clustering</h3>
+<p><strong>What to report:</strong> - Clustering method (hierarchical, k-means) - Number of clusters - Validation metric (silhouette score, dendrogram scree) - Cluster composition - Interpretation</p>
+<p><strong>Template</strong>: &gt; Hierarchical clustering with Ward’s linkage identified 5 clusters (silhouette score = 0.42). Cluster 1 (n = 42) consisted primarily of Biology lab reports (88% of cluster), characterized by high nominal density and low first-person usage. Cluster 2 (n = 38) contained predominantly English argumentative essays (76%), with high first-person and hedging frequencies.</p>
+<p><strong>Dendrogram</strong>: Include figure, not code output</p>
+<p><strong>Cluster composition table</strong>:</p>
+<pre><code>| Cluster | n  | Primary Discipline | Key Features                          |
+|---------|----|--------------------|---------------------------------------|
+| 1       | 42 | Biology (88%)      | High nominal density, low 1st person  |
+| 2       | 38 | English (76%)      | High 1st person, high hedging         |</code></pre>
+</section>
+<section id="multi-dimensional-analysis-mda" class="level3">
+<h3 class="anchored" data-anchor-id="multi-dimensional-analysis-mda">Multi-Dimensional Analysis (MDA)</h3>
+<p><strong>What to report:</strong> - Number of dimensions extracted - Variance explained per dimension - Factor loadings (top features per dimension) - Dimension interpretation - How texts score on dimensions</p>
+<p><strong>Template</strong>: &gt; Factor analysis of 67 Biber features extracted 3 dimensions explaining 58% of variance. Dimension 1 (“Informational density,” 31% variance) loaded positively on nominalizations (0.82), attributive adjectives (0.76), and prepositions (0.71). Biology papers scored significantly higher on this dimension (M = 1.8, SD = 0.6) than English papers (M = -1.2, SD = 0.8), F(1, 158) = 89.3, p &lt; 0.001, η² = 0.36.</p>
+<p><strong>Factor loadings table</strong> (top 5-7 features per dimension):</p>
+<pre><code>| Feature                  | Dim 1  | Dim 2  | Dim 3  |
+|--------------------------|--------|--------|--------|
+| Nominalizations          | 0.82   | -0.12  | 0.23   |
+| Attributive adjectives   | 0.76   | 0.08   | -0.15  |
+| First-person pronouns    | -0.14  | 0.88   | 0.22   |
+| Hedging                  | -0.23  | 0.79   | -0.18  |</code></pre>
+<p><strong>Dimension scores visualization</strong>: Biplot or boxplots by discipline</p>
+</section>
+<section id="sentiment-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="sentiment-analysis">Sentiment Analysis</h3>
+<p><strong>What to report:</strong> - Sentiment method/lexicon (NRC, VADER, syuzhet) - Overall sentiment scores - Differences between groups (if comparing) - Temporal patterns (if time series)</p>
+<p><strong>Template</strong>: &gt; Using the NRC emotion lexicon, tragic novels showed significantly higher negative emotion word density (M = 8.2 per 100 words, SD = 2.1) than comedic novels (M = 4.3, SD = 1.6), t(78) = 9.8, p &lt; 0.001, d = 2.12. Positive emotion words did not differ significantly between genres, t(78) = 1.2, p = 0.23.</p>
+<p><strong>Syuzhet arc</strong> (narrative arcs): &gt; DCT transformation revealed distinct narrative shapes: comedies showed the classic “rags to riches” arc (negative start, positive end), while tragedies showed inverted arcs (positive start, negative end). Figure 3 shows normalized emotional arcs for both genres.</p>
+<p><strong>Sentiment over time</strong>: Include line plot, not raw numbers</p>
+</section>
+</section>
+<section id="tables-and-figures" class="level2">
+<h2 class="anchored" data-anchor-id="tables-and-figures">Tables and Figures</h2>
+<section id="table-formatting" class="level3">
+<h3 class="anchored" data-anchor-id="table-formatting">Table Formatting</h3>
+<p><strong>Every table must have:</strong></p>
+<ol type="1">
+<li><strong>Number and caption</strong> above the table</li>
+<li><strong>Clear column headers</strong> with units</li>
+<li><strong>In-text reference</strong> (“Table 1 shows…”)</li>
+<li><strong>Appropriate precision</strong> (don’t over-report decimals)</li>
+<li><strong>Notes</strong> (below table) for abbreviations or statistical notation</li>
+</ol>
+<p><strong>Example</strong>:</p>
+<pre><code>Table 1
+Descriptive Statistics for Linguistic Features by Discipline
+
+| Feature              | Biology        | English        |
+|                      | M (SD)         | M (SD)         |
+|----------------------|----------------|----------------|
+| Passive voice        | 12.3 (3.1)     | 7.8 (2.4)      |
+| Nominal density      | 34.2 (8.1)     | 22.3 (6.4)     |
+| First-person pronouns| 5.6 (2.3)      | 8.2 (3.0)      |
+
+Note. M = mean; SD = standard deviation. All values are 
+frequencies per 1,000 words. N = 80 per discipline.</code></pre>
+<p><strong>Creating tables in Python</strong>:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> great_tables <span class="im">import</span> GT</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create professional table (from Mini Lab 5)</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Export as LaTeX for Overleaf</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>table.as_latex()  <span class="co"># Not screenshot!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>LaTeX table formatting</strong> (for Overleaf):</p>
+<p>The same table in LaTeX syntax:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">table</span>}[h]</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">\centering</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">\caption</span>{Descriptive Statistics for Linguistic Features by Discipline}</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="kw">\label</span>{<span class="ex">tab:descriptives</span>}</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">tabular</span>}{lcc}</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">\toprule</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>Feature <span class="op">&amp;</span> Biology <span class="op">&amp;</span> English <span class="fu">\\</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">&amp;</span> <span class="fu">\textit</span>{M} (<span class="fu">\textit</span>{SD}) <span class="op">&amp;</span> <span class="fu">\textit</span>{M} (<span class="fu">\textit</span>{SD}) <span class="fu">\\</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">\midrule</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>Passive voice        <span class="op">&amp;</span> 12.3 (3.1) <span class="op">&amp;</span> 7.8 (2.4) <span class="fu">\\</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>Nominal density      <span class="op">&amp;</span> 34.2 (8.1) <span class="op">&amp;</span> 22.3 (6.4) <span class="fu">\\</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>First-person pronouns <span class="op">&amp;</span> 5.6 (2.3) <span class="op">&amp;</span> 8.2 (3.0) <span class="fu">\\</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="fu">\bottomrule</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">tabular</span>}</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">tablenotes</span>}</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="fu">\small</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="fu">\item</span> <span class="fu">\textit</span>{Note}. <span class="fu">\textit</span>{M} = mean; <span class="fu">\textit</span>{SD} = standard deviation. </span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>All values are frequencies per 1,000 words. <span class="fu">\textit</span>{N} = 80 per discipline.</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">tablenotes</span>}</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">table</span>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Key LaTeX table commands</strong>: - <code>\toprule</code>, <code>\midrule</code>, <code>\bottomrule</code>: Professional horizontal lines (requires <code>booktabs</code> package) - <code>\centering</code>: Centers the table - <code>\caption{}</code>: Table title (appears above table) - <code>\label{}</code>: For cross-referencing in text (e.g., <code>\ref{tab:descriptives}</code>) - <code>{lcc}</code>: Column alignment (left, center, center) - <code>\textit{}</code>: Italics for statistical symbols - <code>&amp;</code>: Column separator - <code>\\</code>: Row separator</p>
+<p><strong>Best practice</strong>: Use <code>great_tables</code> in Python to generate LaTeX code, then paste into Overleaf. This ensures consistency and saves manual formatting time.</p>
+</section>
+<section id="figure-formatting" class="level3">
+<h3 class="anchored" data-anchor-id="figure-formatting">Figure Formatting</h3>
+<p><strong>Every figure must have:</strong></p>
+<ol type="1">
+<li><strong>Number and caption</strong> below the figure</li>
+<li><strong>Clear axis labels</strong> with units (e.g., “Frequency per 1,000 words”)</li>
+<li><strong>Legend</strong> (if multiple groups/categories)</li>
+<li><strong>Legible font</strong> (minimum 12pt)</li>
+<li><strong>Professional styling</strong> (seaborn theme, not default matplotlib)</li>
+<li><strong>In-text reference</strong> (“Figure 1 shows…”)</li>
+</ol>
+<p><strong>Bad caption</strong>: “Keyness plot”<br>
+<strong>Good caption</strong>: “Figure 1. Keyness of Top 20 Words Distinguishing Biology and English Papers. Positive log-likelihood values (blue) indicate Biology-frequent words; negative values (orange) indicate English-frequent words. All LL &gt; 0.4 (medium-to-large effect), <em>p</em> &lt; 0.001.”</p>
+<p><strong>Figure types by purpose</strong>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Purpose</th>
+<th>Recommended Plot</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Compare group means</td>
+<td>Bar plot, boxplot, violin plot</td>
+</tr>
+<tr class="even">
+<td>Show distribution</td>
+<td>Histogram, density plot</td>
+</tr>
+<tr class="odd">
+<td>Correlation</td>
+<td>Scatterplot with regression line</td>
+</tr>
+<tr class="even">
+<td>Time trend</td>
+<td>Line plot, area plot</td>
+</tr>
+<tr class="odd">
+<td>Keyness</td>
+<td>Horizontal bar plot (pos/neg)</td>
+</tr>
+<tr class="even">
+<td>Clustering</td>
+<td>Dendrogram, PCA scatter</td>
+</tr>
+<tr class="odd">
+<td>Classification</td>
+<td>Confusion matrix heatmap</td>
+</tr>
+<tr class="even">
+<td>Topic composition</td>
+<td>Stacked bar, heatmap</td>
+</tr>
+<tr class="odd">
+<td>Factor loadings</td>
+<td>Horizontal bar plot</td>
+</tr>
+<tr class="even">
+<td>Sentiment arc</td>
+<td>Line plot with smoothing</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Creating publication-quality figures</strong>:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set style</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>sns.set_style(<span class="st">"whitegrid"</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>sns.set_context(<span class="st">"paper"</span>, font_scale<span class="op">=</span><span class="fl">1.2</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create plot</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co"># ... your plot code ...</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Clear labels with units</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Discipline"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Frequency per 1,000 words"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Passive Voice by Discipline"</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Save high-resolution</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">"passive_voice.png"</span>, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Never</strong>: - Screenshot your Jupyter/Colab output - Include code cells in your report - Paste matplotlib’s default ugly plots - Forget axis labels or legends - Use pie charts (almost always a bad choice)</p>
+</section>
+</section>
+<section id="inline-vs.-parenthetical-reporting" class="level2">
+<h2 class="anchored" data-anchor-id="inline-vs.-parenthetical-reporting">Inline vs.&nbsp;Parenthetical Reporting</h2>
+<section id="inline-sentence-structure-includes-statistics" class="level3">
+<h3 class="anchored" data-anchor-id="inline-sentence-structure-includes-statistics">Inline (sentence structure includes statistics)</h3>
+<blockquote class="blockquote">
+<p>Biology papers used significantly more passive constructions (<em>M</em> = 12.3) than English papers (<em>M</em> = 7.8), <em>t</em>(158) = 8.2, <em>p</em> &lt; 0.001.</p>
+</blockquote>
+</section>
+<section id="parenthetical-statistics-supplementary" class="level3">
+<h3 class="anchored" data-anchor-id="parenthetical-statistics-supplementary">Parenthetical (statistics supplementary)</h3>
+<blockquote class="blockquote">
+<p>Biology papers used significantly more passive constructions than English papers (<em>M</em>s = 12.3 vs.&nbsp;7.8, <em>t</em>(158) = 8.2, <em>p</em> &lt; 0.001, <em>d</em> = 1.62).</p>
+</blockquote>
+<p><strong>Both are acceptable</strong>—choose based on what flows better in your sentence.</p>
+</section>
+</section>
+<section id="common-mistakes-to-avoid" class="level2">
+<h2 class="anchored" data-anchor-id="common-mistakes-to-avoid">Common Mistakes to Avoid</h2>
+<section id="reporting-only-p-values" class="level3">
+<h3 class="anchored" data-anchor-id="reporting-only-p-values">❌ Reporting Only P-values</h3>
+<p><strong>Bad</strong>: “The difference was significant (<em>p</em> &lt; 0.05).”<br>
+<strong>Good</strong>: “Biology papers used significantly more passive voice (<em>M</em> = 12.3, <em>SD</em> = 3.1) than English papers (<em>M</em> = 7.8, <em>SD</em> = 2.4), <em>t</em>(158) = 8.2, <em>p</em> &lt; 0.001, <em>d</em> = 1.62.”</p>
+<p><strong>Why</strong>: P-values alone don’t tell readers the magnitude or practical importance of differences.</p>
+</section>
+<section id="over-precise-reporting" class="level3">
+<h3 class="anchored" data-anchor-id="over-precise-reporting">❌ Over-Precise Reporting</h3>
+<p><strong>Bad</strong>: “Mean = 12.3456789, SD = 3.14159265”<br>
+<strong>Good</strong>: “M = 12.3, SD = 3.1”</p>
+<p><strong>Why</strong>: False precision implies unrealistic measurement accuracy.</p>
+</section>
+<section id="inconsistent-decimal-places" class="level3">
+<h3 class="anchored" data-anchor-id="inconsistent-decimal-places">❌ Inconsistent Decimal Places</h3>
+<p><strong>Bad</strong>: “<em>M</em> = 12, <em>SD</em> = 3.142, <em>t</em> = 8.234567”<br>
+<strong>Good</strong>: “<em>M</em> = 12.0, <em>SD</em> = 3.1, <em>t</em> = 8.23”</p>
+</section>
+<section id="forgetting-units" class="level3">
+<h3 class="anchored" data-anchor-id="forgetting-units">❌ Forgetting Units</h3>
+<p><strong>Bad</strong>: “Biology papers had more passive voice (12.3)”<br>
+<strong>Good</strong>: “Biology papers had more passive voice (12.3 per 1,000 words)”</p>
+</section>
+<section id="screenshots-of-code-or-output" class="level3">
+<h3 class="anchored" data-anchor-id="screenshots-of-code-or-output">❌ Screenshots of Code or Output</h3>
+<p><strong>Never do this</strong>: - Screenshot of Jupyter cell output - Screenshot of Python print statements - Screenshot of DataFrame.head() - Raw copy-paste from console</p>
+<p><strong>Instead</strong>: - Create professional tables with great_tables - Create styled visualizations with seaborn - Export figures as high-res PNG/PDF - Format numbers in prose</p>
+</section>
+<section id="tablesfigures-without-context" class="level3">
+<h3 class="anchored" data-anchor-id="tablesfigures-without-context">❌ Tables/Figures Without Context</h3>
+<p><strong>Bad</strong>: Just inserting Figure 1 with no mention in text<br>
+<strong>Good</strong>: “Figure 1 shows that passive voice distinguishes disciplines, with Biology using 58% more passive constructions than English.”</p>
+</section>
+</section>
+<section id="quick-reference-common-statistical-symbols" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference-common-statistical-symbols">Quick Reference: Common Statistical Symbols</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Symbol</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><em>M</em></td>
+<td>Mean</td>
+<td><em>M</em> = 12.3</td>
+</tr>
+<tr class="even">
+<td><em>SD</em></td>
+<td>Standard deviation</td>
+<td><em>SD</em> = 3.1</td>
+</tr>
+<tr class="odd">
+<td><em>SE</em></td>
+<td>Standard error</td>
+<td><em>SE</em> = 0.4</td>
+</tr>
+<tr class="even">
+<td><em>n</em></td>
+<td>Sample size (subset)</td>
+<td><em>n</em> = 80</td>
+</tr>
+<tr class="odd">
+<td><em>N</em></td>
+<td>Total sample size</td>
+<td><em>N</em> = 160</td>
+</tr>
+<tr class="even">
+<td><em>t</em></td>
+<td>t-statistic</td>
+<td><em>t</em>(158) = 8.2</td>
+</tr>
+<tr class="odd">
+<td><em>F</em></td>
+<td>F-statistic (ANOVA)</td>
+<td><em>F</em>(2, 237) = 45.3</td>
+</tr>
+<tr class="even">
+<td><em>χ²</em></td>
+<td>Chi-square</td>
+<td><em>χ²</em>(3) = 12.4</td>
+</tr>
+<tr class="odd">
+<td><em>r</em></td>
+<td>Pearson correlation</td>
+<td><em>r</em> = 0.52</td>
+</tr>
+<tr class="even">
+<td><em>ρ</em></td>
+<td>Spearman correlation</td>
+<td><em>ρ</em> = 0.48</td>
+</tr>
+<tr class="odd">
+<td><em>p</em></td>
+<td>Probability value</td>
+<td><em>p</em> &lt; 0.001</td>
+</tr>
+<tr class="even">
+<td><em>d</em></td>
+<td>Cohen’s d (effect size)</td>
+<td><em>d</em> = 1.62</td>
+</tr>
+<tr class="odd">
+<td><em>η²</em></td>
+<td>Eta-squared (effect size)</td>
+<td><em>η²</em> = 0.28</td>
+</tr>
+<tr class="even">
+<td><em>R²</em></td>
+<td>R-squared (variance explained)</td>
+<td><em>R²</em> = 0.34</td>
+</tr>
+<tr class="odd">
+<td><em>β</em></td>
+<td>Beta coefficient (regression)</td>
+<td><em>β</em> = 0.45</td>
+</tr>
+<tr class="even">
+<td>LL</td>
+<td>Log-likelihood (keyness)</td>
+<td>LL = 156.3</td>
+</tr>
+<tr class="odd">
+<td><em>df</em></td>
+<td>Degrees of freedom</td>
+<td><em>df</em> = 158</td>
+</tr>
+<tr class="even">
+<td>CI</td>
+<td>Confidence interval</td>
+<td>95% CI [0.29, 0.61]</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="software-and-data-citations" class="level2">
+<h2 class="anchored" data-anchor-id="software-and-data-citations">Software and Data Citations</h2>
+<p><strong>Always cite</strong> the tools and data you used:</p>
+<p><strong>Software</strong>: &gt; Statistical analyses were performed in Python 3.11 using polars 0.19 (Vink, 2023), spaCy 3.7 (Honnibal et al., 2020), pybiber 0.1.5 (Brown, 2024), scikit-learn 1.3 (Pedregosa et al., 2011), and great_tables 0.8 (Mock, 2024).</p>
+<p><strong>Data</strong>: &gt; We analyzed the Michigan Corpus of Upper-level Student Papers (MICUSP; Römer &amp; O’Donnell, 2011), available at <a href="https://elicorpora.info/">https://elicorpora.info/</a>.</p>
+<p><strong>Get citation info</strong>:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Most packages provide citation guidance</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Check package documentation for citation</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="final-checklist" class="level2">
+<h2 class="anchored" data-anchor-id="final-checklist">Final Checklist</h2>
+<p>Before submitting your report, verify:</p>
+<p>✅ <strong>All statistics include</strong>: - Descriptive statistics (<em>M</em>, <em>SD</em>, <em>n</em>) - Test statistics with <em>df</em> where applicable - Effect sizes (<em>d</em>, <em>η²</em>, etc.) - P-values - Interpretation in plain language</p>
+<p>✅ <strong>All tables include</strong>: - Number and descriptive caption - Clear headers with units - In-text reference - Appropriate precision (1-2 decimals)</p>
+<p>✅ <strong>All figures include</strong>: - Number and descriptive caption - Axis labels with units - Legend (if multiple groups) - Professional styling (no screenshots!) - In-text reference</p>
+<p>✅ <strong>No screenshots of</strong>: - Jupyter/Colab cells - Python console output - Raw DataFrames - Matplotlib default plots</p>
+<p>✅ <strong>Citations for</strong>: - Software packages - Data sources - Statistical tests - Prior research</p>
+<hr>
+<p><strong>Remember</strong>: The goal is <strong>clear communication</strong> of your findings. Statistics should support your argument, not overwhelm it. When in doubt, ask: “Can a reader understand this number without referring to my code?”</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../reports/final-project.html" class="pagination-link" aria-label="Final Project: Independent Corpus Analysis">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Final Project: Independent Corpus Analysis</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../tutorials/using-colab.html" class="pagination-link" aria-label="Using Google Colab">
+        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Using Google Colab</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/browndw/humanities_analytics/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

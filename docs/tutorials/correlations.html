@@ -1,0 +1,1965 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.557">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Methods in Humanities Analytics - 11&nbsp; Correlation and Multi-Collinearity</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../tutorials/multi-dimensional-analysis.html" rel="next">
+<link href="../tutorials/cluster-analysis.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../images/text_analysis.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Methods in Humanities Analytics</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/browndw/humanities_analytics" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorials/categorical-variables.html">Advanced Analysis</a></li><li class="breadcrumb-item"><a href="../tutorials/correlations.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Correlation and Multi-Collinearity</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/sentiment-and-syuzhet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Texts, Algorithms, and Black-Boxes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/corpus-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Corpus Basics: Tokenization and Processing Pipelines</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/spacy-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NLP Processing with spaCy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/frequency-and-distributions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Distributions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Core Methods</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/keyness.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Keyness</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/collocations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Collocations and N-grams</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/time-series.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Time Series Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/topic-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Topic Modeling</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Advanced Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/categorical-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">ANOVA and R²: Comparing Groups and Explaining Variance</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/cluster-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Clustering Methods</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/correlations.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Correlation and Multi-Collinearity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/multi-dimensional-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Multi-Dimensional Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/contextual-embeddings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Contextual Embeddings and Transformers</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/classification-federalist-papers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Classification &amp; Authorship Attribution</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Reports</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #1: From Curiosity to Visualization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #2: From Results to Research</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/cbe_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coffee Break Experiment #3: Final Project Pilot Study</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/final-project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Final Project: Independent Corpus Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/statistical-reporting-guide.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Statistical Reporting Guide</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Course Resources</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/using-colab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Using Google Colab</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../resources/packages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Python Packages for This Course</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../resources/data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Course Data Resources</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">11.1</span> Introduction</a></li>
+  <li><a href="#core-concepts" id="toc-core-concepts" class="nav-link" data-scroll-target="#core-concepts"><span class="header-section-number">11.2</span> Core Concepts</a>
+  <ul class="collapse">
+  <li><a href="#what-is-correlation" id="toc-what-is-correlation" class="nav-link" data-scroll-target="#what-is-correlation"><span class="header-section-number">11.2.1</span> What is Correlation?</a></li>
+  <li><a href="#interpreting-correlation-strength" id="toc-interpreting-correlation-strength" class="nav-link" data-scroll-target="#interpreting-correlation-strength"><span class="header-section-number">11.2.2</span> Interpreting Correlation Strength</a></li>
+  <li><a href="#types-of-correlation" id="toc-types-of-correlation" class="nav-link" data-scroll-target="#types-of-correlation"><span class="header-section-number">11.2.3</span> Types of Correlation</a></li>
+  </ul></li>
+  <li><a href="#multi-collinearity-explained" id="toc-multi-collinearity-explained" class="nav-link" data-scroll-target="#multi-collinearity-explained"><span class="header-section-number">11.3</span> Multi-Collinearity Explained</a>
+  <ul class="collapse">
+  <li><a href="#what-is-multi-collinearity" id="toc-what-is-multi-collinearity" class="nav-link" data-scroll-target="#what-is-multi-collinearity"><span class="header-section-number">11.3.1</span> What is Multi-Collinearity?</a></li>
+  <li><a href="#when-multi-collinearity-is-a-problem" id="toc-when-multi-collinearity-is-a-problem" class="nav-link" data-scroll-target="#when-multi-collinearity-is-a-problem"><span class="header-section-number">11.3.2</span> When Multi-Collinearity is a Problem</a></li>
+  <li><a href="#when-multi-collinearity-is-useful" id="toc-when-multi-collinearity-is-useful" class="nav-link" data-scroll-target="#when-multi-collinearity-is-useful"><span class="header-section-number">11.3.3</span> When Multi-Collinearity is Useful</a></li>
+  </ul></li>
+  <li><a href="#correlation-analysis-with-pybiber-features" id="toc-correlation-analysis-with-pybiber-features" class="nav-link" data-scroll-target="#correlation-analysis-with-pybiber-features"><span class="header-section-number">11.4</span> Correlation Analysis with Pybiber Features</a>
+  <ul class="collapse">
+  <li><a href="#load-and-prepare-data" id="toc-load-and-prepare-data" class="nav-link" data-scroll-target="#load-and-prepare-data"><span class="header-section-number">11.4.1</span> Load and Prepare Data</a></li>
+  <li><a href="#extract-feature-columns" id="toc-extract-feature-columns" class="nav-link" data-scroll-target="#extract-feature-columns"><span class="header-section-number">11.4.2</span> Extract Feature Columns</a></li>
+  <li><a href="#compute-correlation-matrix" id="toc-compute-correlation-matrix" class="nav-link" data-scroll-target="#compute-correlation-matrix"><span class="header-section-number">11.4.3</span> Compute Correlation Matrix</a></li>
+  <li><a href="#visualize-correlation-heatmap" id="toc-visualize-correlation-heatmap" class="nav-link" data-scroll-target="#visualize-correlation-heatmap"><span class="header-section-number">11.4.4</span> Visualize: Correlation Heatmap</a></li>
+  <li><a href="#identify-strongest-correlations" id="toc-identify-strongest-correlations" class="nav-link" data-scroll-target="#identify-strongest-correlations"><span class="header-section-number">11.4.5</span> Identify Strongest Correlations</a></li>
+  <li><a href="#examine-specific-correlation" id="toc-examine-specific-correlation" class="nav-link" data-scroll-target="#examine-specific-correlation"><span class="header-section-number">11.4.6</span> Examine Specific Correlation</a></li>
+  <li><a href="#visualize-scatterplot" id="toc-visualize-scatterplot" class="nav-link" data-scroll-target="#visualize-scatterplot"><span class="header-section-number">11.4.7</span> Visualize: Scatterplot</a></li>
+  </ul></li>
+  <li><a href="#detecting-multi-collinearity" id="toc-detecting-multi-collinearity" class="nav-link" data-scroll-target="#detecting-multi-collinearity"><span class="header-section-number">11.5</span> Detecting Multi-Collinearity</a>
+  <ul class="collapse">
+  <li><a href="#correlation-threshold" id="toc-correlation-threshold" class="nav-link" data-scroll-target="#correlation-threshold"><span class="header-section-number">11.5.1</span> Correlation Threshold</a></li>
+  <li><a href="#variance-inflation-factor-vif" id="toc-variance-inflation-factor-vif" class="nav-link" data-scroll-target="#variance-inflation-factor-vif"><span class="header-section-number">11.5.2</span> Variance Inflation Factor (VIF)</a></li>
+  </ul></li>
+  <li><a href="#multi-collinearity-and-dimension-reduction" id="toc-multi-collinearity-and-dimension-reduction" class="nav-link" data-scroll-target="#multi-collinearity-and-dimension-reduction"><span class="header-section-number">11.6</span> Multi-Collinearity and Dimension Reduction</a>
+  <ul class="collapse">
+  <li><a href="#why-correlation-enables-factor-analysis" id="toc-why-correlation-enables-factor-analysis" class="nav-link" data-scroll-target="#why-correlation-enables-factor-analysis"><span class="header-section-number">11.6.1</span> Why Correlation Enables Factor Analysis</a></li>
+  <li><a href="#correlation-matrix-for-factor-analysis" id="toc-correlation-matrix-for-factor-analysis" class="nav-link" data-scroll-target="#correlation-matrix-for-factor-analysis"><span class="header-section-number">11.6.2</span> Correlation Matrix for Factor Analysis</a></li>
+  <li><a href="#visualize-correlation-network" id="toc-visualize-correlation-network" class="nav-link" data-scroll-target="#visualize-correlation-network"><span class="header-section-number">11.6.3</span> Visualize: Correlation Network</a></li>
+  </ul></li>
+  <li><a href="#practical-applications" id="toc-practical-applications" class="nav-link" data-scroll-target="#practical-applications"><span class="header-section-number">11.7</span> Practical Applications</a>
+  <ul class="collapse">
+  <li><a href="#feature-selection-for-classification" id="toc-feature-selection-for-classification" class="nav-link" data-scroll-target="#feature-selection-for-classification"><span class="header-section-number">11.7.1</span> 1. Feature Selection for Classification</a></li>
+  <li><a href="#understanding-functional-groupings" id="toc-understanding-functional-groupings" class="nav-link" data-scroll-target="#understanding-functional-groupings"><span class="header-section-number">11.7.2</span> 2. Understanding Functional Groupings</a></li>
+  <li><a href="#hypothesis-testing" id="toc-hypothesis-testing" class="nav-link" data-scroll-target="#hypothesis-testing"><span class="header-section-number">11.7.3</span> 3. Hypothesis Testing</a></li>
+  <li><a href="#comparing-correlation-across-corpora" id="toc-comparing-correlation-across-corpora" class="nav-link" data-scroll-target="#comparing-correlation-across-corpora"><span class="header-section-number">11.7.4</span> 4. Comparing Correlation Across Corpora</a></li>
+  </ul></li>
+  <li><a href="#methodological-considerations" id="toc-methodological-considerations" class="nav-link" data-scroll-target="#methodological-considerations"><span class="header-section-number">11.8</span> Methodological Considerations</a>
+  <ul class="collapse">
+  <li><a href="#sample-size" id="toc-sample-size" class="nav-link" data-scroll-target="#sample-size"><span class="header-section-number">11.8.1</span> 1. Sample Size</a></li>
+  <li><a href="#outliers" id="toc-outliers" class="nav-link" data-scroll-target="#outliers"><span class="header-section-number">11.8.2</span> 2. Outliers</a></li>
+  <li><a href="#linearity-assumption" id="toc-linearity-assumption" class="nav-link" data-scroll-target="#linearity-assumption"><span class="header-section-number">11.8.3</span> 3. Linearity Assumption</a></li>
+  <li><a href="#range-restriction" id="toc-range-restriction" class="nav-link" data-scroll-target="#range-restriction"><span class="header-section-number">11.8.4</span> 4. Range Restriction</a></li>
+  <li><a href="#shared-method-variance" id="toc-shared-method-variance" class="nav-link" data-scroll-target="#shared-method-variance"><span class="header-section-number">11.8.5</span> 5. Shared Method Variance</a></li>
+  </ul></li>
+  <li><a href="#connections-to-other-methods" id="toc-connections-to-other-methods" class="nav-link" data-scroll-target="#connections-to-other-methods"><span class="header-section-number">11.9</span> Connections to Other Methods</a>
+  <ul class="collapse">
+  <li><a href="#correlation-and-keyness" id="toc-correlation-and-keyness" class="nav-link" data-scroll-target="#correlation-and-keyness"><span class="header-section-number">11.9.1</span> Correlation and Keyness</a></li>
+  <li><a href="#correlation-and-classification" id="toc-correlation-and-classification" class="nav-link" data-scroll-target="#correlation-and-classification"><span class="header-section-number">11.9.2</span> Correlation and Classification</a></li>
+  <li><a href="#correlation-and-embeddings" id="toc-correlation-and-embeddings" class="nav-link" data-scroll-target="#correlation-and-embeddings"><span class="header-section-number">11.9.3</span> Correlation and Embeddings</a></li>
+  <li><a href="#correlation-and-time-series" id="toc-correlation-and-time-series" class="nav-link" data-scroll-target="#correlation-and-time-series"><span class="header-section-number">11.9.4</span> Correlation and Time Series</a></li>
+  </ul></li>
+  <li><a href="#ethical-considerations" id="toc-ethical-considerations" class="nav-link" data-scroll-target="#ethical-considerations"><span class="header-section-number">11.10</span> Ethical Considerations</a>
+  <ul class="collapse">
+  <li><a href="#correlation-fishing" id="toc-correlation-fishing" class="nav-link" data-scroll-target="#correlation-fishing"><span class="header-section-number">11.10.1</span> 1. Correlation Fishing</a></li>
+  <li><a href="#spurious-correlations" id="toc-spurious-correlations" class="nav-link" data-scroll-target="#spurious-correlations"><span class="header-section-number">11.10.2</span> 2. Spurious Correlations</a></li>
+  <li><a href="#ecological-fallacy" id="toc-ecological-fallacy" class="nav-link" data-scroll-target="#ecological-fallacy"><span class="header-section-number">11.10.3</span> 3. Ecological Fallacy</a></li>
+  <li><a href="#reification-of-dimensions" id="toc-reification-of-dimensions" class="nav-link" data-scroll-target="#reification-of-dimensions"><span class="header-section-number">11.10.4</span> 4. Reification of Dimensions</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">11.11</span> Summary</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">11.12</span> Further Reading</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/browndw/humanities_analytics/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../tutorials/categorical-variables.html">Advanced Analysis</a></li><li class="breadcrumb-item"><a href="../tutorials/correlations.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Correlation and Multi-Collinearity</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Correlation and Multi-Collinearity</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">11.1</span> Introduction</h2>
+<p><strong>Correlation</strong> measures the strength and direction of the linear relationship between two variables. In text analysis, correlation helps us understand which linguistic features vary together—a fundamental question for understanding language use.</p>
+<p><strong>Why correlation matters for humanities research:</strong></p>
+<ul>
+<li><strong>Feature relationships</strong>: Do passives increase when nominalizations increase?</li>
+<li><strong>Multi-collinearity detection</strong>: Which features are redundant (measuring the same thing)?</li>
+<li><strong>Dimension reduction</strong>: Can we combine correlated features into composite variables?</li>
+<li><strong>Assumption checking</strong>: Many statistical models assume features are independent—are they?</li>
+<li><strong>Theoretical insights</strong>: Correlation patterns reveal functional groupings (features that serve similar communicative purposes)</li>
+</ul>
+<p>This tutorial introduces correlation analysis with special attention to <strong>multi-collinearity</strong>: when predictor variables are highly correlated with each other. We’ll explore:</p>
+<ol type="1">
+<li><strong>When multi-collinearity is a problem</strong> (regression, classification models assume independence)</li>
+<li><strong>When multi-collinearity is useful</strong> (factor analysis, PCA leverage it for dimension reduction)</li>
+<li><strong>How to detect and interpret correlation patterns</strong> using linguistic features from the <code>pybiber</code> package</li>
+</ol>
+</section>
+<section id="core-concepts" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="core-concepts"><span class="header-section-number">11.2</span> Core Concepts</h2>
+<section id="what-is-correlation" class="level3" data-number="11.2.1">
+<h3 data-number="11.2.1" class="anchored" data-anchor-id="what-is-correlation"><span class="header-section-number">11.2.1</span> What is Correlation?</h3>
+<p><strong>Correlation coefficient</strong> (Pearson’s <em>r</em>) ranges from -1 to +1:</p>
+<ul>
+<li><strong>r = +1</strong>: Perfect positive relationship (as X increases, Y increases proportionally)</li>
+<li><strong>r = 0</strong>: No linear relationship</li>
+<li><strong>r = -1</strong>: Perfect negative relationship (as X increases, Y decreases proportionally)</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<ul>
+<li>Positive correlation: <strong>Nominalizations</strong> and <strong>attributive adjectives</strong> (both increase in informational writing)</li>
+<li>Negative correlation: <strong>Personal pronouns</strong> and <strong>word length</strong> (pronouns are short; informational writing uses long words)</li>
+<li>No correlation: <strong>Past tense</strong> and <strong>type-token ratio</strong> (independent dimensions of variation)</li>
+</ul>
+</section>
+<section id="interpreting-correlation-strength" class="level3" data-number="11.2.2">
+<h3 data-number="11.2.2" class="anchored" data-anchor-id="interpreting-correlation-strength"><span class="header-section-number">11.2.2</span> Interpreting Correlation Strength</h3>
+<p><strong>Conventional benchmarks</strong> (Cohen, 1988):</p>
+<ul>
+<li><strong>|r| &lt; 0.3</strong>: Weak correlation</li>
+<li><strong>0.3 ≤ |r| &lt; 0.5</strong>: Moderate correlation<br>
+</li>
+<li><strong>|r| ≥ 0.5</strong>: Strong correlation</li>
+</ul>
+<p><strong>Context matters</strong>: In social sciences, r = 0.3 might be meaningful. In physics, r = 0.9 might be insufficient. For linguistic features, correlations around 0.4-0.6 are common and theoretically important.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correlation ≠ Causation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Correlation measures <strong>co-occurrence</strong>, not <strong>causation</strong>. If passives and nominalizations correlate, it doesn’t mean one causes the other—both may be responses to a third factor (e.g., genre constraints requiring informational density).</p>
+</div>
+</div>
+</section>
+<section id="types-of-correlation" class="level3" data-number="11.2.3">
+<h3 data-number="11.2.3" class="anchored" data-anchor-id="types-of-correlation"><span class="header-section-number">11.2.3</span> Types of Correlation</h3>
+<p><strong>Pearson correlation</strong> (parametric): - Measures <strong>linear</strong> relationships - Assumes normally distributed variables - Most common, what we’ll use</p>
+<p><strong>Spearman correlation</strong> (non-parametric): - Measures <strong>monotonic</strong> relationships (consistently increasing or decreasing, but not necessarily linear) - Based on ranks, not raw values - Better for non-normal distributions or ordinal data</p>
+<p><strong>Kendall’s tau</strong> (non-parametric): - Also rank-based - More robust to outliers than Spearman - Better for small samples</p>
+<p>For most text analysis with count-based features (especially normalized frequencies), <strong>Pearson correlation</strong> is appropriate.</p>
+</section>
+</section>
+<section id="multi-collinearity-explained" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="multi-collinearity-explained"><span class="header-section-number">11.3</span> Multi-Collinearity Explained</h2>
+<section id="what-is-multi-collinearity" class="level3" data-number="11.3.1">
+<h3 data-number="11.3.1" class="anchored" data-anchor-id="what-is-multi-collinearity"><span class="header-section-number">11.3.1</span> What is Multi-Collinearity?</h3>
+<p><strong>Multi-collinearity</strong> occurs when predictor variables in a model are highly correlated with each other. This creates problems for some statistical procedures but enables others.</p>
+<p><strong>Example</strong>: If we’re predicting genre from linguistic features, and <strong>nominalizations</strong> (r = 0.85) and <strong>prepositions</strong> are highly correlated, they provide redundant information—both measure similar underlying dimension (informativeness).</p>
+</section>
+<section id="when-multi-collinearity-is-a-problem" class="level3" data-number="11.3.2">
+<h3 data-number="11.3.2" class="anchored" data-anchor-id="when-multi-collinearity-is-a-problem"><span class="header-section-number">11.3.2</span> When Multi-Collinearity is a Problem</h3>
+<section id="regression-models" class="level4" data-number="11.3.2.1">
+<h4 data-number="11.3.2.1" class="anchored" data-anchor-id="regression-models"><span class="header-section-number">11.3.2.1</span> 1. Regression Models</h4>
+<p><strong>Why it’s problematic:</strong></p>
+<ul>
+<li><strong>Unstable coefficients</strong>: Small changes in data cause large changes in estimated effects</li>
+<li><strong>Inflated standard errors</strong>: Confidence intervals become unreliable</li>
+<li><strong>Difficulty interpreting</strong>: Can’t tell which variable is “really” important</li>
+<li><strong>Variance inflation</strong>: Collinear variables “compete” to explain the same variance</li>
+</ul>
+<p><strong>Example</strong>: If nominalizations and prepositions both predict academic writing (r = 0.85 with each other), their individual regression coefficients become unreliable. Adding or removing one changes the other’s coefficient dramatically.</p>
+<p><strong>Diagnostic</strong>: <strong>Variance Inflation Factor (VIF)</strong>:</p>
+<ul>
+<li>VIF = 1 / (1 - R²) where R² is from regressing predictor X on all other predictors</li>
+<li>VIF &gt; 10 indicates severe multi-collinearity</li>
+<li>VIF &gt; 5 suggests caution</li>
+</ul>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Drop redundant variables (keep most theoretically important)</li>
+<li>Combine correlated variables into composite scores</li>
+<li>Use dimension reduction (PCA) to create orthogonal predictors</li>
+<li>Use regularization (Ridge regression, Lasso) which penalizes large coefficients</li>
+</ul>
+</section>
+<section id="classification-models" class="level4" data-number="11.3.2.2">
+<h4 data-number="11.3.2.2" class="anchored" data-anchor-id="classification-models"><span class="header-section-number">11.3.2.2</span> 2. Classification Models</h4>
+<p><strong>Some algorithms struggle with multi-collinearity:</strong></p>
+<ul>
+<li><strong>Logistic regression</strong>: Same issues as linear regression (unstable coefficients, inflated SE)</li>
+<li><strong>Linear Discriminant Analysis</strong>: Assumes features are independent</li>
+</ul>
+<p><strong>Some algorithms handle it well:</strong></p>
+<ul>
+<li><strong>Random Forest</strong>: Tree-based methods are robust to multi-collinearity</li>
+<li><strong>Naive Bayes</strong>: Assumes independence but often works despite violations</li>
+<li><strong>Neural networks</strong>: Can learn despite multi-collinearity (but may be inefficient)</li>
+</ul>
+<p><strong>Practical impact</strong>: Multi-collinearity often reduces interpretability more than predictive accuracy. A Random Forest might classify well despite correlated features, but you can’t interpret feature importance reliably.</p>
+</section>
+</section>
+<section id="when-multi-collinearity-is-useful" class="level3" data-number="11.3.3">
+<h3 data-number="11.3.3" class="anchored" data-anchor-id="when-multi-collinearity-is-useful"><span class="header-section-number">11.3.3</span> When Multi-Collinearity is Useful</h3>
+<section id="factor-analysis" class="level4" data-number="11.3.3.1">
+<h4 data-number="11.3.3.1" class="anchored" data-anchor-id="factor-analysis"><span class="header-section-number">11.3.3.1</span> 1. Factor Analysis</h4>
+<p><strong>Factor analysis</strong> (used in Multi-Dimensional Analysis) <strong>requires</strong> correlations among variables:</p>
+<p><strong>Core principle</strong>: If variables don’t correlate, they can’t reflect underlying latent factors.</p>
+<p><strong>Example</strong>:</p>
+<ul>
+<li><strong>Observed variables</strong>: First-person pronouns, present tense, contractions (all correlated r ≈ 0.5-0.7)</li>
+<li><strong>Latent factor</strong>: “Involved production” (personal interaction)</li>
+</ul>
+<p>Factor analysis identifies groups of correlated variables and represents them as latent dimensions. Without correlation, there’s nothing to reduce.</p>
+<p><strong>Requirements</strong>:</p>
+<ul>
+<li><strong>Sufficient correlations</strong>: Need some |r| &gt; 0.3 among variables</li>
+<li><strong>Not perfect correlations</strong>: Avoid |r| &gt; 0.9 (redundancy, not shared factor)</li>
+<li><strong>Bartlett’s test</strong>: Tests if correlation matrix differs from identity matrix (p &lt; 0.05 indicates adequate correlations)</li>
+<li><strong>KMO (Kaiser-Meyer-Olkin)</strong>: Measures sampling adequacy (&gt; 0.6 acceptable, &gt; 0.8 good)</li>
+</ul>
+</section>
+<section id="principal-component-analysis-pca" class="level4" data-number="11.3.3.2">
+<h4 data-number="11.3.3.2" class="anchored" data-anchor-id="principal-component-analysis-pca"><span class="header-section-number">11.3.3.2</span> 2. Principal Component Analysis (PCA)</h4>
+<p><strong>PCA</strong> creates new variables (components) that are <strong>linear combinations</strong> of correlated original variables:</p>
+<p><strong>Example</strong>:</p>
+<ul>
+<li><strong>Component 1</strong>: 0.8×nominalizations + 0.7×prepositions + 0.6×attributive_adjectives</li>
+<li>This component captures shared variance (informational density)</li>
+</ul>
+<p><strong>Why correlation helps</strong>: PCA maximizes variance explained by components. If variables don’t correlate, each component captures variance from just one variable (inefficient).</p>
+<p><strong>Difference from factor analysis</strong>:</p>
+<ul>
+<li><strong>PCA</strong>: Reduces dimensions by explaining total variance (data reduction)</li>
+<li><strong>Factor Analysis</strong>: Identifies latent factors explaining correlations (theory discovery)</li>
+</ul>
+<p>See <a href="#sec-mda">MDA tutorial</a> for how this works with linguistic features.</p>
+</section>
+</section>
+</section>
+<section id="correlation-analysis-with-pybiber-features" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="correlation-analysis-with-pybiber-features"><span class="header-section-number">11.4</span> Correlation Analysis with Pybiber Features</h2>
+<p>Let’s analyze correlations among <strong>Biber’s 67 lexicogrammatical features</strong> using the Brown Corpus. These features capture functional linguistic categories that often correlate because they serve related communicative purposes.</p>
+<section id="load-and-prepare-data" class="level3" data-number="11.4.1">
+<h3 data-number="11.4.1" class="anchored" data-anchor-id="load-and-prepare-data"><span class="header-section-number">11.4.1</span> Load and Prepare Data</h3>
+<div id="3863e2c2" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pybiber <span class="im">as</span> pb</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> pearsonr</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">'ignore'</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Load Brown Corpus with genre labels</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>brown_corpus <span class="op">=</span> pl.read_parquet(</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://github.com/browndw/humanities_analytics/raw/refs/heads/main/data/data_tables/brown_corpus.parquet"</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Select document IDs and texts</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>bc <span class="op">=</span> brown_corpus.select(<span class="st">"doc_id"</span>, <span class="st">"text"</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Load spaCy model (disable NER for speed)</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>nlp <span class="op">=</span> spacy.load(<span class="st">"en_core_web_sm"</span>, disable<span class="op">=</span>[<span class="st">"ner"</span>])</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Parse corpus with spaCy (this takes ~30 seconds with n_process=4)</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Parsing corpus with spaCy..."</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>df_spacy <span class="op">=</span> pb.spacy_parse(corp<span class="op">=</span>bc, nlp_model<span class="op">=</span>nlp, n_process<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate into 67 Biber feature categories</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Extracting Biber features..."</span>)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>dfm_biber <span class="op">=</span> pb.biber(df_spacy)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Add genre labels from original corpus</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>dfm_biber <span class="op">=</span> dfm_biber.join(</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    brown_corpus.select(<span class="st">"doc_id"</span>, <span class="st">"text_type"</span>), </span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    on<span class="op">=</span><span class="st">"doc_id"</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Data shape: </span><span class="sc">{</span>dfm_biber<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Number of features: </span><span class="sc">{</span><span class="bu">len</span>([col <span class="cf">for</span> col <span class="kw">in</span> dfm_biber.columns <span class="cf">if</span> col.startswith(<span class="st">'f_'</span>)])<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">First few rows:"</span>)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(dfm_biber.head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Parsing corpus with spaCy...
+Performance: Corpus processing completed in 59.32s
+Extracting Biber features...
+Data shape: (470, 69)
+Number of features: 67
+
+First few rows:
+shape: (5, 69)
+┌────────┬─────────┬─────────┬─────────┬─────────┬───┬─────────┬────────┬────────┬────────┬────────┐
+│ doc_id ┆ f_01_pa ┆ f_02_pe ┆ f_03_pr ┆ f_04_pl ┆ … ┆ f_64_ph ┆ f_65_c ┆ f_66_n ┆ f_67_n ┆ text_t │
+│ ---    ┆ st_tens ┆ rfect_a ┆ esent_t ┆ ace_adv ┆   ┆ rasal_c ┆ lausal ┆ eg_syn ┆ eg_ana ┆ ype    │
+│ str    ┆ e       ┆ spect   ┆ ense    ┆ erbials ┆   ┆ oordina ┆ _coord ┆ thetic ┆ lytic  ┆ ---    │
+│        ┆ ---     ┆ ---     ┆ ---     ┆ ---     ┆   ┆ tion    ┆ inatio ┆ ---    ┆ ---    ┆ str    │
+│        ┆ f64     ┆ f64     ┆ f64     ┆ f64     ┆   ┆ ---     ┆ n      ┆ f64    ┆ f64    ┆        │
+│        ┆         ┆         ┆         ┆         ┆   ┆ f64     ┆ ---    ┆        ┆        ┆        │
+│        ┆         ┆         ┆         ┆         ┆   ┆         ┆ f64    ┆        ┆        ┆        │
+╞════════╪═════════╪═════════╪═════════╪═════════╪═══╪═════════╪════════╪════════╪════════╪════════╡
+│ A01    ┆ 52.4752 ┆ 5.44554 ┆ 22.2772 ┆ 0.0     ┆ … ┆ 7.42574 ┆ 4.9504 ┆ 1.4851 ┆ 4.4554 ┆ PRESS: │
+│        ┆ 48      ┆ 5       ┆ 28      ┆         ┆   ┆ 3       ┆ 95     ┆ 49     ┆ 46     ┆ REPORT │
+│        ┆         ┆         ┆         ┆         ┆   ┆         ┆        ┆        ┆        ┆ AGE    │
+│ A02    ┆ 36.3994 ┆ 4.91883 ┆ 20.6591 ┆ 0.0     ┆ … ┆ 3.93507 ┆ 1.4756 ┆ 0.4918 ┆ 3.4431 ┆ PRESS: │
+│        ┆ 1       ┆ 9       ┆ 24      ┆         ┆   ┆ 1       ┆ 52     ┆ 84     ┆ 87     ┆ REPORT │
+│        ┆         ┆         ┆         ┆         ┆   ┆         ┆        ┆        ┆        ┆ AGE    │
+│ A03    ┆ 47.4095 ┆ 4.39882 ┆ 15.1515 ┆ 0.48875 ┆ … ┆ 9.77517 ┆ 1.4662 ┆ 1.4662 ┆ 5.3763 ┆ PRESS: │
+│        ┆ 8       ┆ 7       ┆ 15      ┆ 9       ┆   ┆ 1       ┆ 76     ┆ 76     ┆ 44     ┆ REPORT │
+│        ┆         ┆         ┆         ┆         ┆   ┆         ┆        ┆        ┆        ┆ AGE    │
+│ A04    ┆ 33.3660 ┆ 17.1737 ┆ 30.9126 ┆ 2.45338 ┆ … ┆ 6.86948 ┆ 5.3974 ┆ 2.9440 ┆ 6.3788 ┆ PRESS: │
+│        ┆ 45      ┆         ┆ 59      ┆ 6       ┆   ┆         ┆ 48     ┆ 63     ┆ 03     ┆ REPORT │
+│        ┆         ┆         ┆         ┆         ┆   ┆         ┆        ┆        ┆        ┆ AGE    │
+│ A05    ┆ 39.9221 ┆ 6.81596 ┆ 32.1324 ┆ 1.94742 ┆ … ┆ 3.89483 ┆ 2.4342 ┆ 1.9474 ┆ 3.8948 ┆ PRESS: │
+│        ┆ 03      ┆ 9       ┆ 25      ┆         ┆   ┆ 9       ┆ 75     ┆ 2      ┆ 39     ┆ REPORT │
+│        ┆         ┆         ┆         ┆         ┆   ┆         ┆        ┆        ┆        ┆ AGE    │
+└────────┴─────────┴─────────┴─────────┴─────────┴───┴─────────┴────────┴────────┴────────┴────────┘</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[INFO] Using MATTR for f_43_type_token (window=100)
+[INFO] All features normalized per 1000 tokens except: f_43_type_token and f_44_mean_word_length</code></pre>
+</div>
+</div>
+</section>
+<section id="extract-feature-columns" class="level3" data-number="11.4.2">
+<h3 data-number="11.4.2" class="anchored" data-anchor-id="extract-feature-columns"><span class="header-section-number">11.4.2</span> Extract Feature Columns</h3>
+<div id="93a5bfe6" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get all Biber feature columns (f_01, f_02, etc.)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>feature_cols <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> dfm_biber.columns <span class="cf">if</span> col.startswith(<span class="st">'f_'</span>)]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Analyzing </span><span class="sc">{</span><span class="bu">len</span>(feature_cols)<span class="sc">}</span><span class="ss"> linguistic features"</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Sample features:"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, col <span class="kw">in</span> <span class="bu">enumerate</span>(feature_cols[:<span class="dv">10</span>], <span class="dv">1</span>):</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if expected features exist</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">'f_42_nominalizations'</span> <span class="kw">not</span> <span class="kw">in</span> feature_cols:</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Warning: Feature names may differ from expected. Actual feature columns:"</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(feature_cols[:<span class="dv">20</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analyzing 67 linguistic features
+
+Sample features:
+  1. f_01_past_tense
+  2. f_02_perfect_aspect
+  3. f_03_present_tense
+  4. f_04_place_adverbials
+  5. f_05_time_adverbials
+  6. f_06_first_person_pronouns
+  7. f_07_second_person_pronouns
+  8. f_08_third_person_pronouns
+  9. f_09_pronoun_it
+  10. f_10_demonstrative_pronoun
+
+Warning: Feature names may differ from expected. Actual feature columns:
+['f_01_past_tense', 'f_02_perfect_aspect', 'f_03_present_tense', 'f_04_place_adverbials', 'f_05_time_adverbials', 'f_06_first_person_pronouns', 'f_07_second_person_pronouns', 'f_08_third_person_pronouns', 'f_09_pronoun_it', 'f_10_demonstrative_pronoun', 'f_11_indefinite_pronouns', 'f_12_proverb_do', 'f_13_wh_question', 'f_14_nominalizations', 'f_15_gerunds', 'f_16_other_nouns', 'f_17_agentless_passives', 'f_18_by_passives', 'f_19_be_main_verb', 'f_20_existential_there']</code></pre>
+</div>
+</div>
+<p><strong>Feature examples</strong> (see <a href="https://browndw.github.io/pybiber/feature-categories.html">pybiber documentation</a> for full list):</p>
+<ul>
+<li><code>f_01_past_tense</code>: Past tense verb forms</li>
+<li><code>f_02_perfect_aspect</code>: Perfect aspect (have/has + past participle)</li>
+<li><code>f_18_first_person_pronouns</code>: I, me, my, we, us, our</li>
+<li><code>f_19_second_person_pronouns</code>: you, your, yourself</li>
+<li><code>f_42_nominalizations</code>: -tion, -ment, -ness, -ity endings</li>
+<li><code>f_43_type_token</code>: Lexical diversity (MATTR)</li>
+<li><code>f_44_mean_word_length</code>: Average word length in characters</li>
+</ul>
+</section>
+<section id="compute-correlation-matrix" class="level3" data-number="11.4.3">
+<h3 data-number="11.4.3" class="anchored" data-anchor-id="compute-correlation-matrix"><span class="header-section-number">11.4.3</span> Compute Correlation Matrix</h3>
+<div id="cdd61367" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract features as numpy array and compute correlations</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>features_array <span class="op">=</span> dfm_biber.select(feature_cols).to_numpy().astype(np.float64)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute pairwise Pearson correlations using numpy</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>correlation_matrix <span class="op">=</span> np.corrcoef(features_array, rowvar<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to pandas DataFrame for easier manipulation and visualization</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>correlation_matrix <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    correlation_matrix,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>feature_cols,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span>feature_cols</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Correlation matrix shape: </span><span class="sc">{</span>correlation_matrix<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Total pairwise correlations: </span><span class="sc">{</span>correlation_matrix<span class="sc">.</span>shape[<span class="dv">0</span>] <span class="op">*</span> (correlation_matrix.shape[<span class="dv">0</span>] <span class="op">-</span> <span class="dv">1</span>) <span class="op">//</span> <span class="dv">2</span><span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Correlation matrix shape: (67, 67)
+Total pairwise correlations: 2211</code></pre>
+</div>
+</div>
+</section>
+<section id="visualize-correlation-heatmap" class="level3" data-number="11.4.4">
+<h3 data-number="11.4.4" class="anchored" data-anchor-id="visualize-correlation-heatmap"><span class="header-section-number">11.4.4</span> Visualize: Correlation Heatmap</h3>
+<div id="cell-fig-correlation-heatmap" class="cell" data-fig-height="12" data-fig-width="14" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">12</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create heatmap</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>sns.heatmap(</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    correlation_matrix,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    cmap<span class="op">=</span><span class="st">'RdBu_r'</span>,  <span class="co"># Red-blue diverging colormap</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    center<span class="op">=</span><span class="dv">0</span>,        <span class="co"># Center colormap at 0</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    vmin<span class="op">=-</span><span class="dv">1</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    vmax<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    square<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    linewidths<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    cbar_kws<span class="op">=</span>{<span class="st">'label'</span>: <span class="st">'Pearson r'</span>, <span class="st">'shrink'</span>: <span class="fl">0.8</span>}</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Correlation Matrix: Biber Features (Brown Corpus)'</span>, fontsize<span class="op">=</span><span class="dv">16</span>, pad<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Linguistic Features'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Linguistic Features'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">90</span>, fontsize<span class="op">=</span><span class="dv">7</span>)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>plt.yticks(rotation<span class="op">=</span><span class="dv">0</span>, fontsize<span class="op">=</span><span class="dv">7</span>)</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-correlation-heatmap" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-correlation-heatmap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="correlations_files/figure-html/fig-correlation-heatmap-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-correlation-heatmap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.1: Correlation matrix for Biber’s 67 linguistic features. Red indicates positive correlation, blue indicates negative correlation. Patterns reveal functional groupings.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Reading the heatmap:</strong></p>
+<ul>
+<li><strong>Dark red</strong>: Strong positive correlation (features co-occur)</li>
+<li><strong>Dark blue</strong>: Strong negative correlation (features anti-correlate)</li>
+<li><strong>White</strong>: No correlation (independent variation)</li>
+<li><strong>Clusters</strong>: Blocks of similar colors indicate groups of related features</li>
+</ul>
+</section>
+<section id="identify-strongest-correlations" class="level3" data-number="11.4.5">
+<h3 data-number="11.4.5" class="anchored" data-anchor-id="identify-strongest-correlations"><span class="header-section-number">11.4.5</span> Identify Strongest Correlations</h3>
+<div id="daa088f5" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract upper triangle (avoid duplicates and diagonal)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>upper_tri <span class="op">=</span> correlation_matrix.where(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    np.triu(np.ones(correlation_matrix.shape), k<span class="op">=</span><span class="dv">1</span>).astype(<span class="bu">bool</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to long format for sorting</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>correlations_long <span class="op">=</span> []</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(correlation_matrix.columns)):</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(i<span class="op">+</span><span class="dv">1</span>, <span class="bu">len</span>(correlation_matrix.columns)):</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        correlations_long.append({</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">'feature_1'</span>: correlation_matrix.columns[i],</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>            <span class="st">'feature_2'</span>: correlation_matrix.columns[j],</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>            <span class="st">'correlation'</span>: correlation_matrix.iloc[i, j]</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>corr_df <span class="op">=</span> pd.DataFrame(correlations_long)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort by absolute correlation</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>corr_df[<span class="st">'abs_corr'</span>] <span class="op">=</span> corr_df[<span class="st">'correlation'</span>].<span class="bu">abs</span>()</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>corr_df_sorted <span class="op">=</span> corr_df.sort_values(<span class="st">'abs_corr'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Top 20 strongest correlations (positive and negative):</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(corr_df_sorted.head(<span class="dv">20</span>).to_string(index<span class="op">=</span><span class="va">False</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Top 20 strongest correlations (positive and negative):
+
+                 feature_1                  feature_2  correlation  abs_corr
+      f_14_nominalizations      f_44_mean_word_length     0.815438  0.815438
+           f_01_past_tense f_08_third_person_pronouns     0.776922  0.776922
+           f_01_past_tense         f_03_present_tense    -0.771474  0.771474
+          f_16_other_nouns               f_42_adverbs    -0.755530  0.755530
+             f_40_adj_attr      f_44_mean_word_length     0.749926  0.749926
+              f_42_adverbs          f_67_neg_analytic     0.698791  0.698791
+      f_14_nominalizations              f_40_adj_attr     0.673373  0.673373
+         f_19_be_main_verb              f_41_adj_pred     0.672024  0.672024
+     f_44_mean_word_length  f_65_clausal_coordination    -0.669879  0.669879
+         f_59_contractions          f_67_neg_analytic     0.667174  0.667174
+f_08_third_person_pronouns      f_44_mean_word_length    -0.662088  0.662088
+           f_01_past_tense              f_40_adj_attr    -0.658111  0.658111
+         f_39_prepositions          f_59_contractions    -0.655534  0.655534
+           f_01_past_tense      f_44_mean_word_length    -0.649804  0.649804
+     f_44_mean_word_length          f_59_contractions    -0.647208  0.647208
+           f_01_past_tense       f_14_nominalizations    -0.645142  0.645142
+          f_16_other_nouns          f_67_neg_analytic    -0.642385  0.642385
+  f_11_indefinite_pronouns          f_67_neg_analytic     0.638629  0.638629
+         f_39_prepositions      f_44_mean_word_length     0.636497  0.636497
+f_08_third_person_pronouns    f_25_present_participle     0.627919  0.627919</code></pre>
+</div>
+</div>
+<p><strong>Interpretation questions:</strong></p>
+<ul>
+<li>Which features show strongest positive correlations? (Likely features from same functional category)</li>
+<li>Which features show strongest negative correlations? (Likely features from opposing communicative modes)</li>
+<li>Are there surprising pairs? (Features you wouldn’t expect to correlate based on linguistic theory)</li>
+</ul>
+</section>
+<section id="examine-specific-correlation" class="level3" data-number="11.4.6">
+<h3 data-number="11.4.6" class="anchored" data-anchor-id="examine-specific-correlation"><span class="header-section-number">11.4.6</span> Examine Specific Correlation</h3>
+<p>Let’s examine one strong positive correlation in detail:</p>
+<div id="d97078be" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Correlation between two features</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Use available features (names may vary by pybiber version)</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Try to find nominalization and preposition features</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>nom_features <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> feature_cols <span class="cf">if</span> <span class="st">'nominal'</span> <span class="kw">in</span> col.lower()]</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>prep_features <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> feature_cols <span class="cf">if</span> <span class="st">'prep'</span> <span class="kw">in</span> col.lower() <span class="kw">or</span> <span class="st">'preposition'</span> <span class="kw">in</span> col.lower()]</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Use first available, or fall back to first two features</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> nom_features <span class="kw">and</span> prep_features:</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    feature_x <span class="op">=</span> nom_features[<span class="dv">0</span>]</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    feature_y <span class="op">=</span> prep_features[<span class="dv">0</span>]</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    feature_x <span class="op">=</span> feature_cols[<span class="dv">0</span>] <span class="cf">if</span> <span class="bu">len</span>(feature_cols) <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="st">'f_01'</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    feature_y <span class="op">=</span> feature_cols[<span class="dv">1</span>] <span class="cf">if</span> <span class="bu">len</span>(feature_cols) <span class="op">&gt;</span> <span class="dv">1</span> <span class="cf">else</span> <span class="st">'f_02'</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Get correlation coefficient and p-value</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>r, p <span class="op">=</span> pearsonr(dfm_biber[feature_x].to_numpy(), dfm_biber[feature_y].to_numpy())</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Correlation Analysis:"</span>)</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Feature 1: </span><span class="sc">{</span>feature_x<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Feature 2: </span><span class="sc">{</span>feature_y<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Pearson r: </span><span class="sc">{</span>r<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  P-value: </span><span class="sc">{</span>p<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Interpretation: </span><span class="sc">{</span><span class="st">'Significant'</span> <span class="cf">if</span> p <span class="op">&lt;</span> <span class="fl">0.05</span> <span class="cf">else</span> <span class="st">'Not significant'</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Strength: "</span>, end<span class="op">=</span><span class="st">""</span>)</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">abs</span>(r) <span class="op">&lt;</span> <span class="fl">0.3</span>:</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Weak"</span>)</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="cf">elif</span> <span class="bu">abs</span>(r) <span class="op">&lt;</span> <span class="fl">0.5</span>:</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Moderate"</span>)</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Strong"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Correlation Analysis:
+  Feature 1: f_14_nominalizations
+  Feature 2: f_39_prepositions
+  Pearson r: 0.610
+  P-value: 0.0000
+  Interpretation: Significant
+  Strength: Strong</code></pre>
+</div>
+</div>
+</section>
+<section id="visualize-scatterplot" class="level3" data-number="11.4.7">
+<h3 data-number="11.4.7" class="anchored" data-anchor-id="visualize-scatterplot"><span class="header-section-number">11.4.7</span> Visualize: Scatterplot</h3>
+<div id="cell-fig-correlation-scatter" class="cell" data-fig-height="6" data-fig-width="8" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract data as numpy arrays</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>x_data <span class="op">=</span> dfm_biber[feature_x].to_numpy()</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>y_data <span class="op">=</span> dfm_biber[feature_y].to_numpy()</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>plt.scatter(</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    x_data,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    y_data,</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    s<span class="op">=</span><span class="dv">30</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    edgecolors<span class="op">=</span><span class="st">'black'</span>,</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    linewidths<span class="op">=</span><span class="fl">0.5</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Add trend line</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> np.polyfit(x_data, y_data, <span class="dv">1</span>)</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> np.poly1d(z)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>x_line <span class="op">=</span> np.linspace(x_data.<span class="bu">min</span>(), x_data.<span class="bu">max</span>(), <span class="dv">100</span>)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>plt.plot(x_line, p(x_line), <span class="st">"r--"</span>, alpha<span class="op">=</span><span class="fl">0.8</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="ss">f'Trend line (r=</span><span class="sc">{</span>r<span class="sc">:.3f}</span><span class="ss">)'</span>)</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>plt.xlabel(feature_x.replace(<span class="st">'_'</span>, <span class="st">' '</span>).title(), fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>plt.ylabel(feature_y.replace(<span class="st">'_'</span>, <span class="st">' '</span>).title(), fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="ss">f'Correlation: </span><span class="sc">{</span>feature_x<span class="sc">}</span><span class="ss"> vs </span><span class="sc">{</span>feature_y<span class="sc">}</span><span class="ss">'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>plt.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-correlation-scatter" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-correlation-scatter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="correlations_files/figure-html/fig-correlation-scatter-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-correlation-scatter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.2: Scatterplot showing relationship between two correlated features. Each point is a document; trend line shows direction and strength of correlation.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Pattern recognition:</strong></p>
+<ul>
+<li>Tight clustering around trend line → strong correlation</li>
+<li>Wide spread → weak correlation</li>
+<li>Upward slope → positive correlation</li>
+<li>Downward slope → negative correlation</li>
+</ul>
+</section>
+</section>
+<section id="detecting-multi-collinearity" class="level2" data-number="11.5">
+<h2 data-number="11.5" class="anchored" data-anchor-id="detecting-multi-collinearity"><span class="header-section-number">11.5</span> Detecting Multi-Collinearity</h2>
+<section id="correlation-threshold" class="level3" data-number="11.5.1">
+<h3 data-number="11.5.1" class="anchored" data-anchor-id="correlation-threshold"><span class="header-section-number">11.5.1</span> Correlation Threshold</h3>
+<p><strong>Common rule</strong>: Features with |r| &gt; 0.7 or 0.8 are considered highly collinear.</p>
+<div id="f3024009" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find pairs with |r| &gt; 0.7</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>high_collinearity <span class="op">=</span> corr_df[corr_df[<span class="st">'abs_corr'</span>] <span class="op">&gt;</span> <span class="fl">0.7</span>].sort_values(<span class="st">'abs_corr'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Feature pairs with |r| &gt; 0.7 (high multi-collinearity):"</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Count: </span><span class="sc">{</span><span class="bu">len</span>(high_collinearity)<span class="sc">}</span><span class="ss"> pairs</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(high_collinearity.head(<span class="dv">15</span>).to_string(index<span class="op">=</span><span class="va">False</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Feature pairs with |r| &gt; 0.7 (high multi-collinearity):
+  Count: 5 pairs
+
+           feature_1                  feature_2  correlation  abs_corr
+f_14_nominalizations      f_44_mean_word_length     0.815438  0.815438
+     f_01_past_tense f_08_third_person_pronouns     0.776922  0.776922
+     f_01_past_tense         f_03_present_tense    -0.771474  0.771474
+    f_16_other_nouns               f_42_adverbs    -0.755530  0.755530
+       f_40_adj_attr      f_44_mean_word_length     0.749926  0.749926</code></pre>
+</div>
+</div>
+<p><strong>Decision</strong>: If building a regression model, consider:</p>
+<ul>
+<li>Dropping one feature from each pair</li>
+<li>Combining them into composite score (average or sum)</li>
+<li>Using dimension reduction (PCA, factor analysis)</li>
+</ul>
+</section>
+<section id="variance-inflation-factor-vif" class="level3" data-number="11.5.2">
+<h3 data-number="11.5.2" class="anchored" data-anchor-id="variance-inflation-factor-vif"><span class="header-section-number">11.5.2</span> Variance Inflation Factor (VIF)</h3>
+<p><strong>VIF</strong> quantifies how much a predictor’s variance is inflated by multi-collinearity:</p>
+<div id="ed8010e9" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.stats.outliers_influence <span class="im">import</span> variance_inflation_factor</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute VIF for each feature</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract features as numpy array</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>features_array <span class="op">=</span> dfm_biber.select(feature_cols).to_numpy().astype(np.float64)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>vif_data <span class="op">=</span> pd.DataFrame()</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>vif_data[<span class="st">'Feature'</span>] <span class="op">=</span> feature_cols</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>vif_data[<span class="st">'VIF'</span>] <span class="op">=</span> [</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    variance_inflation_factor(features_array, i) </span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(feature_cols))</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>vif_data <span class="op">=</span> vif_data.sort_values(<span class="st">'VIF'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Top 20 features by VIF (highest multi-collinearity):</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(vif_data.head(<span class="dv">20</span>).to_string(index<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Summary:"</span>)</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Features with VIF &gt; 10 (severe): </span><span class="sc">{</span>(vif_data[<span class="st">'VIF'</span>] <span class="op">&gt;</span> <span class="dv">10</span>)<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Features with VIF &gt; 5 (moderate): </span><span class="sc">{</span>(vif_data[<span class="st">'VIF'</span>] <span class="op">&gt;</span> <span class="dv">5</span>)<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Features with VIF &lt; 5 (acceptable): </span><span class="sc">{</span>(vif_data[<span class="st">'VIF'</span>] <span class="op">&lt;</span> <span class="dv">5</span>)<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Top 20 features by VIF (highest multi-collinearity):
+
+                   Feature         VIF
+     f_44_mean_word_length 1690.164719
+           f_43_type_token 1254.412056
+          f_16_other_nouns  273.946439
+         f_39_prepositions  128.226261
+              f_42_adverbs  119.101396
+           f_01_past_tense   80.699838
+             f_40_adj_attr   60.557059
+         f_19_be_main_verb   48.671424
+        f_03_present_tense   48.050500
+          f_13_wh_question   46.890158
+f_08_third_person_pronouns   23.161913
+      f_14_nominalizations   22.655285
+         f_56_verb_private   19.516941
+          f_24_infinitives   18.819103
+         f_67_neg_analytic   15.945096
+             f_41_adj_pred   13.979006
+ f_65_clausal_coordination   13.061420
+   f_17_agentless_passives   11.978803
+           f_09_pronoun_it   10.815481
+        f_38_other_adv_sub   10.631935
+
+Summary:
+  Features with VIF &gt; 10 (severe): 21
+  Features with VIF &gt; 5 (moderate): 41
+  Features with VIF &lt; 5 (acceptable): 26</code></pre>
+</div>
+</div>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li><strong>VIF = 1</strong>: No multi-collinearity (feature independent of all others)</li>
+<li><strong>VIF = 5</strong>: Feature’s variance inflated 5× by correlations with other features</li>
+<li><strong>VIF = 10</strong>: Severe multi-collinearity (80% of variance explained by other features: 1 - 1/10 = 0.9)</li>
+</ul>
+<p><strong>High VIF is expected</strong> for linguistic features because they naturally cluster by function. This is a <em>problem</em> for regression interpretation but an <em>opportunity</em> for dimension reduction.</p>
+</section>
+</section>
+<section id="multi-collinearity-and-dimension-reduction" class="level2" data-number="11.6">
+<h2 data-number="11.6" class="anchored" data-anchor-id="multi-collinearity-and-dimension-reduction"><span class="header-section-number">11.6</span> Multi-Collinearity and Dimension Reduction</h2>
+<section id="why-correlation-enables-factor-analysis" class="level3" data-number="11.6.1">
+<h3 data-number="11.6.1" class="anchored" data-anchor-id="why-correlation-enables-factor-analysis"><span class="header-section-number">11.6.1</span> Why Correlation Enables Factor Analysis</h3>
+<p><strong>Factor analysis</strong> (used in MDA) leverages multi-collinearity to discover latent dimensions:</p>
+<p><strong>Logic</strong>:</p>
+<ol type="1">
+<li><strong>Identify correlated clusters</strong>: Features that correlate form functional groups</li>
+<li><strong>Extract latent factors</strong>: Each cluster reflects an underlying dimension</li>
+<li><strong>Interpret factors</strong>: Give communicative/functional label based on loadings</li>
+</ol>
+<p><strong>Example</strong> (from <a href="#sec-mda">MDA tutorial</a>):</p>
+<p><strong>Dimension 1: Involved vs.&nbsp;Informational Production</strong></p>
+<ul>
+<li><strong>Positive loadings</strong> (involved): first-person pronouns, contractions, present tense (correlated with each other)</li>
+<li><strong>Negative loadings</strong> (informational): nominalizations, prepositions, attributive adjectives (correlated with each other)</li>
+</ul>
+<p>These two clusters are <strong>negatively correlated</strong> with each other (involved features decrease when informational features increase), forming opposite poles of one dimension.</p>
+</section>
+<section id="correlation-matrix-for-factor-analysis" class="level3" data-number="11.6.2">
+<h3 data-number="11.6.2" class="anchored" data-anchor-id="correlation-matrix-for-factor-analysis"><span class="header-section-number">11.6.2</span> Correlation Matrix for Factor Analysis</h3>
+<div id="4a7ae5f6" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assess suitability for factor analysis</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Count correlations above threshold</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>sufficient_corrs <span class="op">=</span> (correlation_matrix.<span class="bu">abs</span>() <span class="op">&gt;</span> <span class="fl">0.3</span>).<span class="bu">sum</span>().<span class="bu">sum</span>() <span class="op">-</span> <span class="bu">len</span>(feature_cols)  <span class="co"># Subtract diagonal</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>total_corrs <span class="op">=</span> <span class="bu">len</span>(feature_cols) <span class="op">*</span> (<span class="bu">len</span>(feature_cols) <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Factor Analysis Suitability:</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  1. Sufficient correlations (|r| &gt; 0.3): </span><span class="sc">{</span>sufficient_corrs<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>total_corrs<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>sufficient_corrs<span class="op">/</span>total_corrs<span class="sc">:.1%}</span><span class="ss">)"</span>)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Check for perfect multi-collinearity (bad even for FA)</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>perfect_corrs <span class="op">=</span> ((correlation_matrix.<span class="bu">abs</span>() <span class="op">&gt;</span> <span class="fl">0.95</span>) <span class="op">&amp;</span> (correlation_matrix.<span class="bu">abs</span>() <span class="op">&lt;</span> <span class="fl">1.0</span>)).<span class="bu">sum</span>().<span class="bu">sum</span>() <span class="op">//</span> <span class="dv">2</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  2. Perfect multi-collinearity (|r| &gt; 0.95): </span><span class="sc">{</span>perfect_corrs<span class="sc">}</span><span class="ss"> pairs (should be 0)"</span>)</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Bartlett's test of sphericity</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> factor_analyzer.factor_analyzer <span class="im">import</span> calculate_bartlett_sphericity</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>chi_square, p_value <span class="op">=</span> calculate_bartlett_sphericity(features_array)</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  3. Bartlett's test: χ² = </span><span class="sc">{</span>chi_square<span class="sc">:.1f}</span><span class="ss">, p = </span><span class="sc">{</span>p_value<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"     </span><span class="sc">{</span><span class="st">'✓ Adequate correlations'</span> <span class="cf">if</span> p_value <span class="op">&lt;</span> <span class="fl">0.05</span> <span class="cf">else</span> <span class="st">'✗ Insufficient correlations'</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. KMO measure of sampling adequacy</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> factor_analyzer.factor_analyzer <span class="im">import</span> calculate_kmo</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>kmo_all, kmo_model <span class="op">=</span> calculate_kmo(features_array)</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  4. KMO measure: </span><span class="sc">{</span>kmo_model<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> kmo_model <span class="op">&gt;=</span> <span class="fl">0.9</span>:</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"     ✓ Excellent sampling adequacy"</span>)</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="cf">elif</span> kmo_model <span class="op">&gt;=</span> <span class="fl">0.8</span>:</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"     ✓ Good sampling adequacy"</span>)</span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a><span class="cf">elif</span> kmo_model <span class="op">&gt;=</span> <span class="fl">0.6</span>:</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"     ✓ Adequate sampling adequacy"</span>)</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"     ✗ Poor sampling adequacy"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Factor Analysis Suitability:
+
+  1. Sufficient correlations (|r| &gt; 0.3): 798/4422 (18.0%)
+  2. Perfect multi-collinearity (|r| &gt; 0.95): 8 pairs (should be 0)
+  3. Bartlett's test: χ² = 17979.3, p = 0.0000
+     ✓ Adequate correlations
+  4. KMO measure: 0.839
+     ✓ Good sampling adequacy</code></pre>
+</div>
+</div>
+<p><strong>Conclusion</strong>: If Bartlett’s test is significant (p &lt; 0.05) and KMO &gt; 0.6, the correlation matrix is suitable for factor analysis. This confirms that multi-collinearity exists and can be leveraged for dimension reduction.</p>
+</section>
+<section id="visualize-correlation-network" class="level3" data-number="11.6.3">
+<h3 data-number="11.6.3" class="anchored" data-anchor-id="visualize-correlation-network"><span class="header-section-number">11.6.3</span> Visualize: Correlation Network</h3>
+<div id="cell-fig-correlation-network" class="cell" data-fig-height="10" data-fig-width="12" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create network graph</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.Graph()</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Add nodes (features)</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>G.add_nodes_from(feature_cols)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Add edges for correlations above threshold</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>threshold <span class="op">=</span> <span class="fl">0.4</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _, row <span class="kw">in</span> corr_df[corr_df[<span class="st">'abs_corr'</span>] <span class="op">&gt;</span> threshold].iterrows():</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    G.add_edge(row[<span class="st">'feature_1'</span>], row[<span class="st">'feature_2'</span>], weight<span class="op">=</span>row[<span class="st">'correlation'</span>])</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Layout</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>pos <span class="op">=</span> nx.spring_layout(G, k<span class="op">=</span><span class="fl">0.5</span>, iterations<span class="op">=</span><span class="dv">50</span>, seed<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">10</span>))</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>nx.draw_networkx_nodes(G, pos, node_size<span class="op">=</span><span class="dv">100</span>, node_color<span class="op">=</span><span class="st">'lightblue'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>nx.draw_networkx_edges(G, pos, alpha<span class="op">=</span><span class="fl">0.3</span>, width<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>nx.draw_networkx_labels(G, pos, font_size<span class="op">=</span><span class="dv">6</span>)</span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="ss">f'Correlation Network (|r| &gt; </span><span class="sc">{</span>threshold<span class="sc">}</span><span class="ss">)'</span>, fontsize<span class="op">=</span><span class="dv">16</span>)</span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Network statistics:"</span>)</span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Nodes (features): </span><span class="sc">{</span>G<span class="sc">.</span>number_of_nodes()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Edges (correlations &gt; </span><span class="sc">{</span>threshold<span class="sc">}</span><span class="ss">): </span><span class="sc">{</span>G<span class="sc">.</span>number_of_edges()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Density: </span><span class="sc">{</span>nx<span class="sc">.</span>density(G)<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-correlation-network" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-correlation-network-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="correlations_files/figure-html/fig-correlation-network-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-correlation-network-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.3: Network visualization of feature correlations. Nodes are features; edges connect correlated pairs (|r| &gt; 0.4). Clusters reveal functional groupings.
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Network statistics:
+  Nodes (features): 67
+  Edges (correlations &gt; 0.4): 198
+  Density: 0.090</code></pre>
+</div>
+</div>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li><strong>Dense clusters</strong>: Groups of tightly correlated features (potential factors)</li>
+<li><strong>Bridge nodes</strong>: Features that connect multiple clusters</li>
+<li><strong>Isolated nodes</strong>: Features with few strong correlations (may not load on major factors)</li>
+</ul>
+</section>
+</section>
+<section id="practical-applications" class="level2" data-number="11.7">
+<h2 data-number="11.7" class="anchored" data-anchor-id="practical-applications"><span class="header-section-number">11.7</span> Practical Applications</h2>
+<section id="feature-selection-for-classification" class="level3" data-number="11.7.1">
+<h3 data-number="11.7.1" class="anchored" data-anchor-id="feature-selection-for-classification"><span class="header-section-number">11.7.1</span> 1. Feature Selection for Classification</h3>
+<p><strong>Problem</strong>: You’re building a classifier to distinguish academic from journalistic writing. You have 67 Biber features, but many are highly correlated.</p>
+<p><strong>Solution</strong>:</p>
+<div id="a2e62c9f" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Identify redundant features (|r| &gt; 0.8)</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>redundant_pairs <span class="op">=</span> corr_df[corr_df[<span class="st">'abs_corr'</span>] <span class="op">&gt;</span> <span class="fl">0.8</span>].copy()</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: For each pair, keep the feature with higher variance (more information)</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>features_to_drop <span class="op">=</span> <span class="bu">set</span>()</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _, row <span class="kw">in</span> redundant_pairs.iterrows():</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    feat1, feat2 <span class="op">=</span> row[<span class="st">'feature_1'</span>], row[<span class="st">'feature_2'</span>]</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compare variances</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    var1 <span class="op">=</span> dfm_biber[feat1].to_numpy().var()</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    var2 <span class="op">=</span> dfm_biber[feat2].to_numpy().var()</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Drop lower-variance feature</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>    to_drop <span class="op">=</span> feat1 <span class="cf">if</span> var1 <span class="op">&lt;</span> var2 <span class="cf">else</span> feat2</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    features_to_drop.add(to_drop)</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Feature Selection for Classification:"</span>)</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Original features: </span><span class="sc">{</span><span class="bu">len</span>(feature_cols)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Features to drop (redundant): </span><span class="sc">{</span><span class="bu">len</span>(features_to_drop)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Retained features: </span><span class="sc">{</span><span class="bu">len</span>(feature_cols) <span class="op">-</span> <span class="bu">len</span>(features_to_drop)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Features dropped:"</span>)</span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> feat <span class="kw">in</span> <span class="bu">sorted</span>(features_to_drop)[:<span class="dv">10</span>]:</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  - </span><span class="sc">{</span>feat<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">len</span>(features_to_drop) <span class="op">&gt;</span> <span class="dv">10</span>:</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  ... and </span><span class="sc">{</span><span class="bu">len</span>(features_to_drop) <span class="op">-</span> <span class="dv">10</span><span class="sc">}</span><span class="ss"> more"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Feature Selection for Classification:
+  Original features: 67
+  Features to drop (redundant): 1
+  Retained features: 66
+
+Features dropped:
+  - f_44_mean_word_length</code></pre>
+</div>
+</div>
+<p><strong>Alternative</strong>: Use <strong>PCA</strong> to create orthogonal components (no multi-collinearity by design).</p>
+</section>
+<section id="understanding-functional-groupings" class="level3" data-number="11.7.2">
+<h3 data-number="11.7.2" class="anchored" data-anchor-id="understanding-functional-groupings"><span class="header-section-number">11.7.2</span> 2. Understanding Functional Groupings</h3>
+<p><strong>Problem</strong>: Which features co-occur to serve similar communicative functions?</p>
+<p><strong>Solution</strong>: Examine high-correlation clusters:</p>
+<div id="3d137a35" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Find all features strongly correlated with first-person pronouns</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Find a feature related to first-person or pronouns</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>pronoun_features <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> feature_cols <span class="cf">if</span> <span class="st">'pronoun'</span> <span class="kw">in</span> col.lower() <span class="kw">or</span> <span class="st">'first'</span> <span class="kw">in</span> col.lower()]</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>target_feature <span class="op">=</span> pronoun_features[<span class="dv">0</span>] <span class="cf">if</span> pronoun_features <span class="cf">else</span> feature_cols[<span class="dv">0</span>]</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Get correlations with target</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>target_corrs <span class="op">=</span> correlation_matrix[target_feature].drop(target_feature)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>target_corrs_sorted <span class="op">=</span> target_corrs.<span class="bu">abs</span>().sort_values(ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Features most correlated with </span><span class="sc">{</span>target_feature<span class="sc">}</span><span class="ss">:</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> feat, corr <span class="kw">in</span> target_corrs_sorted.head(<span class="dv">10</span>).items():</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    direction <span class="op">=</span> <span class="st">"+"</span> <span class="cf">if</span> correlation_matrix.loc[feat, target_feature] <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="st">"-"</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>direction<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>feat<span class="sc">}</span><span class="ss">: r = </span><span class="sc">{</span>correlation_matrix<span class="sc">.</span>loc[feat, target_feature]<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Features most correlated with f_06_first_person_pronouns:
+
+  + f_65_clausal_coordination: r = 0.528
+  - f_44_mean_word_length: r = -0.521
+  + f_59_contractions: r = 0.486
+  + f_67_neg_analytic: r = 0.476
+  - f_16_other_nouns: r = -0.470
+  + f_42_adverbs: r = 0.454
+  + f_56_verb_private: r = 0.451
+  - f_39_prepositions: r = -0.402
+  - f_17_agentless_passives: r = -0.368
+  + f_50_discourse_particles: r = 0.356</code></pre>
+</div>
+</div>
+<p><strong>Interpretation</strong>: Features that correlate with first-person pronouns likely characterize <strong>involved, personal discourse</strong>. This clustering motivates the <strong>Involved Production</strong> dimension in MDA.</p>
+</section>
+<section id="hypothesis-testing" class="level3" data-number="11.7.3">
+<h3 data-number="11.7.3" class="anchored" data-anchor-id="hypothesis-testing"><span class="header-section-number">11.7.3</span> 3. Hypothesis Testing</h3>
+<p><strong>Problem</strong>: You hypothesize that nominalized writing (high nominalizations) uses more prepositions (due to complex noun phrases).</p>
+<p><strong>Solution</strong>: Test correlation significance:</p>
+<div id="3d0b3564" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test hypothesis</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Use same features as above example</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>feat_x <span class="op">=</span> feature_x</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>feat_y <span class="op">=</span> feature_y</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>r, p <span class="op">=</span> pearsonr(dfm_biber[feat_x].to_numpy(), dfm_biber[feat_y].to_numpy())</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Hypothesis Test: Nominalizations ~ Prepositions"</span>)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  H₀: No correlation (r = 0)"</span>)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  H₁: Positive correlation (r &gt; 0)"</span>)</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Observed r: </span><span class="sc">{</span>r<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  P-value: </span><span class="sc">{</span>p<span class="sc">:.6f}</span><span class="ss">"</span>)</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Result: </span><span class="sc">{</span><span class="st">'Reject H₀'</span> <span class="cf">if</span> p <span class="op">&lt;</span> <span class="fl">0.05</span> <span class="cf">else</span> <span class="st">'Fail to reject H₀'</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Conclusion: </span><span class="sc">{</span><span class="st">'Significant positive correlation supports hypothesis'</span> <span class="cf">if</span> (p <span class="op">&lt;</span> <span class="fl">0.05</span> <span class="kw">and</span> r <span class="op">&gt;</span> <span class="dv">0</span>) <span class="cf">else</span> <span class="st">'Hypothesis not supported'</span><span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Hypothesis Test: Nominalizations ~ Prepositions
+  H₀: No correlation (r = 0)
+  H₁: Positive correlation (r &gt; 0)
+  Observed r: 0.610
+  P-value: 0.000000
+  Result: Reject H₀
+  Conclusion: Significant positive correlation supports hypothesis</code></pre>
+</div>
+</div>
+</section>
+<section id="comparing-correlation-across-corpora" class="level3" data-number="11.7.4">
+<h3 data-number="11.7.4" class="anchored" data-anchor-id="comparing-correlation-across-corpora"><span class="header-section-number">11.7.4</span> 4. Comparing Correlation Across Corpora</h3>
+<p><strong>Problem</strong>: Do feature correlations differ across registers?</p>
+<p><strong>Solution</strong>: Compute separate correlation matrices for genres:</p>
+<div id="5acdd9a3" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assume we have genre labels</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dfm_biber = dfm_biber.with_columns(pl.lit("genre_column").alias("text_type"))</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Compare academic vs. fiction</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># academic_features = dfm_biber.filter(pl.col('text_type') == 'learned').select(feature_cols).to_pandas()</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co"># fiction_features = dfm_biber.filter(pl.col('text_type') == 'fiction').select(feature_cols).to_pandas()</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co"># corr_academic = academic_features.corr()</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co"># corr_fiction = fiction_features.corr()</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co"># # Compare specific correlation</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="co"># feat_pair = ('f_18_first_person_pronouns', 'f_01_past_tense')</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="co"># r_academic = corr_academic.loc[feat_pair[0], feat_pair[1]]</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="co"># r_fiction = corr_fiction.loc[feat_pair[0], feat_pair[1]]</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="co"># print(f"Correlation: {feat_pair[0]} ~ {feat_pair[1]}")</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a><span class="co"># print(f"  Academic: r = {r_academic:.3f}")</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="co"># print(f"  Fiction: r = {r_fiction:.3f}")</span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a><span class="co"># print(f"  Difference: Δr = {abs(r_academic - r_fiction):.3f}")</span></span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">(Example code—requires genre-labeled data)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+(Example code—requires genre-labeled data)</code></pre>
+</div>
+</div>
+<p><strong>Interpretation</strong>: Different correlations across genres suggest that features serve different functions in different contexts.</p>
+</section>
+</section>
+<section id="methodological-considerations" class="level2" data-number="11.8">
+<h2 data-number="11.8" class="anchored" data-anchor-id="methodological-considerations"><span class="header-section-number">11.8</span> Methodological Considerations</h2>
+<section id="sample-size" class="level3" data-number="11.8.1">
+<h3 data-number="11.8.1" class="anchored" data-anchor-id="sample-size"><span class="header-section-number">11.8.1</span> 1. Sample Size</h3>
+<p><strong>Correlation stability</strong> depends on sample size:</p>
+<ul>
+<li><strong>n &lt; 30</strong>: Correlations unstable, prone to sampling error</li>
+<li><strong>n = 100</strong>: Moderate stability, r ≈ 0.25 detectable</li>
+<li><strong>n = 500</strong>: Good stability, r ≈ 0.12 detectable</li>
+<li><strong>n &gt; 1000</strong>: Excellent stability, small correlations detectable</li>
+</ul>
+<p><strong>Brown Corpus</strong> (n ≈ 500) provides stable estimates for moderate-to-strong correlations.</p>
+<p><strong>Significance vs.&nbsp;meaningfulness</strong>: With large n, even tiny correlations (r = 0.05) can be statistically significant but substantively meaningless.</p>
+</section>
+<section id="outliers" class="level3" data-number="11.8.2">
+<h3 data-number="11.8.2" class="anchored" data-anchor-id="outliers"><span class="header-section-number">11.8.2</span> 2. Outliers</h3>
+<p><strong>Outliers</strong> can distort correlations:</p>
+<ul>
+<li>One extreme document can artificially inflate or deflate r</li>
+<li>Check scatterplots visually</li>
+<li>Consider robust alternatives (Spearman correlation)</li>
+</ul>
+<p><strong>Solution</strong>: Examine influential points, consider removing or transforming extreme values.</p>
+</section>
+<section id="linearity-assumption" class="level3" data-number="11.8.3">
+<h3 data-number="11.8.3" class="anchored" data-anchor-id="linearity-assumption"><span class="header-section-number">11.8.3</span> 3. Linearity Assumption</h3>
+<p><strong>Pearson correlation</strong> assumes linear relationships. If relationship is non-linear (curved), Pearson underestimates strength.</p>
+<p><strong>Check</strong>: Examine scatterplots for curvature.</p>
+<p><strong>Solution</strong>: Use Spearman (handles monotonic non-linear relationships) or transform variables (log, square root).</p>
+</section>
+<section id="range-restriction" class="level3" data-number="11.8.4">
+<h3 data-number="11.8.4" class="anchored" data-anchor-id="range-restriction"><span class="header-section-number">11.8.4</span> 4. Range Restriction</h3>
+<p><strong>Problem</strong>: If you only analyze academic writing (restricted range on informational features), correlations may be weaker than in full population.</p>
+<p><strong>Example</strong>: In a corpus of only academic papers, nominalizations and prepositions may show weak correlation (both are consistently high). In a mixed corpus (academic + fiction), correlation is stronger.</p>
+<p><strong>Solution</strong>: Ensure sufficient variation in both variables for meaningful correlation estimates.</p>
+</section>
+<section id="shared-method-variance" class="level3" data-number="11.8.5">
+<h3 data-number="11.8.5" class="anchored" data-anchor-id="shared-method-variance"><span class="header-section-number">11.8.5</span> 5. Shared Method Variance</h3>
+<p><strong>Problem</strong>: Features computed from same source (same linguistic annotation) may correlate due to measurement error, not true relationship.</p>
+<p><strong>Example</strong>: If POS tagger makes systematic errors, features based on POS tags may show spurious correlations.</p>
+<p><strong>Solution</strong>: Validate key findings with independent annotation or alternative feature extraction methods.</p>
+</section>
+</section>
+<section id="connections-to-other-methods" class="level2" data-number="11.9">
+<h2 data-number="11.9" class="anchored" data-anchor-id="connections-to-other-methods"><span class="header-section-number">11.9</span> Connections to Other Methods</h2>
+<section id="correlation-and-keyness" class="level3" data-number="11.9.1">
+<h3 data-number="11.9.1" class="anchored" data-anchor-id="correlation-and-keyness"><span class="header-section-number">11.9.1</span> Correlation and Keyness</h3>
+<p><strong>Keyness</strong> identifies distinctive features between corpora. <strong>Correlation</strong> reveals which distinctive features co-occur.</p>
+<p><strong>Combined approach</strong>:</p>
+<ol type="1">
+<li>Use keyness to identify features distinguishing Genre A from Genre B</li>
+<li>Compute correlations among key features</li>
+<li>Discover functional groupings of distinctive features</li>
+</ol>
+<p><strong>Example</strong>: Academic writing is key for nominalizations, passives, and attributive adjectives. Correlation analysis reveals these all correlate (r ≈ 0.5-0.7), forming an “informational production” dimension.</p>
+</section>
+<section id="correlation-and-classification" class="level3" data-number="11.9.2">
+<h3 data-number="11.9.2" class="anchored" data-anchor-id="correlation-and-classification"><span class="header-section-number">11.9.2</span> Correlation and Classification</h3>
+<p><strong>Feature engineering</strong>:</p>
+<ol type="1">
+<li>Compute correlations among features</li>
+<li>Create composite features (sum/average of correlated features)</li>
+<li>Use composites as classifier inputs (reduces dimensionality, improves interpretability)</li>
+</ol>
+<p><strong>Example</strong>: Instead of 10 correlated pronoun features, create one “pronoun density” composite.</p>
+</section>
+<section id="correlation-and-embeddings" class="level3" data-number="11.9.3">
+<h3 data-number="11.9.3" class="anchored" data-anchor-id="correlation-and-embeddings"><span class="header-section-number">11.9.3</span> Correlation and Embeddings</h3>
+<p><strong>Contextual embeddings</strong> (from transformers) capture semantic relationships implicitly. <strong>Correlation</strong> makes them explicit.</p>
+<p><strong>Workflow</strong>:</p>
+<ol type="1">
+<li>Extract embeddings for documents</li>
+<li>Compute pairwise document similarities (cosine)</li>
+<li>Check if similarity correlates with metadata (genre, time period)</li>
+</ol>
+<p><strong>Example</strong>: Do documents with high embedding similarity also have similar first-person pronoun rates? If yes, embeddings capture “personal involvement” dimension.</p>
+</section>
+<section id="correlation-and-time-series" class="level3" data-number="11.9.4">
+<h3 data-number="11.9.4" class="anchored" data-anchor-id="correlation-and-time-series"><span class="header-section-number">11.9.4</span> Correlation and Time Series</h3>
+<p><strong>Diachronic analysis</strong>: Do feature correlations change over time?</p>
+<p><strong>Example</strong>: In 19th-century texts, passives and nominalizations may correlate weakly (independent choices). In modern academic writing, they correlate strongly (package deal for informational style).</p>
+<p><strong>Interpretation</strong>: Evolving correlations reveal changing functional relationships in language use.</p>
+</section>
+</section>
+<section id="ethical-considerations" class="level2" data-number="11.10">
+<h2 data-number="11.10" class="anchored" data-anchor-id="ethical-considerations"><span class="header-section-number">11.10</span> Ethical Considerations</h2>
+<section id="correlation-fishing" class="level3" data-number="11.10.1">
+<h3 data-number="11.10.1" class="anchored" data-anchor-id="correlation-fishing"><span class="header-section-number">11.10.1</span> 1. Correlation Fishing</h3>
+<p><strong>Risk</strong>: Testing hundreds of correlations and reporting only significant ones (“p-hacking”).</p>
+<p><strong>Problem</strong>: With 67 features, there are 2,211 pairwise correlations. By chance, ~110 will be “significant” at p &lt; 0.05 even if no true relationships exist.</p>
+<p><strong>Best practice</strong>:</p>
+<ul>
+<li><strong>Pre-register hypotheses</strong>: Specify predicted correlations before analysis</li>
+<li><strong>Bonferroni correction</strong>: Adjust α = 0.05 / 2,211 ≈ 0.000023 for multiple comparisons</li>
+<li><strong>Report all tests</strong>: Show full correlation matrix, not cherry-picked results</li>
+</ul>
+</section>
+<section id="spurious-correlations" class="level3" data-number="11.10.2">
+<h3 data-number="11.10.2" class="anchored" data-anchor-id="spurious-correlations"><span class="header-section-number">11.10.2</span> 2. Spurious Correlations</h3>
+<p><strong>Risk</strong>: Interpreting meaningful relationships from coincidental patterns.</p>
+<p><strong>Example</strong>: Number of Nicholas Cage films correlates with swimming pool drownings (r = 0.67)—clearly spurious.</p>
+<p><strong>In text analysis</strong>: Two features may correlate in your corpus by chance (both happen to be common in Genre X) without reflecting functional relationship.</p>
+<p><strong>Best practice</strong>:</p>
+<ul>
+<li><strong>Theory first</strong>: Only interpret correlations with plausible linguistic motivation</li>
+<li><strong>Replicate</strong>: Check if correlation holds in independent corpus</li>
+<li><strong>Causal skepticism</strong>: Remember correlation ≠ causation</li>
+</ul>
+</section>
+<section id="ecological-fallacy" class="level3" data-number="11.10.3">
+<h3 data-number="11.10.3" class="anchored" data-anchor-id="ecological-fallacy"><span class="header-section-number">11.10.3</span> 3. Ecological Fallacy</h3>
+<p><strong>Risk</strong>: Assuming document-level correlations apply to within-document variation.</p>
+<p><strong>Example</strong>: Across documents, nominalizations and prepositions correlate (academic texts have more of both). Within a single document, they might not correlate (varied sentence structures).</p>
+<p><strong>Best practice</strong>: Specify level of analysis (document, paragraph, sentence) and don’t generalize across levels.</p>
+</section>
+<section id="reification-of-dimensions" class="level3" data-number="11.10.4">
+<h3 data-number="11.10.4" class="anchored" data-anchor-id="reification-of-dimensions"><span class="header-section-number">11.10.4</span> 4. Reification of Dimensions</h3>
+<p><strong>Risk</strong>: Treating statistically-derived dimensions (factors, PCs) as real psychological or linguistic entities.</p>
+<p><strong>Example</strong>: “Dimension 1” from factor analysis is a mathematical construct explaining variance. Calling it “Involved Production” is an <em>interpretation</em>, not a discovery of natural category.</p>
+<p><strong>Best practice</strong>:</p>
+<ul>
+<li>Present dimensions as analytical tools, not ontological claims</li>
+<li>Acknowledge alternative interpretations</li>
+<li>Validate dimensions against external criteria (genre labels, expert judgments)</li>
+</ul>
+</section>
+</section>
+<section id="summary" class="level2" data-number="11.11">
+<h2 data-number="11.11" class="anchored" data-anchor-id="summary"><span class="header-section-number">11.11</span> Summary</h2>
+<p><strong>Correlation analysis</strong> reveals relationships among variables:</p>
+<p><strong>Key concepts</strong>:</p>
+<ul>
+<li><strong>Pearson r</strong>: Measures linear relationship strength (-1 to +1)</li>
+<li><strong>Significance</strong>: p-value tests if r differs from 0</li>
+<li><strong>Strength</strong>: |r| &gt; 0.5 strong, 0.3-0.5 moderate, &lt; 0.3 weak</li>
+</ul>
+<p><strong>Multi-collinearity</strong>:</p>
+<ul>
+<li><strong>Problem for regression/classification</strong>: Unstable coefficients, inflated variance (VIF &gt; 5-10)</li>
+<li><strong>Opportunity for dimension reduction</strong>: Factor analysis and PCA leverage correlations</li>
+<li><strong>Detection</strong>: Correlation matrix (|r| &gt; 0.7), VIF (&gt; 5)</li>
+</ul>
+<p><strong>Applications</strong>:</p>
+<ul>
+<li><strong>Feature selection</strong>: Drop redundant features for classification</li>
+<li><strong>Dimension reduction</strong>: Identify correlated clusters for factor analysis (MDA)</li>
+<li><strong>Theory development</strong>: Discover functional groupings of linguistic features</li>
+<li><strong>Hypothesis testing</strong>: Test predicted relationships (e.g., nominalizations ~ prepositions)</li>
+</ul>
+<p><strong>Best practices</strong>:</p>
+<ol type="1">
+<li><strong>Visualize first</strong>: Heatmaps, scatterplots reveal patterns</li>
+<li><strong>Consider context</strong>: Strong correlation in one corpus may be weak in another</li>
+<li><strong>Check assumptions</strong>: Linearity, outliers, sample size</li>
+<li><strong>Report transparently</strong>: Full correlation matrix, not just significant pairs</li>
+<li><strong>Interpret cautiously</strong>: Correlation ≠ causation; validate theoretically</li>
+</ol>
+<p><strong>Connections to MDA</strong>:</p>
+<ul>
+<li>Multi-collinearity among linguistic features is expected (functional groupings)</li>
+<li>Factor analysis identifies latent dimensions from correlation patterns</li>
+<li>See <a href="#sec-mda">MDA tutorial</a> for how <code>pybiber</code> leverages correlation for dimension reduction</li>
+</ul>
+<p><strong>Next steps</strong>: Apply correlation analysis to your data. Use it to inform feature selection (drop redundant features) or dimension reduction (identify correlated clusters for factor analysis). Combine with other methods (keyness, classification, MDA) for richer analysis.</p>
+</section>
+<section id="further-reading" class="level2" data-number="11.12">
+<h2 data-number="11.12" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">11.12</span> Further Reading</h2>
+<p><strong>Foundational:</strong></p>
+<ul>
+<li>Cohen, J. (1988). <em>Statistical Power Analysis for the Behavioral Sciences</em> (2nd ed.). Routledge. (Correlation effect sizes)</li>
+<li>Tabachnick, B. G., &amp; Fidell, L. S. (2013). <em>Using Multivariate Statistics</em> (6th ed.). Pearson. (Chapter 4: Cleaning up your act—screening data, including multi-collinearity)</li>
+</ul>
+<p><strong>Multi-collinearity:</strong></p>
+<ul>
+<li>Dormann, C. F., et al.&nbsp;(2013). Collinearity: A review of methods to deal with it and a simulation study evaluating their performance. <em>Ecography</em>, 36(1), 27-46. <a href="https://doi.org/10.1111/j.1600-0587.2012.07348.x">DOI</a></li>
+<li>O’Brien, R. M. (2007). A caution regarding rules of thumb for variance inflation factors. <em>Quality &amp; Quantity</em>, 41(5), 673-690. <a href="https://doi.org/10.1007/s11135-006-9018-6">DOI</a></li>
+</ul>
+<p><strong>Linguistic applications:</strong></p>
+<ul>
+<li>Biber, D. (1988). <em>Variation Across Speech and Writing</em>. Cambridge University Press. (Chapters 3-4: Factor analysis of correlated linguistic features)</li>
+<li>Gries, S. T. (2013). <em>Statistics for Linguistics with R</em> (2nd ed.). De Gruyter Mouton. (Chapter 5: Correlations)</li>
+</ul>
+<p><strong>Dimension reduction:</strong></p>
+<ul>
+<li>Baayen, R. H. (2008). <em>Analyzing Linguistic Data: A Practical Introduction to Statistics Using R</em>. Cambridge University Press. (Chapter 6: PCA and factor analysis)</li>
+<li>Jolliffe, I. T., &amp; Cadima, J. (2016). Principal component analysis: A review and recent developments. <em>Philosophical Transactions of the Royal Society A</em>, 374(2065). <a href="https://doi.org/10.1098/rsta.2015.0202">DOI</a></li>
+</ul>
+<p><strong>Practical guides:</strong></p>
+<ul>
+<li>Scikit-learn: <a href="https://scikit-learn.org/stable/modules/feature_selection.html">Feature Selection</a></li>
+<li>Statsmodels: <a href="https://www.statsmodels.org/stable/generated/statsmodels.stats.outliers_influence.variance_inflation_factor.html">Variance Inflation Factor</a></li>
+<li>Seaborn: <a href="https://seaborn.pydata.org/examples/many_pairwise_correlations.html">Visualizing Correlation Matrices</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../tutorials/cluster-analysis.html" class="pagination-link" aria-label="Clustering Methods">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Clustering Methods</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../tutorials/multi-dimensional-analysis.html" class="pagination-link" aria-label="Multi-Dimensional Analysis">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Multi-Dimensional Analysis</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/browndw/humanities_analytics/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
