@@ -1,0 +1,773 @@
+---
+jupyter: python3
+---
+
+# Multi-Dimensional Analysis
+
+<a target="_blank" href="https://colab.research.google.com/github/browndw/humanities_analytics/blob/main/mini_labs/Mini_Lab_10_MultidimensionalAnalysis.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
+```{python}
+#| echo: false
+#| message: false
+#| warning: false
+
+import polars as pl
+import pybiber as pb
+import spacy
+import warnings
+warnings.filterwarnings('ignore')
+```
+
+## Introduction
+
+Imagine comparing 15 different genres of writing—news articles, academic papers, fiction, blog posts, legal documents. You might count individual features: passives, pronouns, nominalizations, hedges. But analyzing 50+ features across genres becomes overwhelming. Which features matter? How do they co-occur?
+
+**Multi-Dimensional Analysis (MDA)** solves this by revealing how linguistic features **bundle together** to distinguish text types. Rather than examining features in isolation, MDA identifies **dimensions of variation**—underlying patterns that systematically differentiate registers, genres, or styles.
+
+### The Core Insight
+
+MDA, developed by Douglas Biber in the 1980s, rests on a key observation: **linguistic features don't vary randomly**. They co-occur in predictable patterns because they serve related communicative functions.
+
+For example, **involved production** (conversation, personal letters) tends to have:
+
+- High rates of first/second-person pronouns (*I*, *you*)
+- Present tense verbs (*is*, *seems*, *think*)
+- Contractions (*it's*, *don't*)
+- Private verbs (*feel*, *believe*, *want*)
+
+While **informational production** (academic writing, official documents) tends to have:
+
+- High rates of nouns and nominalizations (*discussion*, *implementation*)
+- Attributive adjectives (*significant*, *relevant*)
+- Prepositional phrases
+- Longer words
+
+These features don't just happen to co-occur—they cluster because they all support the same communicative goal (personal interaction vs. information density).
+
+::: {.callout-note}
+## Why "Multi-Dimensional"?
+
+Each **dimension** captures a distinct pattern of co-variation. A corpus might vary along:
+
+- **Dimension 1**: Involved vs. informational production
+- **Dimension 2**: Narrative vs. non-narrative discourse
+- **Dimension 3**: Situation-dependent vs. elaborated reference
+- **Dimension 4**: Overt expression of persuasion
+
+Texts are **scored** on each dimension, creating a multi-dimensional profile. A personal blog might score high on D1 (involved) and low on D2 (non-narrative), while a historical novel scores high on D2 (narrative) but mid-range on D1.
+:::
+
+### Research Questions MDA Can Answer
+
+- **Register variation**: How do academic writing, journalism, and fiction differ linguistically?
+- **Historical change**: Has scientific writing become more impersonal over time?
+- **Genre classification**: Can we automatically distinguish mystery novels from romance based on linguistic profiles?
+- **Cross-linguistic comparison**: Do the same dimensions appear in English and Spanish?
+- **Style attribution**: Does Author A use more "narrative" features than Author B?
+
+::: {.callout-important}
+## Why MDA Matters for Humanities Research
+
+**The single-feature trap**: You might notice that academic writing uses more passives than fiction (e.g., *was observed* vs. *she observed*). But is this a meaningful pattern or just one isolated feature?
+
+**MDA reveals**: Passives don't vary randomly—they cluster with nominalizations, attributive adjectives, and longer words. This **bundle** indicates a deeper pattern: **informational production** where ideas are densely packaged and agency is de-emphasized.
+
+**Implication**: Academic writing isn't just "more passive." It operates in a different **communicative mode** that requires specific linguistic resources (abstraction, nominalization, modification). Understanding this helps explain:
+
+- Why academic prose feels "dense" (multiple features create density together)
+- How genres constrain linguistic choices (you can't write academically with only pronouns and present tense)
+- What features distinguish "academic" from "popular science" (dimensions reveal combinations, not just frequencies)
+
+MDA shifts the question from **"what features differ?"** to **"what communicative modes exist, and what features realize them?"** This is computational reasoning at its best—using statistics to discover functional patterns.
+:::
+
+## Understanding the MDA Workflow
+
+### The Four Steps
+
+**1. Identify relevant variables**
+
+Select linguistic features that might vary systematically across texts. These typically come from tagged corpora (POS tags, dependency parses, semantic categories).
+
+**Example features**:
+
+- Past tense verbs
+- Modal verbs (can, should, must)
+- Attributive adjectives
+- Type-token ratio
+- Average word length
+
+**2. Extract factors from variables**
+
+Use **factor analysis** to identify which variables co-occur. Variables that load on the same factor form a dimension.
+
+**Statistical process**: Factor analysis finds latent variables (factors) that explain correlations among observed variables. If passives, nominalizations, and attributive adjectives consistently co-occur across texts, they'll load on the same factor.
+
+**3. Functional interpretation of factors as dimensions**
+
+Examine high-loading features and assign a **functional label** based on linguistic theory and the communicative purposes those features serve.
+
+**Example interpretation**: If a factor has high loadings for:
+
+- Personal pronouns (+)
+- Present tense (+)
+- Contractions (+)
+- Nominalizations (-)
+- Passives (-)
+
+This suggests an **"involved vs. informational"** dimension—one pole emphasizes personal interaction, the other informational density.
+
+**4. Placement of categories on dimensions**
+
+Score each text on the extracted dimensions and plot text categories (genres, registers, time periods) to see how they cluster.
+
+**Example finding**: Conversation and personal letters cluster at the "involved" pole, while academic prose and official documents cluster at the "informational" pole.
+
+### Why Factor Analysis?
+
+Factor analysis is ideal for MDA because:
+
+1. **Reduces complexity**: 67 features → 5 interpretable dimensions
+2. **Reveals co-occurrence patterns**: Shows which features cluster together
+3. **Handles correlations**: Features are often correlated—factor analysis accounts for this
+4. **Produces weights**: Factor loadings show how strongly each feature contributes to a dimension
+
+::: {.callout-warning}
+## Statistical Requirements
+
+Factor analysis requires:
+
+- **Sufficient observations**: Minimum 5-10 observations per variable (preferably 20+)
+- **Continuous variables**: Normalized frequencies work well
+- **Moderate correlations**: Variables should correlate but not be redundant
+
+For a corpus with 67 features, you need **at least 350-670 texts** (ideally 1,000+).
+:::
+
+## The Biber Tagger Approach
+
+Douglas Biber's foundational MDA studies used **67 lexicogrammatical features** derived from grammatical tagging and parsing. The **pybiber** package replicates this approach using spaCy.
+
+### Why Tagged Features?
+
+In order to carry out MDA, we need **at least 5 observations per variable** (ideally 10-20). This generally precludes using simple word counts—with 500 documents and 10,000 unique words, you'd need 50,000-100,000 documents for stable factor analysis.
+
+Instead, we use **tagged features** that aggregate linguistic patterns into functional categories:
+
+**Examples**:
+
+- Personal pronouns (*I*, *you*, *we*)
+- Type-token ratio (lexical diversity)
+- Nominalizations (*discussion*, *formation*)
+- Passives (*was written*, *has been discussed*)
+
+The **pybiber** package emulates Biber's classification system, organizing 67 categories described here: <https://browndw.github.io/pybiber/feature-categories.html>
+
+### Loading Data
+
+We'll analyze the **Brown Corpus** (500 texts across 15 genres):
+
+```{python}
+# Load Brown Corpus with genre labels
+brown_corpus = pl.read_parquet(
+    "https://github.com/browndw/humanities_analytics/raw/refs/heads/main/data/data_tables/brown_corpus.parquet"
+)
+
+# Select document IDs and texts
+bc = brown_corpus.select("doc_id", "text")
+bc.head(3)
+```
+
+The **Brown Corpus** is the first computer-readable corpus of American English (1961), containing 500 text samples (~2,000 words each) across 15 genres:
+
+- **Press**: Reportage, Editorial, Reviews
+- **Religion**
+- **Skill and Hobbies**
+- **Popular Lore**
+- **Belles-Lettres**
+- **Learned** (academic/scientific writing)
+- **Fiction**: General, Mystery, Science Fiction, Adventure, Romance, Humor
+
+This genre diversity makes the Brown Corpus ideal for MDA—we expect systematic linguistic differences across these registers.
+
+Reference: <http://icame.uib.no/brown/bcm.html>
+
+### Tagging with Biber Features
+
+```{python}
+# Load spaCy model (disable NER for speed)
+nlp = spacy.load("en_core_web_sm", disable=["ner"])
+
+# Parse corpus with spaCy (this takes ~30 seconds with n_process=4)
+df_spacy = pb.spacy_parse(corp=bc, nlp_model=nlp, n_process=4)
+```
+
+The `spacy_parse` function processes each text through spaCy's pipeline, extracting POS tags and dependency relationships needed for Biber feature identification. The `n_process=4` argument uses 4 CPU cores in parallel for faster processing.
+
+### Aggregating Features
+
+```{python}
+# Aggregate into 67 Biber feature categories
+dfm_biber = pb.biber(df_spacy)
+dfm_biber.head(5)
+```
+
+The `biber()` function returns **normalized frequencies** (per 1,000 words) by default, making texts of different lengths comparable.
+
+**Example features**:
+
+- `f_01_past_tense`: Count of past tense verb forms
+- `f_02_perfect_aspect`: Have/has + past participle
+- `f_18_first_person_pronouns`: I, me, my, we, us, our
+- `f_42_nominalizations`: Words ending in -tion, -ment, -ness, -ity
+- `f_43_type_token`: MATTR (moving-average type-token ratio) for lexical diversity
+- `f_44_mean_word_length`: Average word length in characters
+
+### Adding Metadata
+
+```{python}
+# Add genre labels from original corpus
+dfm_biber = dfm_biber.join(
+    brown_corpus.select("doc_id", "text_type"), 
+    on="doc_id"
+)
+```
+
+## Running MDA
+
+### Prepare the Analyzer
+
+```{python}
+# Initialize BiberAnalyzer
+df = pb.BiberAnalyzer(dfm_biber, id_column=True)
+```
+
+### Determine Number of Factors
+
+The **scree plot** shows eigenvalues (variance explained) for each potential factor:
+
+```{python}
+df.mdaviz_screeplot()
+```
+
+**Decision criteria**:
+
+1. **Elbow method**: Look for the bend where slope flattens (around factor 3-4)
+2. **Kaiser criterion**: Extract factors with eigenvalue > 1 (shown by red dashed line)
+3. **Interpretability**: Can you meaningfully interpret each factor?
+
+**Typical range**: 3-7 factors for most corpora
+
+**Our decision**: Extract 3 factors based on clear elbow at 3 and interpretability. While eigenvalues suggest we could extract more, we prioritize parsimony (fewer, clearer dimensions) over explanatory power (more variance explained).
+
+::: {.callout-tip}
+## Balancing Parsimony vs. Power
+
+Extracting too few factors = lose important variation patterns  
+Extracting too many factors = dimensions become uninterpretable
+
+The goal is the **smallest number of factors** that still capture major register differences. 3-5 factors typically work well for genre/register studies.
+:::
+
+### Extract Factors
+
+```{python}
+df.mda(n_factors=3)
+```
+
+Note the information message: pybiber automatically drops variables with low correlations (`max |r| <= 0.20`) because they don't contribute meaningfully to factor structure. In this case, stranded prepositions and split infinitives show minimal correlation with other features.
+
+### Examine Results
+
+View summary statistics:
+
+```{python}
+df.mda_summary
+```
+
+This shows:
+
+- **Variance explained** by each factor
+- **Cumulative variance** (total explained by all factors)
+- **Eigenvalues** (variance per factor)
+
+**Interpretation**: If 3 factors explain 60% of variance, that's good—most linguistic variation captured by few dimensions. The remaining 40% represents unique variation not explained by common patterns.
+
+## Interpreting Dimensions
+
+### Examine Factor Loadings
+
+Factor loadings show how strongly each linguistic feature contributes to each dimension:
+
+```{python}
+# Sort loadings for Factor 1 to see high positive/negative features
+df.mda_loadings.sort("factor_1")
+```
+
+**Reading loadings**:
+
+- **High positive (+0.7 to +1.0)**: Feature strongly present at positive pole of dimension
+- **High negative (-0.7 to -1.0)**: Feature strongly present at negative pole of dimension
+- **Low (close to 0)**: Feature doesn't contribute meaningfully to this dimension
+
+**Example interpretation**:
+
+If Factor 1 shows:
+
+- `f_18_first_person_pronouns`: +0.85
+- `f_03_present_tense`: +0.78
+- `f_27_contractions`: +0.72
+- `f_42_nominalizations`: -0.80
+- `f_35_by_passives`: -0.75
+- `f_19_attributive_adjectives`: -0.70
+
+**Functional label**: **Involved vs. Informational Production**
+
+**Rationale**:
+
+- **Positive pole** (+): Features of interaction and immediacy
+  - First-person pronouns signal personal involvement (*I think*, *we believe*)
+  - Present tense creates immediacy (*is*, *happens*)
+  - Contractions mark informal, conversational style (*it's*, *don't*)
+
+- **Negative pole** (-): Features of informational density
+  - Nominalizations pack meaning into noun phrases (*the implementation of the policy*)
+  - Passives deemphasize agency and create objectivity (*was observed*)
+  - Attributive adjectives add descriptive detail (*significant findings*, *relevant data*)
+
+This aligns with **Biber's Dimension 1**: Involved vs. Informational Production, one of the most robust dimensions across English corpora.
+
+::: {.callout-tip}
+## Functional Interpretation Guidelines
+
+1. **Group high-loading features** (both positive and negative): What communicative function do they share?
+2. **Consult linguistic theory**: What do corpus linguists say about these features? (Halliday's functional grammar, Biber's register studies)
+3. **Examine exemplar texts**: Read texts scoring high/low on the dimension—do labels fit?
+4. **Compare to Biber's dimensions**: Do similar patterns emerge in your corpus?
+
+Biber's foundational dimensions: <https://www.uni-bamberg.de/fileadmin/eng-ling/fs/Chapter_21/23DimensionsofEnglish.html>
+:::
+
+### Visualize Genre Differences
+
+Plot how genres score along each dimension:
+
+```{python}
+df.mdaviz_groupmeans(factor=1, width=4, height=10)
+```
+
+**Interpretation**:
+
+- **Positive scores** (e.g., +15 to +30): High "involved" production
+  - Fiction genres cluster here (mystery, romance, adventure) due to dialogue, character perspective, narrative immediacy
+  - Humor relies on conversational tone and personal engagement
+
+- **Negative scores** (e.g., -10 to -20): High "informational" production
+  - Learned/academic writing clusters here (dense information, objective stance)
+  - Government documents and reports (formal, impersonal)
+  - Skills/hobbies (procedural, informational)
+
+- **Near-zero scores** (e.g., -3 to +3): Balanced or neutral
+  - Press genres (reportage, editorial, reviews) mix narrative with information
+  - Religion balances personal testimony with doctrinal exposition
+  - Popular lore mixes storytelling with factual claims
+
+**Pattern to look for**: Do genres cluster as linguistic theory predicts?
+
+- Fiction should be high on "involved" or "narrative"
+- Academic writing should be high on "informational" or "abstract"
+- Press should occupy middle ground (narrative + information)
+
+If patterns align, it validates both your factor interpretation and the robustness of register variation.
+
+## The DocuScope Approach
+
+DocuScope provides an **alternative feature set** based on **rhetorical functions** rather than grammatical categories.
+
+### Why Use DocuScope?
+
+**Biber features** (grammatical): Focus on syntax and grammatical choices (past tense, passives, nominalizations)
+
+**DocuScope features** (rhetorical): Focus on semantic clusters and discourse moves (reasoning, description, confidence, narrative)
+
+**Example contrast**:
+
+- Biber might count **past tense verbs** (grammatical category)
+- DocuScope identifies **narrative sequences** (rhetorical function of past-tense storytelling)
+
+DocuScope can reveal dimensions like:
+
+- Concrete vs. abstract reference
+- Confident vs. hedged assertions
+- Personal vs. impersonal stance
+- Reasoning vs. description
+
+### DocuScope Categories
+
+DocuScope organizes over 100 rhetorical categories. Examples:
+
+- **Reasoning**: therefore, thus, consequently, it follows that
+- **Description**: blue, tall, enormous, ancient, modern
+- **Character**: protagonist names, character mentions
+- **Confidence**: certainly, definitely, obviously, clearly
+- **InformationStates**: know, realize, understand, aware
+
+Full categories: <https://docuscospacy.readthedocs.io/en/latest/docuscope.html#categories>
+
+### Processing with DocuScope
+
+```{python}
+# Load DocuScope model
+import docuscospacy as ds
+nlp_ds = spacy.load("en_docusco_spacy")
+
+# Parse corpus (~30 seconds with n_process=4)
+ds_tokens = ds.docuscope_parse(bc, nlp_model=nlp_ds, n_process=4)
+
+# Create document-term matrix
+dfm_ds = ds.tags_dtm(ds_tokens, count_by="ds")
+dfm_ds = ds.dtm_weight(dfm_ds)  # Normalize per 1,000 words
+dfm_ds = dfm_ds.drop("Untagged")  # Remove untagged tokens
+
+# Add metadata
+dfm_ds = dfm_ds.join(brown_corpus.select("doc_id", "text_type"), on="doc_id")
+
+dfm_ds.head(3)
+```
+
+### Run MDA on DocuScope Features
+
+```{python}
+df_ds = pb.BiberAnalyzer(dfm_ds, id_column=True)
+df_ds.mdaviz_screeplot()
+```
+
+```{python}
+df_ds.mda(n_factors=3)
+df_ds.mda_summary
+```
+
+```{python}
+df_ds.mdaviz_groupmeans(factor=1, width=4, height=10)
+```
+
+### Compare Biber vs. DocuScope
+
+**Question**: Do similar dimensions emerge from grammatical vs. rhetorical features?
+
+**Possible findings**:
+
+1. **Convergent dimensions**: Both might reveal a "narrative vs. expository" dimension
+   - Biber: past tense, pronouns, contractions (+) vs. nominalizations, passives (-)
+   - DocuScope: Narrative, Character (+) vs. AcademicTerms, Reasoning (-)
+   - **Interpretation**: Robust register difference—emerges regardless of feature set
+
+2. **Divergent dimensions**: DocuScope might reveal a "confident vs. hedged" stance dimension
+   - ConfidenceHigh vs. ConfidenceLow, Uncertainty
+   - Biber features don't capture this as clearly (it's semantic, not grammatical)
+   - **Interpretation**: DocuScope adds rhetorical nuance beyond syntax
+
+3. **Complementary dimensions**: Biber might better capture "syntactic complexity"
+   - Subordination, relative clauses, complement clauses
+   - DocuScope focuses on function, not structure
+   - **Interpretation**: Different taggers reveal different aspects of variation
+
+**Methodological insight**: If dimensions align across taggers, it suggests **robust register variation**—the patterns aren't artifacts of one classification system. If they diverge, each tagger offers unique insights.
+
+::: {.callout-note}
+## Comparative Research
+
+Dejonge & Biber (2021) compared MDA using Biber features vs. DocuScope tags:
+
+- Some dimensions converged (narrative, academic)
+- DocuScope revealed additional rhetorical dimensions (confident reasoning, concrete description)
+- Conclusion: Different taggers **complement** rather than **replace** each other
+
+*Studies in Corpus Linguistics*, 109, 51-76.
+:::
+
+## Principal Component Analysis (PCA)
+
+PCA is a related dimension reduction technique, more common in machine learning and outside corpus linguistics.
+
+### MDA vs. PCA: Theoretical Differences
+
+| Aspect | MDA (Factor Analysis) | PCA |
+|--------|----------------------|-----|
+| **Goal** | Find latent factors **causing** observed variation | Find variance-maximizing components |
+| **Variance** | **Shared variance** among variables | **Total variance** (including unique variance) |
+| **Assumptions** | Latent factors cause observations | No causal assumptions |
+| **Interpretation** | Factors have functional meanings | Components are mathematical constructs |
+| **Rotation** | Varimax/promax rotation for interpretability | No rotation (or optional) |
+| **Use case** | Interpretive analysis (register, style) | Predictive modeling, data compression |
+
+**For text analysis**:
+
+- **MDA preferred** for **interpretable dimensions** (e.g., "involved vs. informational" has linguistic meaning)
+- **PCA preferred** for **data compression** or **predictive features** (feeding into classification models)
+
+**Key difference**: MDA assumes latent factors (like "involved production") **cause** observed linguistic patterns (pronouns, present tense, contractions co-occur because they all serve involvement). PCA just identifies variance patterns without causal claims.
+
+**Resources**:
+
+- Factor analysis vs. PCA: <https://towardsdatascience.com/factor-analysis-vs-pca-1c24a6bf2c1b>
+- IBM explanation: <https://www.ibm.com/docs/en/spss-statistics/25.0.0?topic=detection-factor-analysis-versus-principal-components-analysis>
+
+### Running PCA
+
+```{python}
+# Run PCA on DocuScope data
+df_ds.pca()
+```
+
+### Visualize PCA Results
+
+```{python}
+# Plot group means across PC1 and PC2
+df_ds.pcaviz_groupmeans()
+```
+
+**Interpretation**:
+
+- **PC1 (x-axis)**: First principal component (captures most variance)
+- **PC2 (y-axis)**: Second principal component (captures second-most variance)
+- **Percentages**: Variance explained by each component (e.g., 18.3%, 11.8%)
+
+**Genre clustering**: Fiction genres (romance, mystery, adventure) cluster together on the left, while learned/government genres cluster on the right. This suggests PC1 captures a **narrative vs. informational** dimension similar to MDA Factor 1.
+
+**PC2** separates religious texts (top) from government documents (bottom), possibly capturing a **personal vs. impersonal** or **persuasive vs. procedural** dimension.
+
+```{python}
+# Show variable contributions to PC1
+df_ds.pcaviz_contrib(pc=1)
+```
+
+**Interpretation**: Variables (DocuScope categories) with contributions **above the mean threshold** (red dashed line) are important for that component.
+
+- **Positive contributions** (purple): Categories strongly associated with positive PC1 scores (e.g., AcademicTerms, InformationReportVerbs)
+- **Negative contributions** (teal): Categories strongly associated with negative PC1 scores (e.g., Narrative, Character, Description)
+
+This confirms PC1 as an **informational vs. narrative** dimension, aligning with MDA interpretations.
+
+::: {.callout-tip}
+## When to Use PCA vs. MDA
+
+**Use MDA when**:
+
+- Primary goal is **interpretation** (understanding register differences functionally)
+- You want **labeled dimensions** ("involved vs. informational," not "PC1")
+- You're working in **corpus linguistics tradition** (Biber, Halliday)
+- You need to **explain findings to non-statisticians** (functional labels are clearer)
+
+**Use PCA when**:
+
+- Primary goal is **prediction or classification** (feeding features into machine learning)
+- You need **dimensionality reduction** for computational efficiency
+- You want to **preserve maximum variance** with minimal assumptions
+- You're building **unsupervised clustering** or **similarity models**
+:::
+
+## When to Use MDA
+
+::: {.callout-tip}
+## Well-Suited Research Questions
+
+- **Register variation**: Comparing spoken vs. written, formal vs. informal, academic vs. journalistic
+- **Historical change**: Tracking how scientific writing or legal language evolved over centuries
+- **Cross-linguistic analysis**: Testing if Biber's English dimensions generalize to Spanish, German, Chinese
+- **Authorial style**: Profiling individual authors' linguistic signatures (e.g., does Austen use more "involved" features than Dickens?)
+- **Genre classification**: Building interpretable models for automatic text categorization (what dimensions distinguish mystery from romance?)
+- **Corpus comparison**: Do online forums differ from published writing in predictable ways?
+:::
+
+::: {.callout-warning}
+## Limitations and Alternatives
+
+**When MDA struggles**:
+
+1. **Small corpora** (< 300 texts): Insufficient for stable factor extraction (need 5-10 observations per variable)
+2. **Homogeneous texts**: All one genre → no variation to explain (factors require contrast)
+3. **Highly creative language**: Poetry, experimental fiction violate standard linguistic patterns
+4. **No tagged data**: MDA requires linguistic annotation (POS tags, dependencies, or semantic tags)
+5. **Fine-grained semantics**: MDA captures broad patterns, not subtle meaning differences (irony, metaphor)
+
+**Alternative approaches**:
+
+- **Keyness analysis**: Simpler, works on smaller corpora, identifies distinctive features per genre (see [Tutorial: Keyness](keyness.qmd))
+- **Topic modeling**: Finds thematic rather than stylistic variation (see [Tutorial: Topic Modeling](topic-modeling.qmd))
+- **Supervised classification**: If you only care about prediction, not interpretation (random forests, neural networks)
+- **Simple frequency comparisons**: Sometimes a t-test or Mann-Whitney U test suffices (e.g., "Do academic texts use more passives than fiction?")
+- **Collocation analysis**: Reveals local co-occurrence patterns (see [Tutorial: Collocations](collocations.qmd))
+:::
+
+## Common Pitfalls
+
+**1. Over-extracting factors**
+
+Extracting 10 factors from 500 texts produces unstable, uninterpretable dimensions. Stick to 3-7 for most corpora.
+
+**Why it fails**: Too many factors = overfitting noise rather than capturing meaningful patterns.
+
+**2. Forcing interpretations**
+
+Not every factor has a clear functional interpretation. If you can't meaningfully label it after examining loadings and exemplar texts, consider reducing the number of factors.
+
+**Warning sign**: Labels like "Factor 3" or vague descriptions ("miscellaneous linguistic features").
+
+**3. Ignoring negative loadings**
+
+Dimensions are **bipolar**—both positive and negative poles matter. A factor isn't just "high nominalizations," it's "nominalizations vs. pronouns" (informational vs. involved).
+
+**Fix**: Always report and interpret high loadings on both poles.
+
+**4. Cherry-picking features**
+
+Report **all** high-loading features (typically |loading| > 0.40 or 0.50), not just the ones that fit your hypothesis.
+
+**Transparency**: Readers should see the full factor structure, including inconvenient features that complicate interpretation.
+
+**5. Confusing correlation with causation**
+
+MDA shows **co-occurrence patterns**, not causal relationships. "Passives correlate with nominalizations" ≠ "Passives cause nominalizations."
+
+**Correct framing**: "Passives and nominalizations co-occur because they both serve informational density."
+
+**6. Assuming universality**
+
+Dimensions vary across corpora, languages, and time periods. Biber's Dimension 1 might not emerge in your corpus—that's a **finding**, not a failure.
+
+**Example**: A corpus of 19th-century sermons might not show involved/informational variation (all texts are rhetorically involved), but might reveal a "doctrinal vs. testimonial" dimension unique to that genre.
+
+**7. Neglecting corpus representativeness**
+
+Garbage in, garbage out. If your "fiction" category is all Stephen King novels, dimensions won't generalize to all fiction.
+
+**Best practice**: Ensure balanced sampling across subcategories (multiple authors, publishers, time periods).
+
+## What to Do After MDA
+
+### Connect to Linguistic Theory
+
+- Do extracted dimensions align with **known register theory**? (Biber's dimensions, Halliday's functional grammar)
+- Do they **challenge existing assumptions** about genre boundaries?
+- What **new distinctions** emerge that previous research missed?
+
+**Example**: If a "confident vs. hedged" dimension emerges in scientific writing, does it align with sociology of science literature on epistemic modality?
+
+### Validate with Close Reading
+
+1. **Identify exemplar texts**: Find texts scoring high/low on each dimension
+2. **Read them**: Does the dimension label fit? What nuances are missed by statistical patterns?
+3. **Refine interpretations**: Adjust labels based on actual linguistic content
+
+**Example**: Factor 2 loads high on past tense, third-person pronouns, and public verbs. You label it "narrative," but reading high-scoring texts reveals they're **historical exposition**, not storytelling. Refine label to "historical recount."
+
+### Compare Across Corpora
+
+- Apply the same MDA to a **different corpus** (different language, time period, domain)
+- Do **similar dimensions** emerge? (suggests language-general patterns)
+- What's **corpus-specific** vs. universal?
+
+**Example**: Run MDA on 18th-century and 21st-century academic writing. Does "involved vs. informational" still distinguish genres, or has academic writing become more conversational over time?
+
+### Use for Classification
+
+- Train **supervised models** using dimension scores as features
+- Predict **genre membership** for new texts
+- Test how well dimensions **discriminate categories** (ANOVA, discriminant analysis)
+
+**Example**: Use 3 MDA dimensions to train a logistic regression model classifying texts as "fiction" vs. "non-fiction." If accuracy > 85%, dimensions are robust genre markers.
+
+### Track Diachronic Change
+
+- Run MDA on texts from **different decades** or centuries
+- Do **dimension scores shift** over time? (e.g., is scientific writing becoming less formal?)
+- Are certain registers **becoming more/less distinct**?
+
+**Example**: Apply MDA to New York Times articles from 1920, 1970, and 2020. Does Factor 1 (involved vs. informational) show journalism becoming more conversational?
+
+## Conclusion
+
+MDA is a powerful method for **discovering** and **describing** systematic linguistic variation. It transforms messy, correlated feature counts into interpretable dimensions that capture communicative functions.
+
+**Strengths**:
+
+- **Reduces complexity**: 67 features → 3-5 interpretable dimensions
+- **Reveals co-occurrence patterns**: Shows which features cluster together and why
+- **Produces functional interpretations**: Dimensions have linguistic meaning ("involved production," not "PC1")
+- **Enables comparisons**: Across registers, languages, time periods, authors
+
+**Limitations**:
+
+- **Requires large corpora**: Minimum 300-500 texts for stable factors
+- **Subjective interpretation**: Different researchers might label factors differently
+- **Statistical patterns ≠ explanations**: Co-occurrence doesn't explain **why** features cluster (need linguistic theory)
+
+**Best practices**:
+
+1. **Statistical rigor**: Proper factor extraction, scree plot inspection, reporting all loadings
+2. **Linguistic knowledge**: Functional interpretation grounded in register theory (Biber, Halliday)
+3. **Qualitative validation**: Close reading of exemplar texts to refine interpretations
+4. **Transparency**: Report all factors, all loadings, all decisions (don't cherry-pick)
+5. **Triangulation**: Combine MDA with other methods (keyness, topic modeling, close reading)
+
+The best MDA workflows combine **computational scale** (analyzing hundreds of texts) + **statistical rigor** (proper factor analysis) + **interpretive depth** (functional linguistic interpretation) + **methodological transparency** (reporting everything).
+
+::: {.callout-tip}
+## Connecting to Mini Lab 10
+
+[Mini Lab 10: Multi-Dimensional Analysis](../mini_labs/Mini_Lab_10_MultidimensionalAnalysis.ipynb) provides hands-on practice with the complete MDA workflow using both Biber and DocuScope features on the Brown Corpus. You'll extract factors, interpret dimensions, visualize genre differences, and compare MDA to PCA.
+
+**Discussion questions** in the mini lab ask you to:
+
+- Interpret factor loadings functionally (what do high +/- features reveal?)
+- Justify factor extraction decisions (scree plot trade-offs)
+- Compare Biber vs. DocuScope dimensions (which better distinguishes genres?)
+- Analyze genre clustering patterns (do "learned" vs. "popular" separate as predicted?)
+- Assess stability across taggers (do similar dimensions emerge?)
+- Compare MDA vs. PCA (which is more interpretable for humanities research?)
+:::
+
+## See Also
+
+**Foundational Work**:
+
+- Biber, D. (1988). *Variation across Speech and Writing*. Cambridge University Press.
+- Biber, D. (1995). *Dimensions of Register Variation: A Cross-Linguistic Comparison*. Cambridge University Press.
+- Biber, D. (1992). The multi-dimensional approach to linguistic analyses of genre variation: An overview of methodology and findings. *Computers and the Humanities*, 26(5-6), 331-345.
+
+**Online Resources**:
+
+- [Biber's Dimensions of English](https://www.uni-bamberg.de/fileadmin/eng-ling/fs/Chapter_21/23DimensionsofEnglish.html)
+- [pybiber Documentation](https://browndw.github.io/pybiber/)
+- [pybiber Feature Categories](https://browndw.github.io/pybiber/feature-categories.html)
+- [DocuScope Categories](https://docuscospacy.readthedocs.io/en/latest/docuscope.html#categories)
+- [Factor Analysis vs. PCA](https://towardsdatascience.com/factor-analysis-vs-pca-1c24a6bf2c1b)
+
+**Related Tutorials**:
+
+- **[Frequency and Distributions](frequency-and-distributions.qmd)**: Single-feature analysis before MDA
+- **[Keyness](keyness.qmd)**: Comparing registers via distinctive features (simpler alternative to MDA)
+- **[Topic Modeling](topic-modeling.qmd)**: Thematic vs. stylistic variation
+- **[spaCy Basics](spacy-basics.qmd)**: NLP processing pipeline for linguistic annotation
+
+**Related Mini Labs**:
+
+- **Mini Lab 3**: Frequency distributions (building blocks for MDA)
+- **Mini Lab 4**: Keyness (comparing genres without factor analysis)
+- **Mini Lab 8**: spaCy processing (how Biber features are extracted)
+
+**Methodological Comparisons**:
+
+- Friginal, E., & Hardy, J. A. (Eds.). (2013). *Corpus Linguistics in Context*. Routledge. (Chapters on MDA vs. other methods)
+- Dejonge, S., & Biber, D. (2021). Multidimensional analysis of DocuScope tags. *Studies in Corpus Linguistics*, 109, 51-76.
+
+## Works Cited
+
+Biber, D. (1988). *Variation across Speech and Writing*. Cambridge University Press.
+
+Biber, D. (1992). The multi-dimensional approach to linguistic analyses of genre variation: An overview of methodology and findings. *Computers and the Humanities*, 26(5-6), 331-345.
+
+Dejonge, S., & Biber, D. (2021). Multidimensional analysis of DocuScope tags. *Studies in Corpus Linguistics*, 109, 51-76.

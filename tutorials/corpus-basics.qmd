@@ -1,0 +1,276 @@
+
+# Corpus Basics: Tokenization and Processing Pipelines
+
+<a target="_blank" href="https://colab.research.google.com/github/browndw/humanities_analytics/blob/main/mini_labs/Mini_Lab_02_Basics.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
+::: {.callout-tip}
+## Want to Run This Code?
+This tutorial is read-only. To experiment with the code yourself, open the companion notebook in Google Colab.
+:::
+
+## A Simple Processing Pipeline
+
+In order to carry out any sort of computational analysis, we need to convert text into numbers. Although this is now fairly easy to do with computers, it nonetheless constitutes a **radical reorganization** of text.
+
+A processing pipeline typically looks something like this:
+
+![A processing pipeline](https://raw.githubusercontent.com/browndw/humanities_analytics/refs/heads/main/data/_images/pipeline.svg)
+
+To begin seeing what this looks like in practice, let's start with a toy example.
+
+### A Toy Example
+
+First, we'll create an object consisting of a character string. In this case, the first sentence from *A Tale of Two Cities*:
+
+> It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair.
+
+```{python}
+#| echo: true
+
+totc_txt = "It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair."
+```
+
+### Tokenization
+
+🤔 **How would you turn this text into something you can count?** 
+
+We need to convert text into numbers in order to carry out any kind of computational or statistical analysis. One obvious way would be to simply split the text at spaces.
+
+```{python}
+#| echo: true
+
+split_totc = totc_txt.split(" ")
+print(split_totc)
+```
+
+### Counting Tokens
+
+To create a table of counts, we'll use **Polars** for data manipulation and Python's built-in `Counter` for counting.
+
+```{python}
+#| echo: true
+
+import polars as pl
+from collections import Counter
+
+# Count tokens
+totc_counts = Counter(split_totc)
+
+# Convert to DataFrame
+counts_df = pl.DataFrame(totc_counts).transpose(
+    include_header=True, 
+    header_name="token"
+).rename({"column_0": "count"})
+
+print(counts_df.head())
+```
+
+The process of splitting the string vector into constituent parts is called **tokenization** or [word segmentation](https://en.wikipedia.org/wiki/Text_segmentation#Word_segmentation). Think of this as telling the computer how to define a word (or a "token", which is a more precise, technical term). 
+
+In this case, we've done it in an extremely simple way—by defining a token as any string that is bounded by spaces. As a result, we have different tokens for the third-person pronoun *it*:
+
+```{python}
+#| echo: true
+
+# Filter for variations of "it"
+counts_df.filter(pl.col("token").str.contains(r"(?i)^it$"))
+```
+
+::: {.callout-note}
+## Regex Patterns
+The pattern `(?i)^it$` is a regular expression where:
+- `(?i)` makes the search case-insensitive
+- `^` marks the beginning of the string
+- `$` marks the end of the string
+
+This ensures we match exactly "it" or "It", not words like "with" or "it's".
+:::
+
+## Using Models to Tokenize at Scale
+
+In order to execute this process at scale, we have a couple of options:
+
+1. **Pre-processing**: Manipulate text by converting to lowercase, removing punctuation, deleting non-letter sequences—then split on spaces. This is called [text cleaning](https://medium.com/@maleeshadesilva21/preprocessing-steps-for-natural-language-processing-nlp-a-beginners-guide-d6d9bf7689c9).
+
+2. **Model-based parsing**: Pass data to an algorithm or model with complex rules or probabilities encoded into it.
+
+The second option is more computationally intensive, but allows us to extract additional information: part-of-speech tags, named entities, sentiment scores, or syntactic relations.
+
+For most of these tutorials, we use [spaCy](https://spacy.io/) models to tokenize and parse data. These models are efficient, well-documented, and widely used in industry.
+
+### Load Libraries and Model
+
+We'll use **docuscospacy**, which provides convenient wrappers around spaCy functionality:
+
+```{python}
+#| echo: true
+
+import docuscospacy as ds
+import spacy
+
+# Load the custom spaCy model
+nlp = spacy.load("en_docusco_spacy")
+```
+
+### Parsing Text with spaCy
+
+Parsing text with spaCy requires three steps:
+
+1. Initialize an instance of the model
+2. Load some text  
+3. Pass the text to the model
+
+```{python}
+#| echo: true
+
+# Process the text
+doc = nlp(totc_txt)
+
+# Display token information
+for token in doc:
+    print(f"{token.text:15} {token.pos_:10} {token.tag_:10}")
+```
+
+Notice how spaCy automatically:
+- Separates punctuation from words
+- Assigns part-of-speech tags (`PRON`, `AUX`, `DET`, etc.)
+- Provides fine-grained tags (`PRP`, `VBD`, `DT`, etc.)
+
+### Using docuscospacy to Automate Processing
+
+To use docuscospacy, we need a DataFrame with document IDs and text:
+
+```{python}
+#| echo: true
+
+totc_corpus = pl.DataFrame({
+    "doc_id": "totc", 
+    "text": [totc_txt]
+})
+
+# Parse the corpus
+totc_tokens = ds.docuscope_parse(totc_corpus, nlp_model=nlp, n_process=4)
+
+# Create frequency table
+frequency_table = ds.frequency_table(totc_tokens)
+print(frequency_table.head())
+```
+
+### Processing a Larger Dataset
+
+Let's read in a larger corpus from the course GitHub repository:
+
+```{python}
+#| echo: true
+
+# Load sample corpus
+df = pl.read_parquet("https://github.com/browndw/humanities_analytics/raw/refs/heads/main/data/data_tables/sample_corpus.parquet")
+
+print(f"Loaded {df.height} documents")
+```
+
+Now parse the entire corpus (this takes about 2 minutes):
+
+```{python}
+#| echo: true
+#| eval: false
+
+# Parse corpus (set eval: false to avoid re-running during rendering)
+ds_tokens = ds.docuscope_parse(df, nlp_model=nlp, n_process=4)
+
+# Create frequency table
+wc = ds.frequency_table(ds_tokens)
+
+print(wc.head())
+print(wc.tail())
+```
+
+From the frequency table, we can extract important information like total word count:
+
+```{python}
+#| echo: true
+#| eval: false
+
+# Sum the Absolute Frequency column
+total_words = wc.select("AF").sum()
+print(f"Total corpus size: {total_words:,} words")
+```
+
+## Common Pitfalls and Considerations
+
+When working with tokenization and parsing, watch out for these issues:
+
+### Punctuation and Special Characters
+
+Simple space-splitting treats `"times,"` and `"times"` as different tokens. Model-based tokenizers handle this better, but you still need to think about:
+- Contractions (`don't`, `isn't`)
+- Hyphenated words (`twenty-first`, `self-aware`)
+- URLs and email addresses
+- Emoticons and emoji
+
+### Language and Domain Assumptions
+
+spaCy models are trained on specific corpora. The `en_docusco_spacy` model works well for academic and formal writing, but may struggle with:
+- Historical texts (archaic spelling, grammar)
+- Social media (hashtags, @mentions, slang)
+- Technical jargon or specialized vocabularies
+- Non-standard dialects
+
+### Computational vs. Interpretive Work
+
+Remember: **tokenization is interpretation**. Every choice you make—how to split, what counts as a word, whether to lowercase—shapes your analysis. There's no "neutral" way to process text.
+
+::: {.callout-warning}
+## Critical Question
+If the model assigns part-of-speech tags with 95% accuracy, what does that mean for a corpus of 100,000 words? That's 5,000 potential errors. How do you account for this in your analysis?
+:::
+
+## Why This Matters for Humanities Research
+
+Computational text analysis isn't just about efficiency—it enables entirely new kinds of questions:
+
+- **Scale**: Read thousands of novels, not dozens
+- **Patterns**: Identify linguistic trends across time, geography, or genre
+- **Comparison**: Systematically compare how different authors use language
+- **Discovery**: Find unexpected patterns that close reading might miss
+
+But remember: computational methods complement close reading, they don't replace it. The goal is to move between **distant reading** (patterns across large corpora) and **close reading** (careful interpretation of individual texts).
+
+## Discussion Questions
+
+1. **Tokenization choices**: Why might simple space-splitting not work well for all languages or text types? What problems arise with languages that don't use spaces between words (like Chinese or Japanese)?
+
+2. **Model reliability**: What additional information does the spaCy model provide compared to simple splitting? How confident should we be in these assignments? What kinds of errors might the model make?
+
+3. **Computational trade-offs**: The spaCy approach is more computationally expensive than simple splitting. When might the extra computational cost be worth it? When might it not be?
+
+4. **Scale and infrastructure**: We processed a small corpus quickly. What challenges might arise when processing millions of documents? How would you approach that? What about accessibility—not everyone has access to powerful servers.
+
+5. **Critical methodology**: The model treats every text the same way—no attention to historical context, genre conventions, or authorial style in the parsing stage. How do you maintain critical, contextual awareness when using computational methods?
+
+## Further Exploration
+
+::: {.callout-note}
+## For the Mini Lab
+In [Mini Lab 02](../mini_labs/Mini_Lab_02_Basics.ipynb), you'll get hands-on practice with these concepts. Try:
+
+- Tokenizing text from different domains (tweets, legal documents, poetry)
+- Comparing outputs from different spaCy models
+- Analyzing frequency tables to understand patterns in the corpus
+- Experimenting with edge cases that break simple tokenization
+:::
+
+::: {.callout-tip}
+## Key Takeaways
+
+1. **Simple tokenization** (splitting on spaces) is fast but loses linguistic information
+2. **Model-based tokenization** (spaCy) is slower but provides rich linguistic features
+3. **Trade-offs matter**: Choose your approach based on your research questions
+4. **Scale changes everything**: What works for one sentence may not work for millions of documents
+5. **Tokenization is interpretation**: Every processing choice shapes your analysis
+6. **Errors compound**: Model accuracy matters more at scale
+7. **Context is critical**: Maintain awareness of what the model can't capture
+:::
+

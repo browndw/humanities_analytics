@@ -1,0 +1,791 @@
+# NLP Processing with spaCy
+
+<a target="_blank" href="https://colab.research.google.com/github/browndw/humanities_analytics/blob/main/mini_labs/Mini_Lab_08_All_Things_spaCy.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
+```{python}
+#| echo: false
+#| message: false
+#| warning: false
+
+import spacy
+import re
+import urllib.request
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+from collections import Counter
+from sklearn.decomposition import TruncatedSVD
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# Load spaCy model
+nlp = spacy.load('en_core_web_md')
+```
+
+## Introduction
+
+Most text analysis workflows follow a similar pattern: read text → process text → extract features → analyze features → interpret results. The middle steps—processing and feature extraction—often involve the same computational operations: tokenization, part-of-speech tagging, parsing, and entity recognition. Instead of reinventing these steps for every project, **NLP processing pipelines** automate them.
+
+**spaCy** is an industrial-strength NLP library that provides a complete pipeline architecture. Unlike tools designed for teaching (NLTK) or experimental research (Stanford CoreNLP), spaCy prioritizes speed, accuracy, and production readiness. It's the engine behind many commercial NLP applications and can process millions of words per second on modern hardware.
+
+::: {.callout-note}
+## Why Processing Pipelines Matter
+
+A good pipeline:
+
+- **Standardizes preprocessing**: Everyone on a team gets the same tokenization, the same POS tags, the same parses
+- **Enables reproducibility**: Save the pipeline configuration and get identical results later
+- **Supports complex workflows**: Chain operations (tokenize → tag → parse → extract) without manual coordination
+- **Facilitates reuse**: Train custom components (NER, text classification) and plug them into existing pipelines
+- **Improves efficiency**: Process once, extract many features (tokens, lemmas, dependencies, entities) in one pass
+:::
+
+**Research questions spaCy can help answer**:
+
+- How do sentence structures differ between genres or time periods?
+- Which characters are described with which adjectives across a novel?
+- Where do key thematic words cluster in a narrative?
+- How do authors distribute place names or temporal references?
+- Which documents in a corpus share similar vocabulary profiles?
+
+This tutorial covers:
+
+1. **Pipeline architecture**: What spaCy does automatically when you process text
+2. **Token-level analysis**: Exploring word attributes, frequencies, and distributions
+3. **Sentence-level analysis**: Segmentation and structural patterns
+4. **Named entity recognition**: Extracting people, places, organizations, and events
+5. **Part-of-speech tagging**: Identifying grammatical categories and stylistic patterns
+6. **Dependency parsing**: Understanding grammatical relationships
+7. **Word embeddings**: Semantic similarity from pre-trained vectors
+8. **Document vectorization**: Comparing texts numerically
+
+## Understanding the spaCy Pipeline
+
+### What Happens When You Process Text?
+
+When you run `doc = nlp(text)`, spaCy executes a multi-stage pipeline:
+
+**1. Tokenization**: Splits text into words, punctuation, numbers
+
+**2. Part-of-speech tagging**: Assigns grammatical categories (noun, verb, adjective, etc.)
+
+**3. Lemmatization**: Reduces words to dictionary forms ("running" → "run")
+
+**4. Dependency parsing**: Identifies grammatical relationships between words
+
+**5. Named entity recognition (NER)**: Labels spans as people, organizations, locations, etc.
+
+**6. (Optional) Additional components**: Sentiment analysis, text classification, custom extractors
+
+All of these happen **in one pass** over the text. The result is a `Doc` object containing the original text plus all linguistic annotations.
+
+### Models and Sizes
+
+spaCy's English models come in three sizes:
+
+- **`en_core_web_sm`** (small, ~12 MB): No word vectors, faster, less accurate
+- **`en_core_web_md`** (medium, ~40 MB): 300-dimensional word vectors, balanced speed/accuracy
+- **`en_core_web_lg`** (large, ~560 MB): More vectors, highest accuracy, slower
+
+For this tutorial, we use `en_core_web_md`—large enough for meaningful semantic analysis, small enough for quick processing.
+
+## Loading and Pre-processing Texts
+
+We'll analyze two texts: *Monty Python and the Holy Grail* (1975 screenplay) and Jane Austen's *Pride and Prejudice* (1813 novel).
+
+```{python}
+# Load texts from GitHub
+grail_url = 'https://github.com/browndw/humanities_analytics/raw/refs/heads/main/data/data_text/grail.txt'
+pride_url = 'https://github.com/browndw/humanities_analytics/raw/refs/heads/main/data/data_text/pride.txt'
+
+with urllib.request.urlopen(grail_url) as response:
+    grail_raw = response.read().decode('utf-8')
+
+with urllib.request.urlopen(pride_url) as response:
+    pride_raw = response.read().decode('utf-8')
+```
+
+### The Importance of Pre-processing
+
+The *Monty Python* script includes character names, stage directions, and formatting. Let's peek:
+
+```{python}
+grail_raw[:500]
+```
+
+**Question**: Should we keep this metadata? 
+
+**Answer depends on your research question**:
+
+- Studying dialogue style → remove character names and stage directions
+- Analyzing narrative structure → keep stage directions (they describe action)
+- Examining character-specific language → keep character labels, analyze per-character
+
+For this tutorial, we'll extract just the dialogue:
+
+```{python}
+# Remove character names (anything before a colon at line start)
+grail_raw = re.sub(r'\n.*?: ', ' ', grail_raw)
+grail_raw = re.sub(r'^.*?: ', ' ', grail_raw)
+# Remove stage directions in brackets
+grail_raw = re.sub(r'\[.*?\]', ' ', grail_raw)
+# Normalize whitespace
+grail_raw = " ".join(grail_raw.split()).strip()
+```
+
+```{python}
+# Pride & Prejudice needs only whitespace normalization
+pride_raw = " ".join(pride_raw.split()).strip()
+```
+
+### Parsing the Texts
+
+Now we pass the cleaned texts through the pipeline:
+
+```{python}
+grail = nlp(grail_raw)
+pride = nlp(pride_raw)
+```
+
+This takes ~20-30 seconds for *Pride and Prejudice* (~120K words). Each word is now annotated with POS tags, lemmas, dependency labels, and entity types.
+
+## Token-Level Analysis
+
+### Basic Token Operations
+
+A `Doc` object is an iterable sequence of `Token` objects:
+
+```{python}
+# First 10 tokens
+pride[:10]
+```
+
+```{python}
+# Total token count (includes punctuation)
+len(pride)
+```
+
+Tokens have rich attributes:
+
+```{python}
+# Examine a single token
+token = pride[4]  # "universally"
+print(f"Text: {token.text}")
+print(f"Lemma: {token.lemma_}")
+print(f"POS: {token.pos_}")
+print(f"Tag: {token.tag_}")
+print(f"Index: {token.i}")
+print(f"Character index: {token.idx}")
+print(f"Is punctuation?: {token.is_punct}")
+print(f"Is stop word?: {token.is_stop}")
+```
+
+**Key attributes**:
+
+- `.text`: Original word form
+- `.lemma_`: Dictionary form ("running" → "run")
+- `.pos_`: Coarse part-of-speech (NOUN, VERB, ADJ, etc.)
+- `.tag_`: Fine-grained tag (NN, VBG, JJ, etc. from Penn Treebank)
+- `.i`: Token index in document
+- `.is_punct`, `.is_stop`, `.is_alpha`: Boolean flags
+- `.ent_type_`: Named entity label (if applicable)
+
+### Frequency Distributions
+
+Count word frequencies with `Counter`:
+
+```{python}
+pride_counts = Counter([tok.text for tok in pride])
+pride_counts.most_common(10)
+```
+
+Unsurprisingly, function words dominate. Filter for content words:
+
+```{python}
+# Count only nouns, verbs, adjectives
+content_words = [tok.lemma_.lower() for tok in pride 
+                 if tok.pos_ in ['NOUN', 'VERB', 'ADJ'] and not tok.is_stop]
+Counter(content_words).most_common(10)
+```
+
+### Visualizing Token Distributions
+
+Use token indices (`.i`) to plot word locations across narrative time:
+
+```{python}
+# Find all instances of "love" and plot their positions
+love_indices = [word.i for word in pride if word.text.lower() == 'love']
+plt.figure(figsize=(12, 3))
+plt.hist(love_indices, bins=50, color='skyblue', edgecolor='black')
+plt.xlabel('Token Position')
+plt.ylabel('Frequency')
+plt.title('Distribution of "love" in Pride and Prejudice')
+plt.show()
+```
+
+**Interpretation**: Where does "love" cluster? Early, middle, or late in the novel? Clusters might correspond to romantic turning points.
+
+Compare multiple words:
+
+```{python}
+def get_histogram(word, doc, bins=50):
+    indices = [tok.i for tok in doc if tok.text.lower() == word.lower()]
+    hist, bin_edges = np.histogram(indices, bins=bins, range=(0, len(doc)))
+    return hist
+
+words = ['love', 'hate', 'pride', 'prejudice']
+word_hists = [get_histogram(w, pride) for w in words]
+words_df = pd.DataFrame(word_hists, index=words).T
+
+words_df.plot(subplots=True, figsize=(14, 8), legend=False, color=['steelblue', 'darkred', 'green', 'purple'])
+plt.suptitle('Narrative Arcs of Key Words in Pride and Prejudice')
+plt.show()
+```
+
+::: {.callout-tip}
+## Computational Reasoning: From Patterns to Interpretation
+
+Finding that "pride" appears more in early chapters and "love" more in later chapters is **description**. Interpreting this as reflecting the novel's thematic arc from social judgment to romantic resolution is **interpretation**.
+
+Computational methods provide patterns; literary knowledge explains them. Always ask:
+
+1. **What does this pattern show?** (Description)
+2. **Why does it matter?** (Interpretation)
+3. **What alternative explanations exist?** (Critique)
+4. **How would I validate this with close reading?** (Triangulation)
+:::
+
+## Sentence-Level Analysis
+
+### Sentence Segmentation
+
+spaCy automatically segments text into sentences:
+
+```{python}
+# Count sentences
+pride_sents = list(pride.sents)
+len(pride_sents)
+```
+
+```{python}
+# First sentence
+next(pride.sents)
+```
+
+```{python}
+# Last sentence
+pride_sents[-1]
+```
+
+### Sentence Length Analysis
+
+Average sentence length is a basic stylometric measure:
+
+```{python}
+pride_sent_lengths = [len(sent) for sent in pride_sents]
+avg_length = np.mean(pride_sent_lengths)
+print(f"Average sentence length: {avg_length:.2f} tokens")
+print(f"Longest sentence: {max(pride_sent_lengths)} tokens")
+print(f"Shortest sentence: {min(pride_sent_lengths)} tokens")
+```
+
+Plot the distribution:
+
+```{python}
+plt.figure(figsize=(10, 5))
+plt.hist(pride_sent_lengths, bins=50, color='skyblue', edgecolor='black')
+plt.xlabel('Sentence Length (tokens)')
+plt.ylabel('Frequency')
+plt.title('Sentence Length Distribution in Pride and Prejudice')
+plt.axvline(avg_length, color='red', linestyle='--', label=f'Mean: {avg_length:.1f}')
+plt.legend()
+plt.show()
+```
+
+**Compare across texts or time periods**: Are 19th-century novels more syntactically complex than 20th-century screenplays? Do sentence lengths correlate with narrative tension?
+
+### Finding Extreme Sentences
+
+Longest sentence:
+
+```{python}
+longest_sent = max(pride_sents, key=len)
+print(f"Length: {len(longest_sent)} tokens")
+print(longest_sent)
+```
+
+Shortest non-trivial sentence:
+
+```{python}
+short_sents = [sent for sent in pride_sents if len(sent) > 2]
+shortest_sent = min(short_sents, key=len)
+print(f"Length: {len(shortest_sent)} tokens")
+print(shortest_sent)
+```
+
+## Named Entity Recognition (NER)
+
+### Extracting Entity Types
+
+Named entities are accessible via `doc.ents`:
+
+```{python}
+# What entity types appear in Monty Python?
+grail_entity_types = set([ent.label_ for ent in grail.ents])
+grail_entity_types
+```
+
+**Common entity labels**:
+
+- `PERSON`: People, including fictional characters
+- `GPE`: Geopolitical entities (countries, cities, states)
+- `ORG`: Organizations, companies, institutions
+- `DATE`: Absolute or relative dates
+- `WORK_OF_ART`: Titles of books, songs, etc.
+- `NORP`: Nationalities, religious or political groups
+- `EVENT`: Named events (wars, hurricanes, etc.)
+
+### Counting Specific Entities
+
+Extract place names:
+
+```{python}
+pride_places = Counter([ent.text for ent in pride.ents if ent.label_ == 'GPE'])
+pride_places.most_common(10)
+```
+
+**Note limitations**: NER works best on standard modern English. Historical texts, dialect, and creative spelling cause errors. Always inspect results critically.
+
+Extract people:
+
+```{python}
+pride_people = Counter([ent.text for ent in pride.ents if ent.label_ == 'PERSON'])
+pride_people.most_common(10)
+```
+
+### Validating NER with Context
+
+NER isn't perfect. Check context when uncertain:
+
+```{python}
+# Find sentences mentioning "Bennet"
+bennet_sents = [ent.sent for ent in pride.ents 
+                if ent.label_ == 'PERSON' and 'Bennet' in ent.text]
+bennet_sents[:3]
+```
+
+## Part-of-Speech Tagging
+
+### Understanding POS Categories
+
+Part-of-speech (POS) tagging assigns grammatical categories to each word. spaCy uses two tag sets:
+
+- **Coarse tags** (`.pos_`): Universal Dependencies tagset (NOUN, VERB, ADJ, ADV, etc.)
+- **Fine-grained tags** (`.tag_`): Penn Treebank tagset (NN, VBZ, JJ, RB, etc.)
+
+```{python}
+# Examine POS tags in a sentence
+sent = list(pride.sents)[0]
+for token in sent:
+    if not token.is_punct:
+        print(f"{token.text:15} {token.pos_:8} {token.tag_:6} ({spacy.explain(token.tag_)})")
+```
+
+### POS Distribution Analysis
+
+Compare POS distributions across texts to detect stylistic differences:
+
+```{python}
+def get_pos_distribution(doc):
+    """Calculate POS tag frequencies as proportions."""
+    pos_counts = Counter([tok.pos_ for tok in doc if not tok.is_punct and not tok.is_space])
+    total = sum(pos_counts.values())
+    return {pos: count/total for pos, count in pos_counts.items()}
+
+pride_pos = get_pos_distribution(pride)
+grail_pos = get_pos_distribution(grail)
+
+# Compare distributions
+pos_df = pd.DataFrame({'Pride & Prejudice': pride_pos, 'Monty Python': grail_pos}).fillna(0)
+pos_df = pos_df.sort_values('Pride & Prejudice', ascending=False)
+
+# Plot
+pos_df.plot(kind='bar', figsize=(12, 5))
+plt.title('POS Distribution Comparison')
+plt.xlabel('Part of Speech')
+plt.ylabel('Proportion')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+```
+
+**Interpretation**: Novels typically have higher proportions of nouns (scene-setting, character description), while dialogue-heavy screenplays may show more verbs and pronouns (action, direct address).
+
+### Filtering by POS
+
+Extract all adjectives to analyze descriptive language:
+
+```{python}
+pride_adjectives = [tok.lemma_.lower() for tok in pride 
+                    if tok.pos_ == 'ADJ' and not tok.is_stop]
+Counter(pride_adjectives).most_common(20)
+```
+
+**Stylometric question**: Do certain authors favor particular adjective types (evaluative vs. physical, subjective vs. objective)?
+
+## Dependency Parsing
+
+### Understanding Syntax Trees
+
+Dependency parsing reveals grammatical structure—which words modify which, what role each word plays (subject, object, modifier).
+
+Each token has:
+
+- `.dep_`: Dependency relation (e.g., "nsubj" = nominal subject, "dobj" = direct object)
+- `.head`: The word this token modifies or depends on
+- `.children`: Words that modify this token
+
+```{python}
+# Analyze a sentence
+sent = list(pride.sents)[10]
+print(sent)
+print()
+
+for token in sent:
+    print(f"{token.text:15} {token.dep_:10} {token.head.text}")
+```
+
+### Visualizing Parse Trees
+
+spaCy's `displacy` renders dependency trees:
+
+```{python}
+from IPython.display import SVG, display
+
+# Render a short sentence
+short_sent = list(pride.sents)[5]
+svg = spacy.displacy.render(short_sent, style='dep', jupyter=False)
+# Display inline
+display(SVG(svg))
+```
+
+**Reading the tree**:
+
+- Arrows point from **head** to **dependent**
+- Labels describe the relationship (nsubj, dobj, amod, etc.)
+- The **root** is the main verb
+
+### Extracting Syntactic Patterns
+
+Find adjectives modifying character names:
+
+```{python}
+def adjectives_for_character(doc, character):
+    """Find adjectives that modify a character name."""
+    adjectives = []
+    for sent in doc.sents:
+        for word in sent:
+            if character in word.text:
+                for child in word.children:
+                    if child.pos_ == 'ADJ':
+                        adjectives.append(child.text)
+    return Counter(adjectives).most_common(10)
+
+adjectives_for_character(pride, 'Darcy')
+```
+
+**Interpretation**: "Fine", "handsome", "great" describe Darcy—but what's the context? Are these narrator descriptions, Elizabeth's perceptions, or other characters' opinions? Always verify with close reading.
+
+Find verbs associated with characters:
+
+```{python}
+def verbs_for_character(doc, character):
+    """Find verbs where the character is the subject."""
+    verbs = []
+    char_tokens = [tok for sent in doc.sents for tok in sent 
+                   if character in tok.text]
+    
+    for token in char_tokens:
+        # Walk up the dependency tree to find governing verbs
+        for ancestor in token.ancestors:
+            if ancestor.pos_ == 'VERB':
+                verbs.append(ancestor.lemma_)
+                break  # Take only the first verb ancestor
+    
+    return Counter(verbs).most_common(20)
+
+elizabeth_verbs = verbs_for_character(pride, 'Elizabeth')
+elizabeth_verbs
+```
+
+**Computational reasoning question**: Do character-verb associations reveal agency? If Elizabeth is the subject of active verbs ("say," "ask," "feel") more than passive constructions, does that signal narrative focalization or character autonomy?
+
+## Word Embeddings and Semantic Similarity
+
+### Pre-trained Word Vectors
+
+The `en_core_web_md` model includes 300-dimensional word vectors trained on web text using the GloVe algorithm. These vectors capture semantic relationships: words with similar meanings have similar vectors.
+
+```{python}
+# Compare word similarities
+peanut = nlp('peanut')
+horse = nlp('horse')
+mockingbird = nlp('mockingbird')
+
+print(f"peanut ↔ horse: {peanut.similarity(horse):.3f}")
+print(f"peanut ↔ mockingbird: {peanut.similarity(mockingbird):.3f}")
+print(f"horse ↔ mockingbird: {horse.similarity(mockingbird):.3f}")
+```
+
+**Interpretation**: Similarity scores range from -1 (opposite) to 1 (identical). Higher scores = more semantically related.
+
+::: {.callout-important}
+## Critical Limitation: Generic vs. Contextual Embeddings
+
+spaCy's default word vectors are **pre-trained and fixed**. They capture general semantic relationships from a large web corpus, NOT context-specific meanings in your texts.
+
+**Example**: "Bank" in "river bank" vs. "bank account" gets the same vector—a blend of both meanings. The model doesn't distinguish word senses.
+
+**Implication**: Word similarities reflect broad semantic fields, not specific usage in *Pride and Prejudice* or *Monty Python*. To analyze local collocational patterns, use frequency-based methods (Mini Lab 6) or train custom embeddings.
+:::
+
+### Visualizing Word Embeddings
+
+Extract nouns from *Pride and Prejudice* and reduce dimensions for 2D plotting:
+
+```{python}
+# Get first 150 nouns
+pride_nouns = [tok for tok in pride if tok.pos_ == 'NOUN'][:150]
+pride_noun_vecs = [tok.vector for tok in pride_nouns]
+pride_noun_labels = [tok.text for tok in pride_nouns]
+
+# Reduce from 300 to 2 dimensions using SVD
+from sklearn.decomposition import TruncatedSVD
+lsa = TruncatedSVD(n_components=2)
+noun_2d = lsa.fit_transform(pride_noun_vecs)
+
+# Plot
+plt.figure(figsize=(12, 8))
+for i, label in enumerate(pride_noun_labels):
+    x, y = noun_2d[i]
+    plt.scatter(x, y, alpha=0.6)
+    plt.annotate(label, (x, y), fontsize=8, alpha=0.7)
+
+plt.title('Semantic Space of Nouns in Pride and Prejudice (Pre-trained Embeddings)')
+plt.xlabel('Component 1')
+plt.ylabel('Component 2')
+plt.show()
+```
+
+**What this shows**: Semantic neighborhoods from GloVe, not Austen-specific usage. Character names, family terms, and social concepts may cluster based on general semantic similarity, not narrative relationships.
+
+## Document-Level Analysis
+
+### Document Similarity
+
+spaCy can compute similarity between entire documents using averaged word vectors:
+
+```{python}
+# Load a few inaugural speeches
+import nltk
+nltk.download('inaugural', quiet=True)
+from nltk.corpus import inaugural
+
+# Get two speeches
+obama_2009 = nlp(inaugural.raw('2009-Obama.txt'))
+trump_2017 = nlp(inaugural.raw('2017-Trump.txt'))
+reagan_1981 = nlp(inaugural.raw('1981-Reagan.txt'))
+
+print(f"Obama 2009 ↔ Trump 2017: {obama_2009.similarity(trump_2017):.3f}")
+print(f"Obama 2009 ↔ Reagan 1981: {obama_2009.similarity(reagan_1981):.3f}")
+print(f"Trump 2017 ↔ Reagan 1981: {trump_2017.similarity(reagan_1981):.3f}")
+```
+
+**Interpretation**: Higher scores = more semantically similar vocabulary and themes. But similarity doesn't capture tone, political ideology, or rhetorical strategy—only word choice.
+
+### TF-IDF Vectorization
+
+For more nuanced document comparison, use TF-IDF (term frequency-inverse document frequency) to weight words by distinctiveness:
+
+```{python}
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# Prepare inaugural speeches from 20th century onward
+inaugural_files = [f for f in inaugural.fileids() if int(f[:4]) >= 1900]
+inaugural_texts = [inaugural.raw(f) for f in inaugural_files]
+inaugural_labels = [f[:-4] for f in inaugural_files]
+
+# Vectorize
+tfidf = TfidfVectorizer(stop_words='english', max_features=1000)
+tfidf_matrix = tfidf.fit_transform(inaugural_texts)
+
+# Reduce dimensions for visualization
+lsa = TruncatedSVD(n_components=2)
+doc_2d = lsa.fit_transform(tfidf_matrix.toarray())
+
+# Plot
+plt.figure(figsize=(12, 8))
+for i, label in enumerate(inaugural_labels):
+    x, y = doc_2d[i]
+    plt.scatter(x, y, s=100, alpha=0.6)
+    plt.annotate(label, (x, y), fontsize=8)
+
+plt.title('Inaugural Addresses Semantic Space (TF-IDF + LSA)')
+plt.xlabel('Component 1')
+plt.ylabel('Component 2')
+plt.show()
+```
+
+**Interpretation**: Documents that cluster together use similar distinctive vocabulary. Time periods, political parties, or thematic concerns might drive clustering.
+
+## Choosing the Right Tool for Your Question
+
+Not every research question requires the full spaCy pipeline. Here's how to decide which components you need:
+
+| Research Question | spaCy Features to Use | Why These Features? |
+|------------------|----------------------|---------------------|
+| Track character mentions across chapters | **NER** (entities) | Automatically identifies person names |
+| Compare sentence complexity over time | **Tokenization**, **sentence segmentation** | Measures syntactic structure |
+| Find verb-object patterns (e.g., "seek justice") | **Dependency parsing** | Reveals grammatical relationships |
+| Identify which texts discuss similar themes | **Word embeddings**, **TF-IDF** | Captures semantic similarity |
+| Analyze pronoun usage ("I" vs. "we" vs. "you") | **POS tagging** | Distinguishes grammatical categories |
+| Map place names in travel narratives | **NER** (GPE entities) | Extracts location references |
+| Measure lexical diversity | **Tokenization**, **lemmatization** | Counts unique word forms |
+| Compare dialogue vs. narration | **Custom sentence filtering** | Requires preprocessing choices |
+
+**General principle**: Start simple. Use basic tokenization and frequencies before moving to complex parsing. Add pipeline components only when they answer questions your current tools can't.
+
+## When to Use NLP Pipelines
+
+::: {.callout-tip}
+## Well-Suited Research Questions
+
+- **Syntactic analysis**: Comparing sentence structures, finding grammatical patterns
+- **Entity extraction**: Tracking characters, places, organizations across texts
+- **Dependency-based collocations**: Finding verb-object pairs, adjective-noun pairs
+- **Stylometric comparison**: Sentence length, POS distributions, lexical diversity
+- **Large-scale processing**: Annotating thousands of texts consistently
+:::
+
+::: {.callout-warning}
+## Limitations and Alternatives
+
+**When pipelines struggle**:
+
+- **Historical texts**: Pre-1900 English differs enough to cause POS and NER errors
+- **Creative language**: Poetry, experimental fiction, and non-standard syntax confuse parsers
+- **Domain-specific terminology**: Medical, legal, technical texts need specialized models
+- **Word sense disambiguation**: Fixed embeddings can't distinguish polysemy
+
+**Alternative approaches**:
+
+- **Manual annotation**: For small corpora, human coding may be more accurate
+- **Rule-based extraction**: Regular expressions for highly structured patterns
+- **Custom model training**: Train spaCy on domain-specific data
+- **Contextual embeddings**: Use transformer models (BERT, GPT) for sense-aware vectors
+:::
+
+## Common Pitfalls
+
+**1. Trusting NER blindly**
+
+Always inspect entity extractions. NER models make systematic errors on non-standard text. A character named "England" in a fantasy novel might be tagged as `GPE` (place).
+
+**2. Ignoring preprocessing choices**
+
+Removing stage directions, character names, or chapter headings changes results. Document what you remove and why.
+
+**3. Conflating description with interpretation**
+
+Finding that "Darcy" co-occurs with "proud" is a fact. Claiming this reflects his character arc requires close reading of context.
+
+**4. Overinterpreting embeddings**
+
+Pre-trained vectors show general semantic neighborhoods, not text-specific meanings. Don't claim "love" and "marriage" are thematically linked in *Pride and Prejudice* based on GloVe similarity—check their actual collocational patterns.
+
+**5. Scalability assumptions**
+
+Processing one novel takes 30 seconds. Processing 10,000 novels takes hours or days. Plan compute resources accordingly.
+
+**6. Ignoring model limitations**
+
+spaCy is trained on modern web text. Apply to historical corpora with caution. Check accuracy on a sample before processing thousands of documents.
+
+## What to Do After Processing
+
+spaCy extracts features—what you do with them depends on your discipline and research questions.
+
+### Connect to Literary Analysis
+
+**Character networks**: Use dependency parsing to extract character-verb relationships, then analyze who performs which actions. Does agency correlate with narrative arc?
+
+**Narrative structure**: Plot word distributions across text positions (Mini Lab 8's narrative time analysis). Do clusters reveal plot structure?
+
+**Focalization**: Track whose perspective dominates via subject-verb patterns. Whose verbs of perception ("saw," "heard," "felt") appear most?
+
+### Connect to Linguistic Analysis
+
+**Register variation**: Compare POS distributions between dialogue and narration. Do characters speak differently than the narrator describes?
+
+**Diachronic change**: Process texts across decades. How do sentence lengths, pronoun ratios, or entity types shift?
+
+**Genre markers**: Use TF-IDF to identify distinctive vocabulary. What words characterize detective fiction vs. romance?
+
+### Connect to Distant Reading
+
+**Clustering**: Group documents by similarity (embeddings or TF-IDF). Do clusters align with known genres, time periods, or authors?
+
+**Outlier detection**: Which texts have unusual POS distributions, sentence lengths, or entity densities? What makes them anomalous?
+
+**Hypothesis generation**: Let computational patterns suggest close reading targets. Why does "pride" cluster early while "love" clusters late?
+
+### Methodological Triangulation
+
+1. **Start computational**: Use spaCy to find patterns across large corpora
+2. **Zoom to close reading**: Examine actual sentences where patterns appear
+3. **Contextualize historically**: Check if patterns align with known historical events, genre conventions, or authorial biography
+4. **Iterate**: Let close reading refine computational categories; let computation test interpretive hunches
+
+**Remember**: spaCy is infrastructure. The humanities questions—why does this pattern matter? what does it reveal about culture, power, or aesthetics?—require domain expertise, not just code.
+
+## Conclusion
+
+NLP pipelines transform raw text into structured, analyzable data. spaCy automates the boring parts (tokenization, POS tagging, parsing) so you can focus on the interesting parts (patterns, interpretations, arguments).
+
+**The workflow**:
+
+1. **Preprocess thoughtfully** (clean text, but document what you remove)
+2. **Process with pipelines** (let spaCy handle linguistic annotation)
+3. **Extract features** (tokens, entities, dependencies, embeddings)
+4. **Analyze patterns** (frequencies, distributions, relationships)
+5. **Interpret critically** (connect computational patterns to domain knowledge)
+6. **Validate qualitatively** (read actual examples, check errors)
+
+Remember: pipelines provide **infrastructure**, not **answers**. They standardize preprocessing and feature extraction. What you build on that foundation—whether stylometric comparison, character network analysis, or historical linguistic change—depends on your research questions and disciplinary expertise.
+
+::: {.callout-tip}
+## Connecting to Mini Lab 8
+
+[Mini Lab 8: All Things spaCy](../mini_labs/Mini_Lab_08_All_Things_spaCy.ipynb) provides extensive hands-on practice with all the techniques covered here, plus advanced examples like character-verb extraction, narrative time correlation matrices, and document clustering. The mini lab uses *Pride and Prejudice*, *Monty Python*, and the inaugural corpus to demonstrate practical workflows.
+
+**Attribution**: Mini Lab 8 is adapted from materials by Jonathan Reeve (Group for Experimental Methods in Humanities, Columbia University), shared under the MIT License.
+:::
+
+## See Also
+
+**spaCy Documentation**: [spacy.io](https://spacy.io) — Official guides, API reference, model documentation
+
+**Textacy**: A higher-level library built on spaCy for text analysis workflows, adding corpus management and feature extraction ([textacy.readthedocs.io](https://textacy.readthedocs.io))
+
+**Tutorial: NLP for Literary Text Analysis**: Jonathan Reeve's materials at [github.com/JonathanReeve/advanced-text-analysis-workshop-2017](https://github.com/JonathanReeve/advanced-text-analysis-workshop-2017)
+
+**Contextual Embeddings**: For sense-aware word vectors, explore Hugging Face's transformer models ([huggingface.co/models](https://huggingface.co/models))
+
+**Related Mini Labs**:
+- [Mini Lab 6: Collocations](../mini_labs/Mini_Lab_06_Collocations.ipynb) — Frequency-based word associations
+- [Mini Lab 9: Topic Modeling](../mini_labs/Mini_Lab_09_Topic_Modeling.ipynb) — Unsupervised theme discovery
+- [Mini Lab 10: Multidimensional Analysis](../mini_labs/Mini_Lab_10_MultidimensionalAnalysis.ipynb) — Register variation
+
+## Works Cited

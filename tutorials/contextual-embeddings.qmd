@@ -1,0 +1,736 @@
+---
+jupyter: python3
+---
+
+# Contextual Embeddings and Transformers
+
+<a target="_blank" href="https://colab.research.google.com/github/browndw/humanities_analytics/blob/main/mini_labs/Mini_Lab_11_Contextual_Embeddings.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
+```{python}
+#| echo: false
+#| message: false
+#| warning: false
+#| output: false
+
+# Import libraries and suppress warnings
+import polars as pl
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
+import warnings
+warnings.filterwarnings('ignore')
+
+# Load model with error handling for rendering
+try:
+    from sentence_transformers import SentenceTransformer
+    model = SentenceTransformer('all-MiniLM-L6-v2')
+except:
+    # Fallback if model download fails during rendering
+    model = None
+```
+
+## Introduction
+
+When you use ChatGPT, Claude, or other AI language models, you might wonder: *How does the AI "understand" what I'm asking?* The answer lies in **contextual embeddings**—the technology that allows modern language models to represent meaning as geometric relationships in high-dimensional space.
+
+This tutorial introduces contextual embeddings, explains how they differ from earlier methods (like word2vec from Mini Lab 9), and demonstrates practical applications for humanities research: semantic search, clustering by meaning, and tracking how word meanings shift across contexts.
+
+::: {.callout-tip}
+## Computational Requirements
+
+**Running locally**: This tutorial uses sentence-transformers, which downloads pre-trained models (~100-400 MB). First-time model download requires internet; subsequent runs are faster. The inaugural corpus examples run well on a standard laptop (8GB RAM).
+
+**Running on Colab**: Click the "Open in Colab" badge above to run this tutorial in Google Colab with free GPU access—faster encoding and no local installation needed.
+
+**Companion lab**: [Mini Lab 11: Contextual Embeddings](../mini_labs/Mini_Lab_11_Contextual_Embeddings.ipynb) provides hands-on exercises with the same concepts.
+:::
+
+### From Static to Contextual Representations
+
+**Static embeddings** (word2vec, GloVe) assign each word a single vector representation:
+
+- "bank" → `[0.45, -0.23, 0.89, ...]` (always the same 300 numbers)
+- Works well for **vocabulary analysis**: finding synonyms, semantic fields, analogies
+- Limitation: The word "bank" gets the **same vector** whether it appears in "river bank" or "bank account"
+
+**Contextual embeddings** (BERT, RoBERTa, sentence-transformers) compute **different vectors** for the same word depending on its surrounding context:
+
+- "I deposited money at the **bank**" → `[0.52, 0.18, -0.34, ...]` (finance-related)
+- "We sat by the river **bank**" → `[-0.12, 0.67, 0.41, ...]` (geography-related)
+
+This is achieved through the **attention mechanism**, which allows the model to examine all words in a sentence simultaneously and adjust each word's representation based on what's around it.
+
+::: {.callout-note}
+## Why "Transformers"?
+
+**Transformer** is the neural architecture that enables contextual embeddings. Introduced by Vaswani et al. (2017) in "Attention Is All You Need," transformers process sequences in parallel rather than one word at a time.
+
+**Key innovation**: The **self-attention mechanism** lets each word "attend to" every other word in the input, learning which words are most relevant for understanding it.
+
+Example: In "The bank by the river was steep," the model learns that "bank" should pay high attention to "river" and "steep" (not "money" or "account"), producing a geography-specific representation.
+:::
+
+### How This Powers Modern AI
+
+Large Language Models (LLMs) like GPT-4, Claude, and Gemini are all transformer-based systems trained on massive text corpora:
+
+**The process**:
+
+1. **Tokenization**: Split input into tokens (roughly words or word pieces)
+2. **Embedding**: Convert each token to an initial vector
+3. **Attention layers**: Multiple transformer layers refine representations by attending to context
+4. **Output**: Contextual embeddings that capture meaning in this specific sentence
+
+**What we're doing in this tutorial**:
+
+- Using **sentence-transformers**, which are BERT models fine-tuned for creating high-quality sentence/document embeddings
+- Applying these embeddings to research tasks: semantic similarity, search, clustering, word-sense analysis
+- Building intuition about how AI represents language geometrically
+
+::: {.callout-note}
+## Hugging Face: The AI Model Repository
+
+**Hugging Face** (<https://huggingface.co/>) is the primary platform for sharing, discovering, and using AI models. Think of it as "GitHub for machine learning models."
+
+**What it offers**:
+
+- **Model Hub**: 500,000+ pre-trained models (BERT, GPT, LLaMA, specialized domain models)
+- **Datasets**: Thousands of text corpora for training/testing
+- **Spaces**: Interactive demos to try models in your browser
+- **Transformers library**: Python tools to download and use any model with a few lines of code
+
+**For humanities researchers**: You can find models fine-tuned for specific tasks (sentiment analysis, named entity recognition, translation) or domains (historical texts, literary analysis, legal documents). All freely accessible and ready to use in Python.
+
+**Beyond embeddings**: While this lab focuses on document embeddings, Python provides powerful tools to interact with full LLMs—even running smaller models (Llama 3, Mistral, Phi) **locally on your computer** using libraries like `transformers`, `llama-cpp-python`, or `ollama`. This means you can analyze sensitive texts privately, experiment without API costs, or fine-tune models on your specific corpus. We don't cover this here, but understanding embeddings is the foundation for working with any transformer-based model.
+:::
+
+::: {.callout-important}
+## Why This Matters for Humanities Research
+
+**Beyond keyword search**: Traditional text analysis relies on exact word matches. If you search for "economic crisis," you only find texts containing those words—missing passages about "financial collapse," "market downturn," or "commercial distress."
+
+**Semantic understanding**: Contextual embeddings represent **meaning** not vocabulary. Documents about economic crises cluster together in high-dimensional space even if they use completely different words.
+
+**Applications**:
+
+- **Semantic search**: Find relevant passages across large archives without knowing exact terminology
+  - *Example*: Search thousands of 19th-century novels for "urban alienation" even when authors write about "metropolitan loneliness" or "city estrangement"
+- **Clustering by theme**: Group texts by what they're *about*, not which words they share
+  - *Example*: Discover that Civil War letters and Vietnam War letters cluster together despite different vocabulary, revealing transhistorical patterns in wartime communication
+- **Historical semantics**: Track how concepts like "freedom" or "democracy" shift meaning across time
+  - *Example*: Visualize how "democracy" meant different things to Founding Fathers (property-holding citizens) vs. Civil Rights movement (universal suffrage)
+- **Cross-corpus comparison**: Identify what different communities mean by the same term
+  - *Example*: Compare how "justice" is discussed in legal documents, activist manifestos, and philosophical texts—same word, different semantic neighborhoods
+- **Authorship and influence**: Detect which authors are semantically similar even when using different styles
+  - *Example*: Find that George Eliot and Henry James cluster together thematically (psychological realism) despite different sentence structures
+- **LLM literacy**: Understanding embeddings helps you use AI tools critically and effectively
+  - *Example*: Recognize that ChatGPT's "knowledge" is really proximity in embedding space—why it can answer some questions confidently and others with plausible-sounding nonsense
+
+This is computational reasoning for the humanities: using geometry (distances in vector space) to discover semantic patterns that close reading might miss in large corpora. **The goal isn't automation—it's augmentation**: finding patterns that generate new interpretive questions.
+:::
+
+## Understanding Contextual Embeddings
+
+### The Attention Mechanism
+
+The key to contextual embeddings is **self-attention**—each word's representation is influenced by every other word in the sentence.
+
+Let's demonstrate this with the word "power" in different contexts:
+
+```{python}
+# Load model
+model = SentenceTransformer('all-MiniLM-L6-v2')
+
+# Create sentences where "power" has different meanings
+sentences = [
+    "The government has the power to pass new laws.",  # political authority
+    "The power plant generates electricity for the city.",  # energy/electricity
+    "Her speech had the power to move the audience.",  # influence/effect
+    "The king wielded absolute power over his subjects.",  # political authority
+]
+
+# Get contextual embeddings
+embeddings = model.encode(sentences)
+
+# Compute similarities
+similarities = cosine_similarity(embeddings)
+
+# Display as DataFrame
+import polars as pl
+similarity_df = pl.DataFrame(similarities, schema=[f"S{i+1}" for i in range(len(sentences))])
+print("Cosine similarities between sentences:\n")
+print(similarity_df)
+```
+
+**What this shows**:
+
+- S1-S4 (both political authority) have moderate similarity (**0.29**)—same sense but different contexts
+- S3-S4 (rhetorical power ↔ political power) actually highest (**0.34**)—abstract power concepts overlap
+- S2 (electricity) is quite distinct from political uses: S1-S2 = **0.22**, S2-S4 = **0.07**
+- The model distinguishes "power plant" from "government power" based purely on surrounding words
+
+**Why this works**: Human language interpretation works the same way—we understand "power" by looking at surrounding words. Transformers formalize this intuition mathematically.
+
+### From Words to Documents
+
+Sentence-transformers extend this to **document-level embeddings**. Let's load the inaugural corpus and see this in action:
+
+```{python}
+# Load inaugural addresses
+url = "https://raw.githubusercontent.com/browndw/humanities_analytics/main/data/data_tables/inaugural.tsv"
+inaugural = pl.read_csv(url, separator="\t")
+
+print(f"Loaded {len(inaugural)} presidential speeches")
+print(f"Columns: {inaugural.columns}\n")
+
+# Show a few examples
+inaugural.select(['year', 'president']).head(5)
+```
+
+```{python}
+#| output: false
+
+# Encode all speeches (this takes ~30-60 seconds)
+# Suppressing output during rendering to save memory
+speech_embeddings = model.encode(inaugural['text'].to_list(), show_progress_bar=False)
+```
+
+```{python}
+print(f"Encoded {len(speech_embeddings)} speeches")
+print(f"Each speech → {speech_embeddings.shape[1]}-dimensional vector")
+```
+
+Now we can:
+
+- **Compare documents**: Cosine similarity between speech vectors
+- **Search semantically**: Find speeches most similar to a query concept
+- **Cluster by meaning**: Group speeches by thematic content
+- **Track evolution**: See how topics shift across time or communities
+
+::: {.callout-tip}
+## Dimensions and Model Size
+
+Different models produce different embedding dimensions:
+
+- **all-MiniLM-L6-v2**: 384 dimensions (fast, lightweight, good quality)
+- **all-mpnet-base-v2**: 768 dimensions (slower, higher quality)
+- **paraphrase-multilingual**: 768 dimensions (works across languages)
+
+**Tradeoff**: Higher dimensions capture more nuance but require more computation. For most humanities research, 384 dimensions provide excellent results.
+
+**Computational cost**: Encoding 1000 documents takes ~30-60 seconds on a laptop with all-MiniLM-L6-v2. This is dramatically faster than training your own word2vec model.
+:::
+
+## Research Applications
+
+### 1. Semantic Search
+
+**Problem**: You want to find texts about "economic recovery after crisis" in a historical corpus. Keyword search for "economic recovery" misses relevant passages using different vocabulary: "commercial resurgence," "financial rebound," "restoration of prosperity."
+
+**Solution**: Encode your query and all documents, then find highest cosine similarities.
+
+Let's search for speeches about economic crisis:
+
+```{python}
+def semantic_search(query, top_k=5):
+    """Find speeches most semantically similar to a query."""
+    # Encode the query
+    query_embedding = model.encode([query])[0].reshape(1, -1)
+    
+    # Compute similarities
+    similarities = cosine_similarity(query_embedding, speech_embeddings)[0]
+    
+    # Get top results
+    results = inaugural.with_columns([
+        pl.Series("similarity", similarities)
+    ]).sort("similarity", descending=True).head(top_k)
+    
+    return results.select(['year', 'president', 'similarity'])
+
+# Try a search
+print("Query: 'economic crisis and national recovery'\n")
+semantic_search("economic crisis and national recovery", top_k=5)
+```
+
+```{python}
+# Try another query
+print("Query: 'war and national defense'\n")
+semantic_search("war and national defense", top_k=5)
+```
+
+**Why it works**: The model learns that "recovery," "rebound," and "resurgence" occupy nearby regions in vector space because they appear in similar contexts. Your query vector sits in this semantic neighborhood, capturing conceptually related texts regardless of vocabulary.
+
+**Research use cases**:
+
+- Finding relevant passages in massive archives (millions of documents)
+- Cross-linguistic search (with multilingual models)
+- Discovering unexpected connections across discourses
+- Building custom search engines for specialized corpora
+
+::: {.callout-note}
+## Semantic Search vs. Topic Modeling
+
+**Topic modeling** (LDA, NMF) finds **word co-occurrence patterns**: documents sharing words like {economy, growth, market, trade} form a topic.
+
+**Semantic search** finds **meaning relationships**: documents about economic themes using entirely different vocabularies (19th-century "commercial prosperity" vs. modern "GDP growth").
+
+**When to use which**:
+
+- Topic modeling: Discover latent themes, understand vocabulary structure
+- Semantic search: Find specific concepts, cross-vocabulary retrieval
+- Both together: Topic modeling reveals corpus structure, semantic search finds examples
+:::
+
+### 2. Clustering by Semantic Content
+
+**Problem**: You have 60 presidential speeches spanning 236 years. Do they cluster by **historical era** (19th vs. 20th century) or by **theme** (wartime, economic crisis, unity)?
+
+**Solution**: Use embeddings as features for clustering algorithms.
+
+```{python}
+from sklearn.cluster import KMeans
+
+# Cluster speeches into 4 groups
+n_clusters = 4
+kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
+clusters = kmeans.fit_predict(speech_embeddings)
+
+# Add cluster labels to dataframe
+inaugural_clustered = inaugural.with_columns([
+    pl.Series("cluster", clusters)
+])
+
+# Show distribution
+print("Speeches per cluster:\n")
+print(inaugural_clustered.group_by('cluster').agg(pl.count()).sort('cluster'))
+```
+
+```{python}
+# Show samples from each cluster
+print("\nSample speeches from each cluster:\n")
+print("="*60)
+
+for cluster_id in range(n_clusters):
+    print(f"\nCluster {cluster_id}:")
+    sample = inaugural_clustered.filter(pl.col('cluster') == cluster_id).sample(n=min(3, len(inaugural_clustered.filter(pl.col('cluster') == cluster_id))))
+    for row in sample.to_dicts():
+        print(f"  {row['year']:4d} {row['president']}")
+```
+
+**What you find**: Examine the clusters. Do they correspond to historical periods, or do they cut across time based on themes? This reveals how rhetorical patterns persist or change.
+
+**Insight**: Speeches often cluster by **communicative function** not chronology. A 1941 wartime speech may resemble a 2001 wartime speech more than a 1945 peace speech.
+
+**Research implications**:
+
+- Challenges periodization assumptions (historical era ≠ rhetorical mode)
+- Reveals transhistorical patterns (certain situations evoke similar language)
+- Complements stylistic analysis (MDA finds *how* texts differ, embeddings find *what* they're about)
+
+::: {.callout-warning}
+## Interpreting Clusters
+
+Clustering results depend on:
+
+- Number of clusters (try 3-7 for interpretability)
+- Clustering algorithm (K-means, hierarchical, DBSCAN)
+- Preprocessing choices (which texts to include)
+
+**Best practice**: Treat clusters as **exploratory hypotheses**, not objective categories. Examine sample texts, validate with close reading, test alternative cluster numbers.
+:::
+
+### 3. Document Similarity
+
+Let's find which speeches are most similar to a specific speech:
+
+```{python}
+# Find speeches similar to most recent
+target_idx = len(inaugural) - 1
+target_speech = inaugural[target_idx]
+
+print(f"Finding speeches similar to: {target_speech['year'][0]} - {target_speech['president'][0]}\n")
+
+# Compute similarities
+target_embedding = speech_embeddings[target_idx].reshape(1, -1)
+similarities_to_target = cosine_similarity(target_embedding, speech_embeddings)[0]
+
+# Create results dataframe
+results = inaugural.with_columns([
+    pl.Series("similarity", similarities_to_target)
+]).sort("similarity", descending=True)
+
+print("Most similar speeches:\n")
+results.select(['year', 'president', 'similarity']).head(10)
+```
+
+**What this reveals**: The most similar speeches may come from completely different eras, showing that thematic content transcends historical period.
+
+**Historical semantics applications**:
+
+- Track how "democracy," "liberty," "rights" shift across constitutional debates
+- Compare how different social movements invoke the same concepts  
+- Identify when semantic change occurs (gradual drift vs. sudden shift)
+- Validate conceptual history arguments computationally
+
+::: {.callout-tip}
+## Computational Historical Semantics
+
+Traditional historical semantics relies on:
+
+- Close reading of key texts
+- Etymological dictionaries
+- Expert knowledge of historical context
+
+**Computational approach** (word-in-context embeddings) adds:
+
+- **Scale**: Analyze thousands of uses automatically
+- **Objectivity**: Find patterns without pre-existing hypotheses
+- **Visualization**: See semantic space geometrically
+- **Comparison**: Measure similarity quantitatively
+
+**Best results**: Combine both. Use embeddings to find patterns at scale, then validate with close reading and historical expertise.
+:::
+
+## Methodological Considerations
+
+### When to Use Contextual vs. Static Embeddings
+
+**Contextual embeddings (BERT, sentence-transformers)** excel at:
+
+- Document similarity and semantic search
+- Tasks requiring context-dependent meaning (word sense disambiguation)
+- Comparing texts across vocabularies (different time periods, discourses)
+- Building on pre-trained models (no need to train on your corpus)
+
+**Static embeddings (word2vec, GloVe)** are preferable for:
+
+- Vocabulary analysis (semantic fields, synonym detection)
+- Historical word embedding models (training on period-specific corpora)
+- Computational efficiency (smaller models, faster inference)
+- Interpretability (single vector per word is easier to inspect)
+
+**When to use both**:
+
+- Word2vec to map semantic fields → sentence-transformers to find documents expressing those concepts
+- Static embeddings for diachronic analysis (train on decade-specific corpora) → contextual for synchronic variation (how is "freedom" used differently in the same period)
+
+### Limitations and Biases
+
+**Pre-training data matters**: Sentence-transformers are trained on massive web corpora. This means:
+
+- **Bias**: Models inherit biases from training data (gender, race, political assumptions)
+- **Domain mismatch**: Web text ≠ historical documents. Models may not understand archaic vocabulary or specialized discourse
+- **Anglophone focus**: Most models are English-centric. Multilingual models exist but have lower quality
+
+**Example**: A model trained on 21st-century web text might misunderstand 18th-century uses of "virtue" (which had specific political connotations in republican discourse).
+
+::: {.callout-important}
+## Critical Use of Pre-trained Models
+
+**Question to always ask**: Is the model's training data appropriate for my research questions?
+
+**Strategies**:
+
+- Test model performance on sample texts from your corpus
+- Compare results to expert knowledge or close reading
+- Consider domain-specific models (e.g., BiomedBERT for medical texts)
+- Fine-tune on your corpus if you have labeled data
+- Acknowledge limitations in research write-ups
+
+**Remember**: Embeddings find patterns in *how the model was trained to represent language*, not objective semantic truth. Treat them as powerful exploratory tools, not oracles.
+:::
+
+### Interpreting Similarity Scores
+
+**Cosine similarity** ranges from -1 to 1 (in practice, usually 0 to 1 for sentence embeddings):
+
+- **0.9-1.0**: Nearly identical content (duplicates, paraphrases)
+- **0.7-0.9**: High semantic overlap (same topic, similar argument)
+- **0.5-0.7**: Moderate thematic relationship (related but distinct)
+- **0.3-0.5**: Weak connection (tangentially related)
+- **<0.3**: Unrelated or opposite
+
+**Context matters**: What counts as "similar" depends on your research question:
+
+- Comparing different editions of the same book: expect >0.9
+- Finding thematically related articles: 0.6-0.8 is strong
+- Cross-genre comparison: 0.4-0.6 might indicate meaningful connection
+- Historical comparison: 0.5 between 18th and 21st-century texts on "liberty" might be surprisingly high (semantic stability) or surprisingly low (conceptual shift)
+
+**Calibration**: Always examine sample pairs at different similarity levels to understand what scores mean in your corpus.
+
+**Humanities perspective**: Unlike quantitative sciences where statistical significance determines validity, humanities research values **interpretive significance**. A similarity score of 0.4 might reveal a fascinating connection worth exploring through close reading—the number is a prompt for interpretation, not a verdict.
+
+### Computational Costs and Scalability
+
+**Encoding time** (all-MiniLM-L6-v2 on a laptop):
+
+- 100 documents: ~5 seconds
+- 1,000 documents: ~30 seconds
+- 10,000 documents: ~5 minutes
+- 100,000 documents: ~50 minutes
+
+**Memory requirements**:
+
+- 10,000 documents × 384 dimensions × 4 bytes/float = ~15 MB
+- 100,000 documents = ~150 MB
+- 1 million documents = ~1.5 GB
+
+**Practical implications**:
+
+- Encode once, save embeddings, reuse for multiple analyses
+- Use batch encoding for efficiency
+- For truly massive corpora (millions of texts), consider approximate nearest neighbor libraries (FAISS, Annoy)
+
+## Connecting to Other Methods
+
+### Embeddings + Multi-Dimensional Analysis (MDA)
+
+**MDA** (Mini Lab 10) clusters texts by **stylistic features**: pronouns, passives, nominalizations, sentence length. It answers: *How do texts differ in style?*
+
+**Contextual embeddings** cluster by **semantic content**: themes, topics, arguments. They answer: *What are texts about?*
+
+**Combining both**:
+
+1. Use embeddings to identify thematically similar texts
+2. Apply MDA to see if they use similar or different styles
+3. **Example finding**: 19th and 21st century inaugural speeches about unity might share themes (high embedding similarity) but differ stylistically (different MDA profiles)
+
+**Insight**: Separates **what** is said from **how** it's said—crucial for understanding rhetorical choices.
+
+### Embeddings + Topic Modeling
+
+**Topic modeling** (Mini Lab 9) discovers **word co-occurrence patterns** (latent topics).
+
+**Contextual embeddings** find **semantic relationships** regardless of shared vocabulary.
+
+**Complementary uses**:
+
+- Topic modeling: "What topics structure this corpus?"
+- Embeddings: "For each topic, find examples using different vocabularies"
+- **Example**: Topic modeling finds {economy, growth, market, trade} topic. Embeddings find 19th-century speeches expressing economic themes with entirely different words {commerce, prosperity, manufacture}.
+
+### Embeddings + Keyness Analysis
+
+**Keyness** identifies words that distinguish one corpus from another (statistically overrepresented).
+
+**Embeddings** identify texts that are semantically similar despite different vocabulary.
+
+**Workflow**:
+
+1. Use keyness to find distinctive vocabulary (what makes Group A different from Group B)
+2. Use embeddings to find if Group A texts are semantically coherent (do they share themes?) or heterogeneous
+3. **Example**: Keyness shows female authors overuse "felt," "seemed," "thought." Embeddings reveal these words appear in narratives focused on interiority (not just random distribution).
+
+## Ethical and Critical Considerations
+
+### Understanding Model Biases
+
+Transformer models are trained on massive web corpora (Reddit, Wikipedia, news sites, books). This means they **encode the biases present in that data**:
+
+**Gender bias**: A model might embed "doctor" closer to "he" than "she" because of training data patterns, not reality.
+
+**Cultural bias**: Concepts like "family," "freedom," or "justice" are embedded based on dominant cultural perspectives in the training data (predominantly English-language, Western sources).
+
+**Historical anachronism**: Models trained on 21st-century text may misrepresent 18th-century concepts ("virtue" meant something specific in republican discourse that modern embeddings might miss).
+
+**For humanities researchers**:
+
+- Always ask: **Whose language is this model encoding?** Not universal truth, but patterns from specific corpora.
+- Validate computational findings with domain expertise and close reading
+- Consider whether your research questions require domain-specific models or careful interpretation of general-purpose models
+- Acknowledge limitations in your write-ups: "These embeddings capture how concepts relate *in contemporary web text*, not necessarily in historical discourse"
+
+### Privacy and Data Sovereignty
+
+When working with sensitive texts:
+
+- **Cloud APIs** (OpenAI, Anthropic) send your texts to their servers—inappropriate for unpublished manuscripts, confidential archives, or culturally sensitive materials
+- **Local models** (via Hugging Face transformers or Ollama) process everything on your computer—maintains privacy and data sovereignty
+- **Considerations**: Indigenous texts, unpublished correspondence, medical records, legal documents—all may require local processing
+
+### Interpretive Authority
+
+Embeddings are **tools for discovery**, not **arguments in themselves**:
+
+- A clustering result is a pattern worth investigating, not proof of a categorical distinction
+- Similarity scores suggest connections to explore through close reading
+- Computational patterns complement humanistic interpretation—they don't replace it
+
+**Best practice**: Frame results as **generative** ("this pattern raises questions about...") rather than **conclusive** ("this proves that...").
+
+## Practical Workflow
+
+### Step 1: Choose a Model
+
+Browse available models at [Sentence Transformers](https://www.sbert.net/docs/pretrained_models.html) or the [Hugging Face Model Hub](https://huggingface.co/models?library=sentence-transformers):
+
+**General-purpose** (start here for most humanities research):
+
+- `all-MiniLM-L6-v2`: 384 dimensions, fast, good for most tasks
+  - Best for: Getting started, exploratory analysis, large corpora (10,000+ documents)
+- `all-mpnet-base-v2`: 768 dimensions, higher quality, slower
+  - Best for: Final analysis, smaller corpora where quality matters more than speed
+
+**Specialized** (use when you have specific needs):
+
+- `paraphrase-multilingual-MiniLM-L12-v2`: Cross-lingual embeddings
+  - Best for: Comparing French novels to English translations, multilingual archives
+- `allenai-specter`: Scientific paper embeddings
+  - Best for: History of science, analyzing academic discourse
+- `msmarco-distilbert-base-v4`: Optimized for semantic search
+  - Best for: Building search engines for large text collections
+
+**For historical texts**: Be aware that models trained on modern web text may not capture historical vocabulary well. Consider fine-tuning (advanced) or accept that results require more validation.
+
+```python
+from sentence_transformers import SentenceTransformer
+
+# Load model (downloads automatically first time from Hugging Face)
+model = SentenceTransformer('all-MiniLM-L6-v2')
+```
+
+### Step 2: Encode Your Corpus
+
+```python
+# Prepare texts as list
+texts = df['text'].to_list()
+
+# Encode (shows progress bar)
+embeddings = model.encode(texts, show_progress_bar=True)
+
+# Save for reuse (avoid re-encoding)
+import numpy as np
+np.save('corpus_embeddings.npy', embeddings)
+
+# Later, load without re-encoding
+# embeddings = np.load('corpus_embeddings.npy')
+```
+
+**Why save embeddings**: Encoding is the slow step (~30-60 seconds for 1000 documents). Once encoded, you can run dozens of analyses (searches, clusterings, comparisons) in seconds by loading the saved embeddings.
+
+::: {.callout-note}
+## Visualization Considerations
+
+When reducing 384-dimensional embeddings to 2D for visualization (using UMAP or t-SNE):
+
+- **Information loss**: 2D projections necessarily lose information—clusters that appear close in 2D might be far apart in 384D
+- **Parameter sensitivity**: UMAP's `n_neighbors` and `min_dist` affect layout significantly
+- **Interpretation**: Use visualizations for **exploration** ("what patterns exist?"), validate with quantitative analysis (actual cosine similarities)
+- **Alternative**: For rigorous analysis, work in full 384D space and use metrics like silhouette score to evaluate clusters
+
+Visualizations are powerful for communication and hypothesis generation, but always verify patterns quantitatively.
+:::
+
+### Step 3: Analyze
+
+**Semantic search**:
+
+```python
+query_embedding = model.encode(["your search query"])[0]
+similarities = cosine_similarity(
+    query_embedding.reshape(1, -1), 
+    embeddings
+)[0]
+top_matches = np.argsort(similarities)[::-1][:10]
+```
+
+**Clustering**:
+
+```python
+from sklearn.cluster import KMeans
+
+kmeans = KMeans(n_clusters=5, random_state=42)
+clusters = kmeans.fit_predict(embeddings)
+```
+
+**Visualization**:
+
+```python
+from umap import UMAP
+import matplotlib.pyplot as plt
+
+reducer = UMAP(n_components=2, random_state=42)
+embeddings_2d = reducer.fit_transform(embeddings)
+
+plt.scatter(embeddings_2d[:, 0], embeddings_2d[:, 1], 
+           c=clusters, cmap='viridis', alpha=0.6)
+plt.show()
+```
+
+### Step 4: Interpret and Validate
+
+- **Examine cluster samples**: Read representative texts from each cluster
+- **Test edge cases**: Look at low-similarity pairs—why aren't they similar?
+- **Compare to metadata**: Do clusters align with genres, time periods, authors?
+- **Validate with close reading**: Do computational patterns hold up under careful reading?
+
+::: {.callout-tip}
+## Iterative Workflow
+
+Embedding analysis is rarely one-and-done:
+
+1. **Explore**: Run initial clustering, examine results
+2. **Refine**: Adjust preprocessing (filter short texts, combine chunks)
+3. **Test**: Try different cluster numbers, alternative models
+4. **Validate**: Compare to existing categories, close reading
+5. **Interpret**: Build argument connecting patterns to research questions
+
+**Expect surprises**: The best insights often come from unexpected patterns that challenge your initial hypotheses.
+:::
+
+## See Also
+
+### Foundational Papers
+
+- **Vaswani et al. (2017)**: "Attention Is All You Need" (introduced transformers)
+- **Devlin et al. (2019)**: "BERT: Pre-training of Deep Bidirectional Transformers" (BERT architecture)
+- **Reimers & Gurevych (2019)**: "Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks" (sentence-transformers)
+
+### Online Resources
+
+- **Sentence Transformers Documentation**: <https://www.sbert.net/>
+- **Hugging Face**: <https://huggingface.co/> (the primary platform for AI models and datasets)
+  - **Model Hub**: <https://huggingface.co/models> (browse 500,000+ models including specialized humanities models)
+  - **Datasets**: <https://huggingface.co/datasets> (thousands of text corpora)
+  - **Transformers Documentation**: <https://huggingface.co/docs/transformers> (library for using any model)
+- **Jay Alammar's Illustrated Transformer**: <https://jalammar.github.io/illustrated-transformer/> (visual explanation)
+- **UMAP Documentation**: <https://umap-learn.readthedocs.io/> (dimensionality reduction)
+- **Ollama**: <https://ollama.com/> (run LLMs locally on your computer—simple interface for Llama, Mistral, etc.)
+
+### Related Tutorials
+
+- **Mini Lab 11**: Contextual Embeddings (hands-on exercises with inaugural corpus—start here for interactive learning)
+- **Mini Lab 9**: Vector Models (word2vec, static embeddings)
+- **Mini Lab 10**: Multi-Dimensional Analysis (stylistic dimensions)
+- **Mini Lab 8**: spaCy Basics (NLP preprocessing for embeddings)
+
+**Relationship to Mini Lab 11**: This tutorial provides conceptual depth, methodological guidance, and connections to other methods. Mini Lab 11 offers hands-on exercises with code you can run and modify. Use both together: read this tutorial for understanding, then work through the lab for practice.
+
+### Methodological Readings
+
+- **Underwood (2015)**: "The Historical Significance of Textual Distances" (applying embeddings to literary history)
+- **Schmidt (2015)**: "Vector Space Models for the Digital Humanities" (overview of embedding methods)
+- **Garg et al. (2018)**: "Word Embeddings Quantify 100 Years of Gender and Ethnic Stereotypes" (bias in embeddings)
+- **Hamilton et al. (2016)**: "Diachronic Word Embeddings Reveal Statistical Laws of Semantic Change" (tracking meaning shifts)
+
+## Summary
+
+**Contextual embeddings** represent the foundation of modern AI language understanding. By computing context-specific vector representations, they enable:
+
+- **Semantic search**: Find meaning, not keywords
+- **Thematic clustering**: Group by content, not vocabulary
+- **Word-sense analysis**: Track how concepts shift across contexts
+- **LLM literacy**: Understand how ChatGPT "knows" language
+
+**Key insights**:
+
+1. **Context matters**: Same word in different contexts gets different representations
+2. **Geometry is meaning**: Semantic relationships = distances in high-dimensional space  
+3. **Pre-training enables transfer**: Models trained on web text work (mostly) on historical/literary corpora
+4. **Always validate**: Computational patterns are hypotheses, not facts
+
+**Next steps**: Apply these methods to your own research questions. What semantic patterns exist in your corpus that close reading might miss at scale? How do concepts evolve across your texts? What unexpected connections emerge from semantic clustering?
+
+The goal isn't to replace humanistic interpretation—it's to discover patterns that inspire new interpretative questions.

@@ -1,0 +1,620 @@
+# Collocations and N-grams
+
+<a target="_blank" href="https://colab.research.google.com/github/browndw/humanities_analytics/blob/main/mini_labs/Mini_Lab_06_Collocations.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
+```{python}
+#| echo: false
+#| message: false
+#| warning: false
+
+import docuscospacy as ds
+import polars as pl
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Load preprocessed data (model not needed since tokens already parsed)
+twilight_tokens = pl.read_parquet('https://github.com/browndw/humanities_analytics/raw/refs/heads/main/data/data_tables/ya_tokens.parquet')
+twilight_tokens = twilight_tokens.filter(pl.col("doc_id").str.contains("Twilight"))
+```
+
+## Introduction
+
+While frequency analysis tells us which words appear often, **collocations** reveal which words appear *together*. Collocation analysis identifies words that attract each other—lexical partnerships that shape meaning, construct genre conventions, and reveal stylistic patterns invisible to single-word analysis.
+
+::: {.callout-note}
+## Why Collocations Matter
+
+Consider "strong coffee" vs. "powerful coffee"—both adjectives mean roughly the same thing, but only one sounds natural. This is collocation: some word combinations occur far more often than chance would predict. Studying these patterns reveals:
+
+- **Semantic prosody**: Words carry emotional colorings from their frequent partners ("rancid" almost always modifies negative things)
+- **Register and genre**: Academic writing has different collocational patterns than fiction
+- **Character and narrative**: How a character is described through their collocates
+- **Formulaic language**: Phraseological patterns that structure discourse
+:::
+
+This tutorial covers:
+
+1. **Collocational analysis**: Finding words that co-occur within a span
+2. **Association measures**: Different ways to quantify word attraction (PMI, NPMI, t-score)
+3. **N-gram clusters**: Fixed multi-word sequences anchored by a node word
+4. **Computational reasoning**: Moving from collocational patterns to linguistic interpretation
+
+## Understanding Collocation
+
+### What Makes Words Collocate?
+
+Two words collocate when they appear together **more often than we'd expect by chance**. The key question is: given the frequency of word A and word B in a corpus, how often would they co-occur if placement were random? When the observed frequency exceeds this expected frequency, we have a collocation.
+
+**The fundamental insight**: Collocation is not about frequency alone—it's about **attraction**. "The" and "of" appear together frequently simply because they're both extremely common words. But "strong coffee" appears together more often than the individual frequencies of "strong" and "coffee" would predict. That's collocation.
+
+### Core Concepts
+
+**1. The Node Word**
+
+The **node word** is your target—the word you want to investigate. In the phrase "strong coffee," if we're studying "coffee," that's our node. Everything else is analyzed in relation to this anchor point.
+
+- Node selection drives your research question: "How is this concept described?" "What verbs does this character perform?"
+- Nodes can be single words ("love") or lemmas (grouping "love," "loves," "loved," "loving")
+- Choose nodes strategically: content words (nouns, verbs, adjectives) reveal more than function words
+
+**2. The Span or Window**
+
+The **span** (or **window**) defines how far from the node to look for collocates. A span of 4-4 means 4 words to the left and 4 to the right of the node.
+
+::: {.callout-note}
+## Why Does Window Size Matter?
+
+Different linguistic relationships require different windows:
+
+- **Narrow windows (1-2 words)**: Capture grammatical collocations
+  - Prepositions after verbs: "depend on," "arrive at"
+  - Adjective-noun pairs: "strong coffee," "heavy rain"
+  
+- **Medium windows (4-5 words)**: Capture semantic associations  
+  - Typical academic default
+  - Balances precision with context
+  
+- **Wide windows (8+ words)**: Capture thematic co-occurrence
+  - Words appearing in the same general context
+  - Risk including unrelated words
+:::
+
+The span creates a **virtual document** around each instance of your node word. If "coffee" appears 100 times in your corpus with a 4-4 span, you're analyzing 100 nine-word snippets (4 before + node + 4 after).
+
+**Note on directionality**: Most collocation tools (including `coll_table()`) treat left and right context symmetrically—a word 2 positions to the left counts the same as 2 positions to the right. This is usually appropriate for semantic associations, but grammatical relationships often show strong directional preferences. When direction matters (like verb-preposition pairs), use `clusters_by_token()` to specify exact positions.
+
+**3. Observed vs. Expected Frequency**
+
+This is the heart of collocation analysis. Consider:
+
+- Corpus size: 1 million words
+- "The" appears 70,000 times (7% of corpus)
+- "Coffee" appears 500 times (0.05% of corpus)
+- Span: 4-4 window = 9 words total
+
+**Expected co-occurrence**: If words were placed randomly, how often would "the" appear in coffee's window?
+
+- 500 instances of "coffee" × 9-word window = 4,500 word positions
+- 7% of words are "the" → we expect ~315 instances of "the" near "coffee"
+
+**Observed co-occurrence**: Count how many times "the" actually appears near "coffee" in your corpus.
+
+**Collocation occurs when**: Observed >> Expected (or Observed << Expected for negative collocation)
+
+::: {.callout-important}
+## The Frequency Trap
+
+A common mistake: assuming frequent co-occurrence means collocation.
+
+**Scenario**: In a novel, "he" appears 3,000 times and "the" appears 5,000 times. You find "he the" appearing 200 times together.
+
+- **Naive interpretation**: 200 is a lot! They must collocate.
+- **Correct interpretation**: Given their individual frequencies, we'd expect ~1,500 co-occurrences by chance. Actually appearing 200 times means they **avoid** each other—negative collocation!
+
+This is why we need association measures like MI or NPMI—they account for baseline frequency.
+:::
+
+**4. Association Strength vs. Frequency**
+
+**Association measures** (MI, NPMI, t-score, log-likelihood) quantify the strength of attraction between words, correcting for their individual frequencies.
+
+Two dimensions to consider:
+
+1. **Strength of association**: How reliably do these words co-occur? (MI/NPMI)
+2. **Frequency of co-occurrence**: How many times do we observe this pattern? (raw count)
+
+Both matter:
+
+- High MI + low frequency = strong but rare pairing (possibly idiosyncratic)
+- High MI + high frequency = robust, substantive collocation ✓
+- Low MI + high frequency = words appearing together by chance (both just common)
+
+**Components of collocation analysis:**
+
+- **Node word**: The target word you're interested in (your anchor point)
+- **Span/Window**: How many words to the left and right to search (commonly 4-4, 5-5, or 2-2)
+- **Collocate**: A word that appears within the span more often than expected by chance
+- **Association measure**: The statistic quantifying strength of attraction (MI, NPMI, etc.)
+- **Observed frequency**: Actual count of co-occurrences in your data
+- **Expected frequency**: Predicted count if words appeared independently
+
+### The Mathematics: Mutual Information
+
+The most common association measure is **Pointwise Mutual Information (PMI)**:
+
+$$
+\text{PMI} = \log_2 \frac{P(w_1, w_2)}{P(w_1) \times P(w_2)}
+$$
+
+Where:
+
+- $P(w_1, w_2)$ = observed probability of words appearing together in the span
+- $P(w_1)$ = probability of word 1 in the corpus  
+- $P(w_2)$ = probability of word 2 in the corpus
+
+**Intuition**: If two words appear together purely by chance, the fraction equals 1 and $\log_2(1) = 0$. Higher PMI means stronger attraction.
+
+**Worked Example:**
+
+Imagine a 10,000-word corpus with a 2-2 window (5 words total per span):
+
+- "coffee" appears 50 times (node word)
+- "strong" appears 40 times total in the corpus
+- "strong" appears 15 times in coffee's window (within 2 words before/after "coffee")
+
+**Step 1: Calculate probabilities**
+
+- $P(\text{strong}) = 40/10000 = 0.004$
+- 50 instances of "coffee" × 5-word window = 250 word positions in coffee's spans
+- $P(\text{strong, coffee}) = 15/250 = 0.06$
+
+**Step 2: Expected co-occurrence**
+
+If placement were random: $P(\text{strong}) \times P(\text{coffee's spans}) = 0.004 \times 250 = 1$ instance
+
+**Step 3: PMI calculation**
+
+$$\text{PMI} = \log_2 \frac{0.06}{0.004} = \log_2(15) = 3.9$$
+
+**Interpretation**: We observed "strong" near "coffee" **15 times more often** than chance would predict. That's a collocation!
+
+Compare this to a non-collocation:
+
+- "the" appears 700 times in the corpus  
+- "the" appears 8 times in coffee's window
+- Expected: $700/10000 \times 250 = 17.5$ times
+- Observed: 8 times
+- PMI = $\log_2(8/17.5) = -1.1$ (negative = avoidance!)
+
+**The problem**: PMI is biased toward rare words. Two words that appear together once each will have high PMI even though one co-occurrence isn't meaningful.
+
+**The solution**: Use **Normalized PMI (NPMI)**:
+
+$$
+\text{NPMI} = \frac{\text{PMI}}{-\log_2 P(w_1, w_2)}
+$$
+
+NPMI ranges from -1 (words never co-occur) to +1 (words always co-occur), making scores comparable across different frequency ranges. This normalization prevents rare words from dominating your results.
+
+::: {.callout-important}
+### Interpreting PMI: What You Need to Know
+
+**PMI is extremely sensitive to rare occurrences.** Even with NPMI normalization, two words that appear together just once or twice can show high association scores. This is mathematically correct (they *do* co-occur at a high rate relative to their individual frequencies), but may not be linguistically meaningful.
+
+**Two common approaches:**
+
+1. **Filter by minimum frequency thresholds**: Only analyze collocates that appear at least N times (e.g., 5 or 10). Some researchers find this practical and necessary; others argue it's arbitrary and may hide interesting rare phenomena.
+
+2. **Report both association strength AND raw frequency**: Present NPMI scores alongside co-occurrence counts so readers can judge for themselves.
+
+**Important limitations:**
+
+- **PMI has no p-value**: It's not a statistical hypothesis test. There's no significance level, no confidence interval. PMI quantifies association strength, not statistical reliability.
+
+- **Conventional threshold**: Many researchers use **PMI > 3** as a rule of thumb for "strong" collocations (meaning words co-occur 8× more than expected, since $2^3 = 8$). For NPMI, values above 0.2-0.3 often indicate meaningful association, but these are conventions, not statistical cutoffs.
+
+- **Alternative methods exist**: PMI treats words as discrete symbols. For semantic similarity and paradigmatic relations (words that could substitute for each other), consider **vector embeddings** with cosine similarity (see [Vector Models](vector-models.qmd)). Different questions require different tools.
+:::
+
+## Collocation Analysis with docuscospacy
+
+### Basic Workflow
+
+We'll analyze *Twilight* by Stephenie Meyer, exploring how different characters and concepts are described through their collocates.
+
+::: {.callout-tip}
+## Connecting to Mini Lab 6
+
+[Mini Lab 6: Collocations](../mini_labs/Mini_Lab_06_Collocations.ipynb) provides hands-on practice with these methods using Google Colab. The mini lab walks through uploading your own data, generating collocation tables, and exporting results for further analysis.
+:::
+
+**Load and prepare data:**
+
+```{python}
+# Already loaded at top
+twilight_tokens.head()
+```
+
+### Generating a Collocation Table
+
+The `coll_table()` function finds words that collocate with a node word:
+
+```{python}
+# Find collocates of "me" (narrator Bella)
+me_collocates = ds.coll_table(twilight_tokens, node_word='me')
+me_collocates.head(10)
+```
+
+**Understanding the output:**
+
+- `Token`: The collocating word
+- `Tag`: Part-of-speech tag
+- `Freq Span`: Times this word appears within the span around "me"
+- `Freq Total`: Total times this word appears in the corpus
+- `MI`: Normalized PMI score (default)
+
+### Filtering and Exploration
+
+Raw collocation tables are overwhelming. Strategic filtering reveals patterns:
+
+**Filter by part of speech—nouns near "me":**
+
+```{python}
+me_collocates.filter(pl.col("Tag").str.starts_with("NN")).head(10)
+```
+
+**Add frequency threshold to focus on substantive patterns:**
+
+```{python}
+me_collocates.filter(
+    pl.col("Tag").str.starts_with("NN"),
+    pl.col("Freq Total") > 10
+).head(10)
+```
+
+**Look at verbs (especially present participles -ing forms):**
+
+```{python}
+me_collocates.filter(
+    pl.col("Tag") == "VVG",
+    pl.col("Freq Total") > 5
+).head(10)
+```
+
+### Comparative Analysis
+
+Collocations become more revealing when compared across different node words:
+
+```{python}
+# Edward's collocates (love interest)
+edward_collocates = ds.coll_table(twilight_tokens, node_word='edward')
+
+# Nouns around Edward
+edward_collocates.filter(
+    pl.col("Tag").str.starts_with("NN"),
+    pl.col("Freq Total") > 10
+).head(10)
+```
+
+**What patterns emerge?**
+
+Compare the nouns around "me" vs. "edward"—do they reveal different narrative roles or descriptive patterns?
+
+## N-gram Clusters: Fixed Sequences
+
+While `coll_table()` finds any words within a span, `clusters_by_token()` identifies **fixed multi-word sequences** (n-grams) anchored by your node word in a specific position.
+
+### 2-grams with "me" in Final Position
+
+```{python}
+# Find patterns like "told me", "asked me"
+me_clusters_2gram = ds.clusters_by_token(twilight_tokens, "me", node_position=2, span=2)
+me_clusters_2gram.head(10)
+```
+
+**Interpreting cluster tables:**
+
+- `Token_1`, `Token_2`: The words in the n-gram
+- `Tag_1`, `Tag_2`: Part-of-speech tags for each position
+- `AF`: Absolute frequency (raw count)
+- `RF`: Relative frequency (per 100 tokens)
+- `Range`: Percentage of documents containing this cluster
+
+### Filtering Clusters by Pattern
+
+**Find verbs preceding "me":**
+
+```{python}
+me_clusters_2gram.filter(pl.col("Tag_1") == "VVG").head(10)
+```
+
+### 3-grams: Complex Patterns
+
+Longer n-grams capture more complex grammatical structures:
+
+```{python}
+# Find 3-word sequences with "he" in first position
+he_me_clusters = ds.clusters_by_token(twilight_tokens, "he", node_position=1, span=3)
+
+# Filter for those with "me" in third position
+he_me_clusters = he_me_clusters.filter(pl.col("Token_3") == "me")
+he_me_clusters.head(10)
+```
+
+**Comparing directional patterns:**
+
+```{python}
+# Now reverse: "I _ him" patterns
+i_him_clusters = ds.clusters_by_token(twilight_tokens, "I", node_position=1, span=3)
+i_him_clusters = i_him_clusters.filter(pl.col("Token_3") == "him")
+i_him_clusters.head(10)
+```
+
+## Computational Reasoning: From Patterns to Insights
+
+### Research Workflow
+
+Collocation analysis supports multiple research questions:
+
+**1. Semantic prosody and connotation**
+
+What emotional or evaluative tone do words carry through their collocates?
+
+- Search for a node word (e.g., "commit")
+- Examine noun collocates: what does it commit? (crimes, suicide, resources, time)
+- Conclusion: Different senses have different prosodies
+
+**2. Character construction**
+
+How are characters described through language patterns around their names?
+
+- Generate collocates for character names
+- Compare verb patterns: Who does what? Who has things done to them?
+- Conclusion: Collocational profiles reveal agency, power, relationships
+
+**3. Genre conventions**
+
+What phraseological patterns define a genre?
+
+- Find collocates of genre-specific terms
+- Compare across corpora (romance vs. thriller, academic vs. news)
+- Conclusion: Genres have distinctive collocational fingerprints
+
+**4. Diachronic change**
+
+How do word meanings shift through changing collocational patterns?
+
+- Track collocates of a word across time periods
+- Note which partners appear/disappear
+- Conclusion: Meaning is usage, and usage patterns change
+
+### Case Study: Narrative Agency in Twilight
+
+Let's explore power dynamics through pronoun-verb clusters:
+
+**Who does things? Who has things done to them?**
+
+```{python}
+# Actions Bella (I) performs toward Edward (him)
+i_verb_him = ds.clusters_by_token(twilight_tokens, "I", node_position=1, span=3)
+i_verb_him = i_verb_him.filter(pl.col("Token_3") == "him")
+
+# Top 5 "I [verb] him" patterns
+i_verb_him.head(5)
+```
+
+```{python}
+# Actions Edward (he) performs toward Bella (me)
+he_verb_me = ds.clusters_by_token(twilight_tokens, "he", node_position=1, span=3)
+he_verb_me = he_verb_me.filter(pl.col("Token_3") == "me")
+
+# Top 5 "he [verb] me" patterns
+he_verb_me.head(5)
+```
+
+**Questions to ask:**
+
+- Are the verbs symmetric? Or does one character primarily act while the other is acted upon?
+- What verbs appear? Active (push, pull) vs. perceptual (look, see) vs. communicative (tell, ask)?
+- What does this reveal about power, agency, or narrative focalization?
+
+**Interpreting the patterns**: If "I [verb] him" shows mostly perceptual verbs ("saw him," "watched him") while "he [verb] me" shows speech acts ("told me," "asked me"), this suggests asymmetric communicative roles—one character observes while the other directs discourse. This isn't just about frequency; it's about **what kinds of actions** each character performs, which can reveal narrative power structures even in a first-person narration.
+
+### Visualization: Comparing Collocational Profiles
+
+We can visualize differences between node words by comparing their top collocates:
+
+```{python}
+#| label: fig-collocate-comparison
+#| fig-cap: "Comparing noun collocates of 'me' vs. 'edward' (Freq Total > 15)"
+
+# Get top nouns for each
+me_nouns = (me_collocates
+    .filter(pl.col("Tag").str.starts_with("NN"), pl.col("Freq Total") > 15)
+    .sort("MI", descending=True)
+    .head(10))
+
+edward_nouns = (edward_collocates
+    .filter(pl.col("Tag").str.starts_with("NN"), pl.col("Freq Total") > 15)
+    .sort("MI", descending=True)
+    .head(10))
+
+# Create side-by-side bar charts
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+# Me collocates
+me_tokens = me_nouns.get_column("Token").to_list()
+me_mi = me_nouns.get_column("MI").to_list()
+ax1.barh(range(len(me_tokens)), me_mi, color='steelblue')
+ax1.set_yticks(range(len(me_tokens)))
+ax1.set_yticklabels(me_tokens)
+ax1.set_xlabel('NPMI Score', fontsize=11)
+ax1.set_title("Noun collocates of 'me'", fontsize=12, weight='bold')
+ax1.invert_yaxis()
+
+# Edward collocates  
+edward_tokens = edward_nouns.get_column("Token").to_list()
+edward_mi = edward_nouns.get_column("MI").to_list()
+ax2.barh(range(len(edward_tokens)), edward_mi, color='darkred')
+ax2.set_yticks(range(len(edward_tokens)))
+ax2.set_yticklabels(edward_tokens)
+ax2.set_xlabel('NPMI Score', fontsize=11)
+ax2.set_title("Noun collocates of 'edward'", fontsize=12, weight='bold')
+ax2.invert_yaxis()
+
+plt.tight_layout()
+plt.show()
+```
+
+## When to Use Collocation Analysis
+
+::: {.callout-important}
+## Well-Suited Research Questions
+
+Collocation analysis works best when you want to:
+
+- **Explore semantic prosody**: What connotations does a word carry?
+- **Study phraseology**: What are the formulaic patterns in a genre or register?
+- **Character analysis**: How are characters constructed through language around their names?
+- **Compare varieties**: How do different authors, genres, or time periods use the same word differently?
+- **Hypothesis generation**: Find unexpected patterns to investigate further
+
+:::
+
+::: {.callout-warning}
+## Limitations and Alternatives
+
+**When collocation analysis struggles:**
+
+- **Fixed phrases**: If you want exact sequences, use n-gram extraction (not collocation windows)
+- **Grammatical relations**: Collocation doesn't capture syntax—use dependency parsing instead
+- **Meaning disambiguation**: High-frequency words (like "get", "make") have many senses; collocates mix them all
+- **Directionality**: Basic collocation treats left and right context equally; sometimes direction matters
+
+**Alternative methods:**
+
+- Use `clusters_by_token()` for fixed n-grams
+- Use dependency parsing for grammatical relationships
+- Use keyword analysis (keyness) for comparing corpora
+- Use embeddings (word2vec) for semantic similarity beyond co-occurrence
+:::
+
+## Common Pitfalls
+
+**1. Ignoring frequency thresholds**
+
+A word appearing 3 times total can have a high MI score if 2 of those are near your node word. Always filter by `Freq Total` or `Freq Span` to ensure robustness.
+
+**2. Misinterpreting association measures**
+
+PMI/NPMI measures *strength of association*, not frequency. A collocate with NPMI = 0.8 but Freq Span = 2 is a strong but rare pairing. Consider both strength and frequency.
+
+**3. Assuming causality or meaning**
+
+Collocation shows co-occurrence patterns, not semantic relationships. "Doctor" and "patient" collocate not because they mean the same thing, but because they appear in related contexts. Interpretation requires close reading.
+
+**4. Over-relying on default spans**
+
+The 4-4 window is conventional, but not universal. Grammatical collocations (like verb-preposition pairs) might need 1-2 words; semantic associations might need 5-8. Experiment with span sizes.
+
+**5. Treating all collocates equally**
+
+Part-of-speech matters enormously. Nouns, verbs, adjectives, and function words reveal different patterns. Always filter by POS tags to focus analysis.
+
+**6. Forgetting about directionality**
+
+Some relationships are asymmetric. A word might appear frequently *before* your node but rarely *after*. Use position-specific n-grams when direction matters.
+
+## What to Do After Finding Collocations
+
+Collocations are a discovery tool, not an endpoint. Here's how to build on initial findings:
+
+### 1. Concordancing for Context
+
+Use KWIC (Key Words in Context) to see collocates in actual sentences:
+
+```{python}
+# See "told me" in context
+ds.kwic_center_node(twilight_tokens, "told me")
+```
+
+This grounds statistical patterns in readable text.
+
+### 2. Expand to Related Words
+
+If "told me" is frequent, check related verbs:
+
+```{python}
+# What other communication verbs appear with "me"?
+me_collocates.filter(
+    pl.col("Tag").str.contains("VV"),
+    pl.col("Token").str.contains("(tell|ask|say|whisper|murmur)")
+).head(10)
+```
+
+### 3. Compare Across Subcorpora
+
+If you have multiple books, authors, or time periods:
+
+- Generate collocates for each subcorpus separately
+- Compare: which collocates are shared? Which are distinctive?
+- Use keyness analysis to find subcorpus-specific collocates
+
+### 4. Network Analysis
+
+Collocations form networks—words that collocate with each other create clusters:
+
+- Node A collocates with B, B with C, C with A = semantic field
+- Map these networks to visualize lexical domains
+
+### 5. Qualitative Deep Dive
+
+Statistics show you *what* patterns exist. Close reading explains *why*:
+
+- Read passages containing key collocations
+- Consider narrative function, character development, thematic resonance
+- Connect computational patterns to literary interpretation
+
+## Conclusion
+
+Collocation analysis reveals the phraseological fabric of language—patterns that native speakers know implicitly but rarely articulate. By quantifying word attraction, we can:
+
+- **Make the invisible visible**: Surface patterns that operate below conscious awareness
+- **Scale interpretation**: Analyze thousands of instances that close reading alone couldn't cover
+- **Generate hypotheses**: Find unexpected patterns worth investigating qualitatively
+- **Compare systematically**: Contrast how different texts, authors, or time periods use the same words
+
+**The computational reasoning workflow**:
+
+1. **Identify the pattern** (high MI score, unusual collocates)
+2. **Examine the evidence** (check frequency thresholds, read concordances)
+3. **Ask why it matters** (connect to research question)
+4. **Contextualize** (compare across corpora, consider genre/register)
+5. **Interpret cautiously** (collocation shows attraction, not causation or meaning)
+
+Remember: statistical association is the starting point for investigation, not the conclusion. The goal isn't to reduce texts to numbers, but to use numbers to **ask better questions** about texts.
+
+- Make **implicit patterns explicit**
+- **Compare** texts, authors, genres, or time periods systematically  
+- **Generate hypotheses** about meaning, style, and usage
+- **Ground** interpretation in observable linguistic behavior
+
+The power of collocation analysis lies not in replacing close reading, but in directing it—showing you *where* to look more carefully in large corpora.
+
+::: {.callout-tip}
+## Connecting Concepts
+
+- **From keyness to collocations**: Keyness finds distinctive *words*; collocations find distinctive *word combinations*
+- **From collocations to n-grams**: Collocation windows capture associations; n-grams capture fixed sequences
+- **From collocations to embeddings**: Both measure word relationships, but embeddings (Tutorial 9) capture semantic similarity beyond direct co-occurrence
+:::
+
+## Further Reading
+
+For deeper exploration of collocation methods and interpretation:
+
+- Stubbs, M. (2001). *Words and Phrases: Corpus Studies of Lexical Semantics*. Oxford: Blackwell. [Classic treatment of semantic prosody]
+- Sinclair, J. (1991). *Corpus, Concordance, Collocation*. Oxford: Oxford University Press. [Foundational work on phraseology]
+- Gries, S. Th. (2013). "50-something years of work on collocations." *International Journal of Corpus Linguistics* 18(1): 137-166. [Survey of measures and methods]

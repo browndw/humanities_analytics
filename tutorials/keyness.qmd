@@ -1,0 +1,641 @@
+# Keyness
+
+<a target="_blank" href="https://colab.research.google.com/github/browndw/humanities_analytics/blob/main/mini_labs/Mini_Lab_04_Keywords.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
+## What is keyness?
+
+Keyness is a generic term for various statistical tests that compare observed vs. expected frequencies in text corpora.
+
+The most commonly used measure (though not the only option) is called **log-likelihood** in corpus linguistics, but you will see it elsewhere called a **G-test** of goodness-of-fit.
+
+The calculation is based on a 2 × 2 contingency table. It is similar to a chi-square test, but performs better when corpora are unequally sized—which is almost always the case in real research.
+
+::: callout-tip
+## Why Keyness Matters
+
+Keyness helps us answer a fundamental question in corpus linguistics: **What makes this corpus distinctive?**
+
+- **Comparing genres**: What words characterize academic writing vs. fiction?
+- **Author attribution**: What lexical choices distinguish Author A from Author B?
+- **Temporal change**: How has language use shifted over time?
+- **Register analysis**: What features mark formal vs. informal language?
+
+Keyness provides statistical evidence for claims like "academic writing uses more passive voice" or "this author prefers certain vocabulary."
+:::
+
+### The mathematics
+
+Expected frequencies are based on the relative size of each corpus (in total number of words N~i~) and the total number of observed frequencies:
+
+$$
+E_i = \sum_i O_i \times \frac{N_i}{\sum_i N_i}
+$$
+
+And log-likelihood is calculated according to the formula:
+
+$$
+LL = 2 \times \sum_i O_i \ln \frac{O_i}{E_i}
+$$
+
+A good explanation of its implementation in linguistics can be found here: <http://ucrel.lancs.ac.uk/llwizard.html>
+
+You don't need to worry about the math, but you should understand what is happening conceptually and what the results show:
+
+> Keyness measures the frequency we observe in a target corpus vs. what we would expect if our target corpus and our reference corpus were part of the same distribution. In other words: pool both corpora together and calculate expected frequencies based on overall proportions.
+
+Importantly, keyness measures **how much evidence we have for an effect**. It doesn't make much sense to claim, for example, that one token is "more key" than another based solely on LL values.
+
+## Prepare a corpus
+
+### Load the needed packages
+
+```{python}
+import docuscospacy.corpus_analysis as ds
+import polars as pl
+import spacy
+from great_tables import GT
+import matplotlib.pyplot as plt
+```
+
+### Load the corpus
+
+```{python}
+url = "https://github.com/browndw/humanities_analytics/raw/refs/heads/main/data/data_tables/sample_corpus.parquet"
+df = pl.read_parquet(url)
+```
+
+Let's peek at the data:
+
+```{python}
+#| code-fold: true
+
+df.head()
+```
+
+For this tutorial, it's useful to note what text categories are encoded in the `doc_id`:
+
+```{python}
+df.get_column("doc_id").str.extract(r"^([a-z]+)", 1).unique().sort().to_list()
+```
+
+### Process the corpus
+
+Load the spaCy model and process the corpus:
+
+```{python}
+nlp = spacy.load("en_docusco_spacy")
+ds_tokens = ds.docuscope_parse(df, nlp_model=nlp)
+```
+
+Check the result:
+
+```{python}
+#| code-fold: true
+
+ds_tokens.head()
+```
+
+## Corpus composition table
+
+It is conventional to report the composition of the corpus or corpora you are using for your study. Let's create a table showing texts and tokens by text type:
+
+```{python}
+corpus_comp = (
+    df
+    .with_columns(
+        pl.col("doc_id").str.extract(r"^([a-z]+)", 1).alias("text_type")
+    )
+    .group_by("text_type")
+    .agg([
+        pl.count().alias("Texts"),
+        pl.col("text").str.len_chars().sum().alias("Characters")
+    ])
+    .sort("text_type")
+)
+```
+
+Display as a formatted table:
+
+```{python}
+#| code-fold: true
+
+GT(corpus_comp)
+```
+
+This gives us context for interpreting keyness results—we know the relative sizes and composition of each text type.
+
+## Research workflow: From question to keyness
+
+Keyness analysis is not a fishing expedition—it should be guided by research questions. Here's a practical workflow:
+
+::: callout-tip
+## Computational Reasoning: The Keyness Workflow
+
+**1. Start with a research question**
+
+- ❌ Bad: "What are the keywords in my corpus?"
+- ✅ Good: "How does academic writing differ lexically from other registers?"
+- ✅ Good: "What linguistic features distinguish Author A from Author B?"
+
+**2. Choose your target and reference thoughtfully**
+
+- **Target**: The corpus you want to characterize (e.g., academic texts)
+- **Reference**: The baseline for comparison (e.g., all other text types)
+- **Critical question**: What claims can you make based on this comparison?
+
+**3. Decide on your unit of analysis**
+
+- Individual tokens (most common)
+- POS tags (grammatical patterns)
+- DocuScope categories (rhetorical patterns)
+- N-grams (multi-word expressions)
+
+**4. Set appropriate thresholds**
+
+- Larger corpora → stricter p-value thresholds (p < 0.001 instead of 0.05)
+- Consider both LL and LR when filtering
+- Check dispersion (Range) to avoid document-specific artifacts
+
+**5. Interpret results in context**
+
+- Don't just list keywords—explain what they reveal
+- Consider negative keywords (what's absent)
+- Connect to your research question
+- Look for patterns, not just individual words
+
+**6. Validate and iterate**
+
+- Do the keywords align with your domain knowledge?
+- Check concordances to see words in context
+- Refine your corpus boundaries if needed
+- Consider multiple comparisons to triangulate findings
+:::
+
+## Choosing target and reference corpora
+
+The first step in carrying out a keyness calculation is to decide what you're comparing to what. This choice has clear implications for what you can claim based on your results.
+
+What would it show, for example, to compare television and movie scripts to blogs? What's the research question? What do you hope to learn?
+
+Let's start by comparing the academic texts to the other text types. We'll use polars' `filter()` function. Note that the tilde (`~`) is a negator (so "does not contain"):
+
+```{python}
+target = ds_tokens.filter(pl.col("doc_id").str.contains("acad"))
+reference = ds_tokens.filter(~pl.col("doc_id").str.contains("acad"))
+```
+
+Check the results:
+
+```{python}
+#| code-fold: true
+
+target.head()
+```
+
+```{python}
+#| code-fold: true
+
+reference.head()
+```
+
+## Creating frequency tables
+
+The docuscospacy package has a function called `keyness_table()` that will calculate all of the statistical information we need.
+
+See here: <https://docuscospacy.readthedocs.io/en/latest/corpus_analysis.html#Keyword-tables>
+
+The function requires us to first create frequency tables for our target and our reference:
+
+```{python}
+wc_target = ds.frequency_table(target)
+wc_ref = ds.frequency_table(reference)
+```
+
+## Creating a keyness table
+
+Now we can generate our keyness table:
+
+```{python}
+kw = ds.keyness_table(wc_target, wc_ref)
+```
+
+Check the table:
+
+```{python}
+#| code-fold: true
+
+kw.head(20)
+```
+
+The columns are as follows:
+
+1. **Token**: the token
+2. **Tag**: the POS tag
+3. **LL**: the keyness value or [**log-likelihood**](http://ucrel.lancs.ac.uk/llwizard.html), also known as a G² or goodness-of-fit test
+4. **LR**: the effect size, which here is the [**log ratio**](http://cass.lancs.ac.uk/log-ratio-an-informal-introduction/)
+5. **PV**: the *p*-value associated with the log-likelihood
+6. **RF_Tar**: the relative frequency in the target corpus (per million words)
+7. **RF_Ref**: the relative frequency in the reference corpus (per million words)
+8. **AF_Tar**: the absolute frequency in the target corpus
+9. **AF_Ref**: the absolute frequency in the reference corpus
+10. **Range_Tar**: the percentage of texts in which the token appears in the target corpus
+11. **Range_Ref**: the percentage of texts in which the token appears in the reference corpus
+
+### Interpreting the results
+
+Looking at the top keywords for academic texts:
+
+- High **LL** values indicate strong statistical evidence that the word is more frequent than expected
+- Positive **LR** values show the word is overrepresented in the target (academic)
+- The **Range** columns show whether a word appears widely or is concentrated in a few texts
+
+## Comparing tags instead of tokens
+
+It can be useful sometimes to compare tags (parts-of-speech or DocuScope categories) instead of individual tokens. For that, the process is the same, but we create tables of tag frequencies:
+
+```{python}
+tag_tar = ds.tags_table(target, count_by='pos')  # by part-of-speech
+tag_ref = ds.tags_table(reference, count_by='pos')
+```
+
+And generate a keyness table by setting `tags_only=True`:
+
+```{python}
+kt_pos = ds.keyness_table(tag_tar, tag_ref, tags_only=True)
+```
+
+Check the result:
+
+```{python}
+#| code-fold: true
+
+kt_pos.head(10)
+```
+
+This shows which grammatical categories are key to academic writing (e.g., more nouns, fewer pronouns).
+
+We can do the same for DocuScope rhetorical categories:
+
+```{python}
+ds_tar = ds.tags_table(target, count_by='ds')
+ds_ref = ds.tags_table(reference, count_by='ds')
+kt_ds = ds.keyness_table(ds_tar, ds_ref, tags_only=True)
+```
+
+```{python}
+#| code-fold: true
+
+kt_ds.head(10)
+```
+
+## Effect size
+
+While the LL value produces one important piece of information (the amount of evidence we have for an effect), it neglects another (the magnitude of the effect). Whenever we report on significance it is **critical** to report **effect size**.
+
+Some common effect size measures include:
+
+* **%DIFF** - see Gabrielatos and Marchi (2011)
+* **Bayes Factor (BIC)** - see Wilson (2013)
+* **Effect Size for Log Likelihood (ELL)** - see Johnston et al. (2006)
+* **Relative Risk**
+* **Odds Ratio**
+* **Log Ratio** - see Andrew Hardie's CASS blog
+
+### Log Ratio (LR)
+
+The `keyness_table()` function returns [Hardie's Log Ratio](https://cass.lancs.ac.uk/log-ratio-an-informal-introduction/), which is easy and intuitive. It is simply the (base 2) logarithm of the ratio of relative frequencies:
+
+- **LR = 1**: Token is 2× more frequent in target than reference
+- **LR = 2**: Token is 4× more frequent in target
+- **LR = 3**: Token is 8× more frequent in target
+- **LR = -1**: Token is 2× more frequent in reference than target
+
+This makes it straightforward to interpret the practical significance of keyness results.
+
+::: callout-note
+## Example Interpretation
+
+If a word has:
+- **LL = 150** (very high statistical significance)
+- **LR = 0.5** (only 1.4× more frequent)
+
+We have strong *evidence* for a difference, but the *magnitude* is modest. Both pieces of information matter.
+:::
+
+## P-values and statistical significance
+
+It is important to interpret and report *p*-values correctly. A p-value represents a threshold (conventionally 0.05, 0.01, or 0.001) at which we can claim a difference is statistically significant.
+
+The threshold we choose is largely dependent on the size of our corpora. With a corpus of many millions of words, at a *p*-value < 0.05, an enormous quantity of tokens would reach significance.
+
+::: callout-warning
+## Interpreting P-values
+
+- **p < 0.05**: Significant (but with large corpora, may be trivial differences)
+- **p < 0.01**: More stringent threshold (recommended for larger corpora)
+- **p < 0.001**: Very stringent (for very large corpora)
+
+Note that the default threshold in the `keyness_table()` function is `threshold=0.01`. In other words, it returns only values below that threshold.
+
+Avoid phrases like "marginally significant" or "approaching significance"—statistical significance is a threshold, not a continuum.
+:::
+
+## Visualizing keyness
+
+To understand the relationship between statistical significance and effect size, let's examine specific examples that illustrate different scenarios.
+
+### Finding representative examples
+
+We'll select tokens that represent different combinations of LL (statistical significance) and LR (effect size):
+
+```{python}
+# Find examples of different keyness patterns
+# High LL, High LR: truly distinctive keywords
+high_high = kw.filter((pl.col("LL") > 50) & (pl.col("LR") > 2)).head(3)
+
+# High LL, Low LR: statistically significant but small effect
+high_low = kw.filter((pl.col("LL") > 20) & (pl.col("LR") < 1) & (pl.col("LR") > 0)).head(3)
+
+# Moderate LL, High LR: large effect with moderate evidence
+mod_high = kw.filter((pl.col("LL") > 10) & (pl.col("LL") < 30) & (pl.col("LR") > 3)).head(3)
+
+# Combine for visualization
+examples = pl.concat([high_high, high_low, mod_high])
+```
+
+Let's look at these examples:
+
+```{python}
+#| code-fold: true
+
+examples.select(["Token", "LL", "LR", "PV"]).head(10)
+```
+
+### Visualizing the patterns
+
+Now we'll create side-by-side bar plots to show both LL and LR for these examples:
+
+```{python}
+#| code-fold: true
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+# Get tokens and values
+tokens = examples["Token"].to_list()
+ll_values = examples["LL"].to_list()
+lr_values = examples["LR"].to_list()
+
+# Plot 1: Log-Likelihood (Statistical Significance)
+colors_ll = ['darkgreen' if ll > 50 else 'orange' if ll > 20 else 'steelblue' for ll in ll_values]
+ax1.barh(tokens, ll_values, color=colors_ll, alpha=0.7)
+ax1.axvline(x=10.83, color='red', linestyle='--', linewidth=1, alpha=0.5, label='p < 0.001')
+ax1.axvline(x=6.63, color='orange', linestyle='--', linewidth=1, alpha=0.5, label='p < 0.01')
+ax1.set_xlabel('Log-Likelihood (LL)', fontsize=11)
+ax1.set_title('Statistical Significance', fontsize=12, fontweight='bold')
+ax1.legend(fontsize=9)
+ax1.grid(axis='x', alpha=0.3)
+
+# Plot 2: Log Ratio (Effect Size)
+colors_lr = ['darkgreen' if lr > 2 else 'orange' if lr > 1 else 'steelblue' for lr in lr_values]
+ax2.barh(tokens, lr_values, color=colors_lr, alpha=0.7)
+ax2.axvline(x=1, color='gray', linestyle='--', linewidth=1, alpha=0.5, label='2× more frequent')
+ax2.axvline(x=2, color='orange', linestyle='--', linewidth=1, alpha=0.5, label='4× more frequent')
+ax2.axvline(x=3, color='red', linestyle='--', linewidth=1, alpha=0.5, label='8× more frequent')
+ax2.set_xlabel('Log Ratio (LR)', fontsize=11)
+ax2.set_title('Effect Size', fontsize=12, fontweight='bold')
+ax2.legend(fontsize=9)
+ax2.grid(axis='x', alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+::: callout-note
+## Interpreting the Patterns
+
+Looking at these examples side-by-side reveals important patterns:
+
+- **Dark green bars** (both plots): These tokens have *both* high statistical significance and large effect sizes. They are truly distinctive keywords—highly reliable evidence of a substantial difference.
+
+- **Orange bars** (LL high, LR moderate): These tokens are statistically significant but with more modest effect sizes. They're real differences, but not as dramatic as they might first appear from the LL value alone.
+
+- **Blue bars** (LL moderate, LR high): These tokens show large effect sizes but with less statistical certainty. This often happens with relatively rare words that nonetheless show strong preferences when they do appear.
+
+The key insight: **You need both panels to tell the full story.** Statistical significance alone (LL) doesn't tell you how big the effect is, and effect size alone (LR) doesn't tell you how certain we can be about it.
+:::
+
+### A practical example
+
+Let's examine one token in detail to see what these numbers actually mean:
+
+```{python}
+# Pick the first high LL, high LR example
+example_token = examples.head(1)
+example_token.select(["Token", "LL", "LR", "RF", "RF_Ref", "PV"])
+```
+
+```{python}
+#| echo: false
+
+# Extract values for interpretation
+token_name = example_token["Token"][0]
+ll_val = round(example_token["LL"][0], 2)
+lr_val = round(example_token["LR"][0], 2)
+rf_tar = round(example_token["RF"][0], 2)
+rf_ref = round(example_token["RF_Ref"][0], 2)
+ratio = round(2**lr_val, 1)
+```
+
+For the token "*`{python} token_name`*":
+
+- **LL = `{python} ll_val`**: Extremely strong statistical evidence (p < 0.001) that this is not due to chance
+- **LR = `{python} lr_val`**: The word appears approximately **`{python} ratio`× more frequently** in academic texts than in other text types
+- **Frequencies**: `{python} rf_tar` per million in academic vs. `{python} rf_ref` per million in reference
+
+This is a truly distinctive keyword—both statistically reliable and practically meaningful.
+
+## What to do after keyness analysis
+
+Identifying keywords is just the beginning. Here's how keyness connects to downstream analyses:
+
+### 1. Examine keywords in context
+
+High keyness doesn't tell you *how* a word is used. Next steps:
+
+```{python}
+# Example: Get top 5 keywords
+top_keywords = kw.head(5).select("Token").to_series().to_list()
+print("Top keywords to investigate:", top_keywords)
+```
+
+**Next:** Use concordancing to see these words in their original contexts. Do they cluster with certain topics? Are they used literally or metaphorically?
+
+### 2. Investigate collocations
+
+Keywords often reveal their significance through their company:
+
+- What words co-occur with your top keywords?
+- Are there distinctive multi-word expressions?
+- Do certain keywords cluster together thematically?
+
+**Example research question:** If "data" is a keyword in academic writing, what verbs commonly precede it? ("analyze data", "collect data", "interpret data")
+
+### 3. Build a feature set for classification
+
+Keywords can become features for machine learning:
+
+```{python}
+# Get keywords as a feature list
+keyword_features = kw.filter(pl.col("LR") > 1).select("Token").to_series().to_list()
+print(f"Found {len(keyword_features)} potential features for classification")
+```
+
+**Next:** Use these tokens as features to train a classifier that can automatically categorize new texts.
+
+### 4. Compare multiple subcorpora
+
+Move beyond binary comparisons:
+
+- Calculate keyness for each text type vs. all others
+- Create a "keyword profile" for each category
+- Identify words that are key to multiple categories (avoid these as distinguishing features)
+
+### 5. Validate with qualitative analysis
+
+Keyness is quantitative, but interpretation requires qualitative judgment:
+
+- Do the keywords align with your domain expertise?
+- Read sample texts from high-keyword documents
+- Consider what's *absent* (negative keywords)
+- Discuss findings with domain experts
+
+::: callout-tip
+## From Keywords to Insights
+
+Keyness analysis is most powerful when combined with other methods:
+
+1. **Keyness** → identifies distinctive tokens
+2. **Concordancing** → shows how those tokens are used
+3. **Collocation** → reveals meaningful phrases
+4. **Close reading** → interprets significance
+5. **Iteration** → refines corpus boundaries and research questions
+
+This iterative, multi-method approach is at the heart of corpus-assisted discourse analysis.
+:::
+
+## When to use keyness (and when not to)
+
+Keyness is powerful but not universally applicable. Here's a decision framework:
+
+::: callout-note
+## Decision Tree: Is Keyness Right for Your Question?
+
+**Keyness is WELL-SUITED for:**
+
+- ✅ **Comparing defined categories**: Academic vs. fiction, Author A vs. Author B
+- ✅ **Identifying distinctive features**: What makes this corpus unique?
+- ✅ **Exploratory analysis**: Getting a quick overview of differences
+- ✅ **Hypothesis generation**: Finding patterns to investigate further
+- ✅ **Register/genre analysis**: Characterizing text types
+
+**Keyness is POORLY-SUITED for:**
+
+- ❌ **Continuous variables**: Keyness requires categorical groupings (can't compare "degree of formality" directly)
+- ❌ **Temporal trends**: Use time series analysis instead, or bin time into discrete periods
+- ❌ **Nuanced semantic differences**: Keyness shows frequency, not meaning shifts
+- ❌ **Small corpora**: Insufficient statistical power (aim for 10,000+ words per subcorpus)
+- ❌ **Single-text analysis**: Need multiple texts for meaningful comparison
+
+**Consider ALTERNATIVES when:**
+
+- You want to understand **how** words are used (not just frequency) → Use concordancing and collocation analysis
+- You want to find **topics** or **semantic clusters** → Use topic modeling
+- You want to measure **similarity** between texts → Use distance metrics or cluster analysis
+- You want to track **change over time** → Use time series or diachronic analysis
+- You want to predict **categories** → Use classification algorithms
+:::
+
+## Common Pitfalls
+
+::: callout-warning
+## Watch Out For
+
+1. **Ignoring Effect Size**: High LL doesn't mean high importance. Always check LR to see the magnitude of difference.
+
+2. **Inappropriate Reference Corpus**: Comparing academic writing to fiction will give different results than comparing to all other text types pooled. Your reference corpus shapes your claims.
+
+3. **Multiple Comparisons**: If you run 100 keyness tests, you'll get ~5 "significant" results by chance at p < 0.05. Consider adjusting thresholds.
+
+4. **Corpus Size Imbalance**: While log-likelihood handles this better than chi-square, extreme size differences can still be problematic.
+
+5. **Interpreting Range**: A high-frequency, low-range token might be driven by just a few texts. Always check dispersion.
+
+6. **Conflating Keyness with Importance**: Keyness tells us what's statistically distinctive, not necessarily what's rhetorically, culturally, or theoretically important.
+:::
+
+### A cautionary example
+
+Consider this scenario:
+
+> A researcher compares 18th-century texts to 21st-century texts and finds that "hath" is a highly significant keyword (LL = 500, LR = 8). They conclude: "This proves that 18th-century authors were more concerned with possession and ownership."
+
+**What's wrong here?**
+
+- ❌ Confusing spelling/grammar changes with semantic concerns
+- ❌ Ignoring historical language change
+- ❌ Not checking concordances to see how "hath" is used
+- ❌ Assuming frequency = thematic importance
+
+**Better interpretation:**
+
+"Hath" is key because it's an archaic verb form, not because of semantic content. To study concerns with possession, we'd need to:
+
+1. Normalize for historical spelling differences
+2. Look at semantic fields related to ownership (property, possess, own, etc.)
+3. Examine syntactic patterns (who owns what?)
+4. Read texts closely to understand context
+
+This example illustrates why **computational methods inform interpretation but don't replace it**.
+
+## Discussion Questions
+
+1. **Target vs. Reference**: How does the choice of reference corpus shape the results and claims we can make? What would change if we compared academic texts to fiction vs. academic texts to news?
+
+2. **Statistical vs. Practical Significance**: Can you think of a scenario where a word might be statistically significant (high LL) but not practically important (low LR)? What about the reverse?
+
+3. **Negative Keywords**: We've focused on positive keywords (overrepresented in target). What might negative keywords (underrepresented in target) tell us about a corpus?
+
+4. **POS Tags vs. Tokens**: When would keyness analysis of POS tags be more useful than analysis of individual tokens? What different research questions might each approach answer?
+
+5. **Corpus Composition**: How might the internal composition of your target or reference corpus affect keyness results? What if your "academic" corpus includes both hard sciences and humanities?
+
+6. **Critical Reflection**: Keyness assumes that statistical distinctiveness equals meaningful difference. When might this assumption be problematic? What contextual factors might keyness measures miss?
+
+## Key Takeaways
+
+- **Keyness** measures the statistical significance of frequency differences between a target and reference corpus
+- **Log-likelihood (LL)** quantifies the strength of evidence for a difference
+- **Log ratio (LR)** quantifies the magnitude or effect size of a difference
+- **Both metrics are essential**: High LL without high LR indicates a statistically significant but small effect
+- **P-values** must be interpreted in context of corpus size; larger corpora require more stringent thresholds
+- **Choice of reference corpus** fundamentally shapes what claims you can make from keyness analysis
+- **Dispersion matters**: Check Range values to distinguish widespread keywords from concentrated ones
+
+## Further Reading
+
+- Gabrielatos, C., & Marchi, A. (2011). "Keyness: Matching metrics to definitions." *Proceedings of Corpus Linguistics*.
+- Hardie, A. (2014). "Log Ratio: An informal introduction." CASS Technical Paper.
+- Johnston, J. E., Berry, K. J., & Mielke, P. W. (2006). "Measures of effect size for chi-squared and likelihood-ratio goodness-of-fit tests." *Perceptual and Motor Skills* 103(2): 412-414.
+- Rayson, P., & Garside, R. (2000). "Comparing corpora using frequency profiling." *Proceedings of the Workshop on Comparing Corpora* (pp. 1-6).
+
+---
+
+::: callout-note
+## Ready to Practice?
+
+Head to [Mini Lab 04: Keywords](../mini_labs/Mini_Lab_04_Keywords.ipynb) to apply these concepts hands-on. You'll compare different text types, filter keyness tables, experiment with effect size thresholds, and explore both token and tag-level keyness.
+
+The mini lab includes experimentation prompts to help you develop intuitions about when and how to use keyness analysis effectively.
+:::

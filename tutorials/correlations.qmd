@@ -1,0 +1,887 @@
+---
+jupyter: python3
+---
+
+# Correlation and Multi-Collinearity
+
+## Introduction
+
+**Correlation** measures the strength and direction of the linear relationship between two variables. In text analysis, correlation helps us understand which linguistic features vary together—a fundamental question for understanding language use.
+
+**Why correlation matters for humanities research:**
+
+- **Feature relationships**: Do passives increase when nominalizations increase?
+- **Multi-collinearity detection**: Which features are redundant (measuring the same thing)?
+- **Dimension reduction**: Can we combine correlated features into composite variables?
+- **Assumption checking**: Many statistical models assume features are independent—are they?
+- **Theoretical insights**: Correlation patterns reveal functional groupings (features that serve similar communicative purposes)
+
+This tutorial introduces correlation analysis with special attention to **multi-collinearity**: when predictor variables are highly correlated with each other. We'll explore:
+
+1. **When multi-collinearity is a problem** (regression, classification models assume independence)
+2. **When multi-collinearity is useful** (factor analysis, PCA leverage it for dimension reduction)
+3. **How to detect and interpret correlation patterns** using linguistic features from the `pybiber` package
+
+## Core Concepts
+
+### What is Correlation?
+
+**Correlation coefficient** (Pearson's *r*) ranges from -1 to +1:
+
+- **r = +1**: Perfect positive relationship (as X increases, Y increases proportionally)
+- **r = 0**: No linear relationship
+- **r = -1**: Perfect negative relationship (as X increases, Y decreases proportionally)
+
+**Example**:
+
+- Positive correlation: **Nominalizations** and **attributive adjectives** (both increase in informational writing)
+- Negative correlation: **Personal pronouns** and **word length** (pronouns are short; informational writing uses long words)
+- No correlation: **Past tense** and **type-token ratio** (independent dimensions of variation)
+
+### Interpreting Correlation Strength
+
+**Conventional benchmarks** (Cohen, 1988):
+
+- **|r| < 0.3**: Weak correlation
+- **0.3 ≤ |r| < 0.5**: Moderate correlation  
+- **|r| ≥ 0.5**: Strong correlation
+
+**Context matters**: In social sciences, r = 0.3 might be meaningful. In physics, r = 0.9 might be insufficient. For linguistic features, correlations around 0.4-0.6 are common and theoretically important.
+
+::: {.callout-warning}
+## Correlation ≠ Causation
+
+Correlation measures **co-occurrence**, not **causation**. If passives and nominalizations correlate, it doesn't mean one causes the other—both may be responses to a third factor (e.g., genre constraints requiring informational density).
+:::
+
+### Types of Correlation
+
+**Pearson correlation** (parametric):
+- Measures **linear** relationships
+- Assumes normally distributed variables
+- Most common, what we'll use
+
+**Spearman correlation** (non-parametric):
+- Measures **monotonic** relationships (consistently increasing or decreasing, but not necessarily linear)
+- Based on ranks, not raw values
+- Better for non-normal distributions or ordinal data
+
+**Kendall's tau** (non-parametric):
+- Also rank-based
+- More robust to outliers than Spearman
+- Better for small samples
+
+For most text analysis with count-based features (especially normalized frequencies), **Pearson correlation** is appropriate.
+
+## Multi-Collinearity Explained
+
+### What is Multi-Collinearity?
+
+**Multi-collinearity** occurs when predictor variables in a model are highly correlated with each other. This creates problems for some statistical procedures but enables others.
+
+**Example**: If we're predicting genre from linguistic features, and **nominalizations** (r = 0.85) and **prepositions** are highly correlated, they provide redundant information—both measure similar underlying dimension (informativeness).
+
+### When Multi-Collinearity is a Problem
+
+#### 1. Regression Models
+
+**Why it's problematic:**
+
+- **Unstable coefficients**: Small changes in data cause large changes in estimated effects
+- **Inflated standard errors**: Confidence intervals become unreliable
+- **Difficulty interpreting**: Can't tell which variable is "really" important
+- **Variance inflation**: Collinear variables "compete" to explain the same variance
+
+**Example**: If nominalizations and prepositions both predict academic writing (r = 0.85 with each other), their individual regression coefficients become unreliable. Adding or removing one changes the other's coefficient dramatically.
+
+**Diagnostic**: **Variance Inflation Factor (VIF)**:
+
+- VIF = 1 / (1 - R²) where R² is from regressing predictor X on all other predictors
+- VIF > 10 indicates severe multi-collinearity
+- VIF > 5 suggests caution
+
+**Solutions:**
+
+- Drop redundant variables (keep most theoretically important)
+- Combine correlated variables into composite scores
+- Use dimension reduction (PCA) to create orthogonal predictors
+- Use regularization (Ridge regression, Lasso) which penalizes large coefficients
+
+#### 2. Classification Models
+
+**Some algorithms struggle with multi-collinearity:**
+
+- **Logistic regression**: Same issues as linear regression (unstable coefficients, inflated SE)
+- **Linear Discriminant Analysis**: Assumes features are independent
+
+**Some algorithms handle it well:**
+
+- **Random Forest**: Tree-based methods are robust to multi-collinearity
+- **Naive Bayes**: Assumes independence but often works despite violations
+- **Neural networks**: Can learn despite multi-collinearity (but may be inefficient)
+
+**Practical impact**: Multi-collinearity often reduces interpretability more than predictive accuracy. A Random Forest might classify well despite correlated features, but you can't interpret feature importance reliably.
+
+### When Multi-Collinearity is Useful
+
+#### 1. Factor Analysis
+
+**Factor analysis** (used in Multi-Dimensional Analysis) **requires** correlations among variables:
+
+**Core principle**: If variables don't correlate, they can't reflect underlying latent factors.
+
+**Example**: 
+
+- **Observed variables**: First-person pronouns, present tense, contractions (all correlated r ≈ 0.5-0.7)
+- **Latent factor**: "Involved production" (personal interaction)
+
+Factor analysis identifies groups of correlated variables and represents them as latent dimensions. Without correlation, there's nothing to reduce.
+
+**Requirements**:
+
+- **Sufficient correlations**: Need some |r| > 0.3 among variables
+- **Not perfect correlations**: Avoid |r| > 0.9 (redundancy, not shared factor)
+- **Bartlett's test**: Tests if correlation matrix differs from identity matrix (p < 0.05 indicates adequate correlations)
+- **KMO (Kaiser-Meyer-Olkin)**: Measures sampling adequacy (> 0.6 acceptable, > 0.8 good)
+
+#### 2. Principal Component Analysis (PCA)
+
+**PCA** creates new variables (components) that are **linear combinations** of correlated original variables:
+
+**Example**:
+
+- **Component 1**: 0.8×nominalizations + 0.7×prepositions + 0.6×attributive_adjectives
+- This component captures shared variance (informational density)
+
+**Why correlation helps**: PCA maximizes variance explained by components. If variables don't correlate, each component captures variance from just one variable (inefficient).
+
+**Difference from factor analysis**:
+
+- **PCA**: Reduces dimensions by explaining total variance (data reduction)
+- **Factor Analysis**: Identifies latent factors explaining correlations (theory discovery)
+
+See [MDA tutorial](#sec-mda) for how this works with linguistic features.
+
+## Correlation Analysis with Pybiber Features
+
+Let's analyze correlations among **Biber's 67 lexicogrammatical features** using the Brown Corpus. These features capture functional linguistic categories that often correlate because they serve related communicative purposes.
+
+### Load and Prepare Data
+
+```{python}
+import polars as pl
+import numpy as np
+import pandas as pd
+import pybiber as pb
+import spacy
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy.stats import pearsonr
+import warnings
+warnings.filterwarnings('ignore')
+
+# Load Brown Corpus with genre labels
+brown_corpus = pl.read_parquet(
+    "https://github.com/browndw/humanities_analytics/raw/refs/heads/main/data/data_tables/brown_corpus.parquet"
+)
+
+# Select document IDs and texts
+bc = brown_corpus.select("doc_id", "text")
+
+# Load spaCy model (disable NER for speed)
+nlp = spacy.load("en_core_web_sm", disable=["ner"])
+
+# Parse corpus with spaCy (this takes ~30 seconds with n_process=4)
+print("Parsing corpus with spaCy...")
+df_spacy = pb.spacy_parse(corp=bc, nlp_model=nlp, n_process=4)
+
+# Aggregate into 67 Biber feature categories
+print("Extracting Biber features...")
+dfm_biber = pb.biber(df_spacy)
+
+# Add genre labels from original corpus
+dfm_biber = dfm_biber.join(
+    brown_corpus.select("doc_id", "text_type"), 
+    on="doc_id"
+)
+
+print(f"Data shape: {dfm_biber.shape}")
+print(f"Number of features: {len([col for col in dfm_biber.columns if col.startswith('f_')])}")
+print("\nFirst few rows:")
+print(dfm_biber.head())
+```
+
+### Extract Feature Columns
+
+```{python}
+# Get all Biber feature columns (f_01, f_02, etc.)
+feature_cols = [col for col in dfm_biber.columns if col.startswith('f_')]
+
+print(f"Analyzing {len(feature_cols)} linguistic features")
+print(f"\nSample features:")
+for i, col in enumerate(feature_cols[:10], 1):
+    print(f"  {i}. {col}")
+```
+
+**Feature examples** (see [pybiber documentation](https://browndw.github.io/pybiber/feature-categories.html) for full list):
+
+- `f_01_past_tense`: Past tense verb forms
+- `f_02_perfect_aspect`: Perfect aspect (have/has + past participle)
+- `f_18_first_person_pronouns`: I, me, my, we, us, our
+- `f_19_second_person_pronouns`: you, your, yourself
+- `f_42_nominalizations`: -tion, -ment, -ness, -ity endings
+- `f_43_type_token`: Lexical diversity (MATTR)
+- `f_44_mean_word_length`: Average word length in characters
+
+### Compute Correlation Matrix
+
+```{python}
+# Extract features as numpy array and compute correlations
+features_array = dfm_biber.select(feature_cols).to_numpy().astype(np.float64)
+
+# Compute pairwise Pearson correlations using numpy
+correlation_matrix = np.corrcoef(features_array, rowvar=False)
+
+# Convert to pandas DataFrame for easier manipulation and visualization
+correlation_matrix = pd.DataFrame(
+    correlation_matrix,
+    index=feature_cols,
+    columns=feature_cols
+)
+
+print(f"Correlation matrix shape: {correlation_matrix.shape}")
+print(f"Total pairwise correlations: {correlation_matrix.shape[0] * (correlation_matrix.shape[0] - 1) // 2}")
+```
+
+### Visualize: Correlation Heatmap
+
+```{python}
+#| fig-cap: "Correlation matrix for Biber's 67 linguistic features. Red indicates positive correlation, blue indicates negative correlation. Patterns reveal functional groupings."
+#| label: fig-correlation-heatmap
+#| fig-width: 14
+#| fig-height: 12
+
+plt.figure(figsize=(14, 12))
+
+# Create heatmap
+sns.heatmap(
+    correlation_matrix,
+    cmap='RdBu_r',  # Red-blue diverging colormap
+    center=0,        # Center colormap at 0
+    vmin=-1,
+    vmax=1,
+    square=True,
+    linewidths=0.5,
+    cbar_kws={'label': 'Pearson r', 'shrink': 0.8}
+)
+
+plt.title('Correlation Matrix: Biber Features (Brown Corpus)', fontsize=16, pad=20)
+plt.xlabel('Linguistic Features', fontsize=12)
+plt.ylabel('Linguistic Features', fontsize=12)
+plt.xticks(rotation=90, fontsize=7)
+plt.yticks(rotation=0, fontsize=7)
+plt.tight_layout()
+plt.show()
+```
+
+**Reading the heatmap:**
+
+- **Dark red**: Strong positive correlation (features co-occur)
+- **Dark blue**: Strong negative correlation (features anti-correlate)
+- **White**: No correlation (independent variation)
+- **Clusters**: Blocks of similar colors indicate groups of related features
+
+### Identify Strongest Correlations
+
+```{python}
+# Extract upper triangle (avoid duplicates and diagonal)
+upper_tri = correlation_matrix.where(
+    np.triu(np.ones(correlation_matrix.shape), k=1).astype(bool)
+)
+
+# Convert to long format for sorting
+correlations_long = []
+for i in range(len(correlation_matrix.columns)):
+    for j in range(i+1, len(correlation_matrix.columns)):
+        correlations_long.append({
+            'feature_1': correlation_matrix.columns[i],
+            'feature_2': correlation_matrix.columns[j],
+            'correlation': correlation_matrix.iloc[i, j]
+        })
+
+corr_df = pd.DataFrame(correlations_long)
+
+# Sort by absolute correlation
+corr_df['abs_corr'] = corr_df['correlation'].abs()
+corr_df_sorted = corr_df.sort_values('abs_corr', ascending=False)
+
+print("Top 20 strongest correlations (positive and negative):\n")
+print(corr_df_sorted.head(20).to_string(index=False))
+```
+
+**Interpretation questions:**
+
+- Which features show strongest positive correlations? (Likely features from same functional category)
+- Which features show strongest negative correlations? (Likely features from opposing communicative modes)
+- Are there surprising pairs? (Features you wouldn't expect to correlate based on linguistic theory)
+
+### Examine Specific Correlation
+
+Let's examine one strong positive correlation in detail:
+
+```{python}
+# Example: Correlation between nominalizations and prepositions
+# (both typical of informational writing)
+
+feature_x = 'f_42_nominalizations'
+feature_y = 'f_35_total_prepositions'
+
+# Get correlation coefficient and p-value
+r, p = pearsonr(dfm_biber[feature_x].to_numpy(), dfm_biber[feature_y].to_numpy())
+
+print(f"\nCorrelation Analysis:")
+print(f"  Feature 1: {feature_x}")
+print(f"  Feature 2: {feature_y}")
+print(f"  Pearson r: {r:.3f}")
+print(f"  P-value: {p:.4f}")
+print(f"  Interpretation: {'Significant' if p < 0.05 else 'Not significant'}")
+print(f"  Strength: ", end="")
+if abs(r) < 0.3:
+    print("Weak")
+elif abs(r) < 0.5:
+    print("Moderate")
+else:
+    print("Strong")
+```
+
+### Visualize: Scatterplot
+
+```{python}
+#| fig-cap: "Scatterplot showing relationship between two correlated features. Each point is a document; trend line shows direction and strength of correlation."
+#| label: fig-correlation-scatter
+#| fig-width: 8
+#| fig-height: 6
+
+plt.figure(figsize=(8, 6))
+
+# Extract data as numpy arrays
+x_data = dfm_biber[feature_x].to_numpy()
+y_data = dfm_biber[feature_y].to_numpy()
+
+plt.scatter(
+    x_data,
+    y_data,
+    alpha=0.5,
+    s=30,
+    edgecolors='black',
+    linewidths=0.5
+)
+
+# Add trend line
+z = np.polyfit(x_data, y_data, 1)
+p = np.poly1d(z)
+x_line = np.linspace(x_data.min(), x_data.max(), 100)
+plt.plot(x_line, p(x_line), "r--", alpha=0.8, linewidth=2, label=f'Trend line (r={r:.3f})')
+
+plt.xlabel(feature_x.replace('_', ' ').title(), fontsize=12)
+plt.ylabel(feature_y.replace('_', ' ').title(), fontsize=12)
+plt.title(f'Correlation: {feature_x} vs {feature_y}', fontsize=14)
+plt.legend()
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+**Pattern recognition:**
+
+- Tight clustering around trend line → strong correlation
+- Wide spread → weak correlation
+- Upward slope → positive correlation
+- Downward slope → negative correlation
+
+## Detecting Multi-Collinearity
+
+### Correlation Threshold
+
+**Common rule**: Features with |r| > 0.7 or 0.8 are considered highly collinear.
+
+```{python}
+# Find pairs with |r| > 0.7
+high_collinearity = corr_df[corr_df['abs_corr'] > 0.7].sort_values('abs_corr', ascending=False)
+
+print(f"\nFeature pairs with |r| > 0.7 (high multi-collinearity):")
+print(f"  Count: {len(high_collinearity)} pairs\n")
+print(high_collinearity.head(15).to_string(index=False))
+```
+
+**Decision**: If building a regression model, consider:
+
+- Dropping one feature from each pair
+- Combining them into composite score (average or sum)
+- Using dimension reduction (PCA, factor analysis)
+
+### Variance Inflation Factor (VIF)
+
+**VIF** quantifies how much a predictor's variance is inflated by multi-collinearity:
+
+```{python}
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+
+# Compute VIF for each feature
+vif_data = pd.DataFrame()
+vif_data['Feature'] = feature_cols
+vif_data['VIF'] = [
+    variance_inflation_factor(features_df.values, i) 
+    for i in range(len(feature_cols))
+]
+
+vif_data = vif_data.sort_values('VIF', ascending=False)
+
+print("\nTop 20 features by VIF (highest multi-collinearity):\n")
+print(vif_data.head(20).to_string(index=False))
+
+print(f"\nSummary:")
+print(f"  Features with VIF > 10 (severe): {(vif_data['VIF'] > 10).sum()}")
+print(f"  Features with VIF > 5 (moderate): {(vif_data['VIF'] > 5).sum()}")
+print(f"  Features with VIF < 5 (acceptable): {(vif_data['VIF'] < 5).sum()}")
+```
+
+**Interpretation:**
+
+- **VIF = 1**: No multi-collinearity (feature independent of all others)
+- **VIF = 5**: Feature's variance inflated 5× by correlations with other features
+- **VIF = 10**: Severe multi-collinearity (80% of variance explained by other features: 1 - 1/10 = 0.9)
+
+**High VIF is expected** for linguistic features because they naturally cluster by function. This is a *problem* for regression interpretation but an *opportunity* for dimension reduction.
+
+## Multi-Collinearity and Dimension Reduction
+
+### Why Correlation Enables Factor Analysis
+
+**Factor analysis** (used in MDA) leverages multi-collinearity to discover latent dimensions:
+
+**Logic**:
+
+1. **Identify correlated clusters**: Features that correlate form functional groups
+2. **Extract latent factors**: Each cluster reflects an underlying dimension
+3. **Interpret factors**: Give communicative/functional label based on loadings
+
+**Example** (from [MDA tutorial](#sec-mda)):
+
+**Dimension 1: Involved vs. Informational Production**
+
+- **Positive loadings** (involved): first-person pronouns, contractions, present tense (correlated with each other)
+- **Negative loadings** (informational): nominalizations, prepositions, attributive adjectives (correlated with each other)
+
+These two clusters are **negatively correlated** with each other (involved features decrease when informational features increase), forming opposite poles of one dimension.
+
+### Correlation Matrix for Factor Analysis
+
+```{python}
+# Assess suitability for factor analysis
+
+# 1. Count correlations above threshold
+sufficient_corrs = (correlation_matrix.abs() > 0.3).sum().sum() - len(feature_cols)  # Subtract diagonal
+total_corrs = len(feature_cols) * (len(feature_cols) - 1)
+
+print("Factor Analysis Suitability:\n")
+print(f"  1. Sufficient correlations (|r| > 0.3): {sufficient_corrs}/{total_corrs} ({sufficient_corrs/total_corrs:.1%})")
+
+# 2. Check for perfect multi-collinearity (bad even for FA)
+perfect_corrs = ((correlation_matrix.abs() > 0.95) & (correlation_matrix.abs() < 1.0)).sum().sum() // 2
+print(f"  2. Perfect multi-collinearity (|r| > 0.95): {perfect_corrs} pairs (should be 0)")
+
+# 3. Bartlett's test of sphericity
+from factor_analyzer.factor_analyzer import calculate_bartlett_sphericity
+
+chi_square, p_value = calculate_bartlett_sphericity(features_df)
+print(f"  3. Bartlett's test: χ² = {chi_square:.1f}, p = {p_value:.4f}")
+print(f"     {'✓ Adequate correlations' if p_value < 0.05 else '✗ Insufficient correlations'}")
+
+# 4. KMO measure of sampling adequacy
+from factor_analyzer.factor_analyzer import calculate_kmo
+
+kmo_all, kmo_model = calculate_kmo(features_df)
+print(f"  4. KMO measure: {kmo_model:.3f}")
+if kmo_model >= 0.9:
+    print("     ✓ Excellent sampling adequacy")
+elif kmo_model >= 0.8:
+    print("     ✓ Good sampling adequacy")
+elif kmo_model >= 0.6:
+    print("     ✓ Adequate sampling adequacy")
+else:
+    print("     ✗ Poor sampling adequacy")
+```
+
+**Conclusion**: If Bartlett's test is significant (p < 0.05) and KMO > 0.6, the correlation matrix is suitable for factor analysis. This confirms that multi-collinearity exists and can be leveraged for dimension reduction.
+
+### Visualize: Correlation Network
+
+```{python}
+#| fig-cap: "Network visualization of feature correlations. Nodes are features; edges connect correlated pairs (|r| > 0.4). Clusters reveal functional groupings."
+#| label: fig-correlation-network
+#| fig-width: 12
+#| fig-height: 10
+
+import networkx as nx
+
+# Create network graph
+G = nx.Graph()
+
+# Add nodes (features)
+G.add_nodes_from(feature_cols)
+
+# Add edges for correlations above threshold
+threshold = 0.4
+for _, row in corr_df[corr_df['abs_corr'] > threshold].iterrows():
+    G.add_edge(row['feature_1'], row['feature_2'], weight=row['correlation'])
+
+# Layout
+pos = nx.spring_layout(G, k=0.5, iterations=50, seed=42)
+
+# Draw
+plt.figure(figsize=(12, 10))
+nx.draw_networkx_nodes(G, pos, node_size=100, node_color='lightblue', alpha=0.7)
+nx.draw_networkx_edges(G, pos, alpha=0.3, width=1)
+nx.draw_networkx_labels(G, pos, font_size=6)
+
+plt.title(f'Correlation Network (|r| > {threshold})', fontsize=16)
+plt.axis('off')
+plt.tight_layout()
+plt.show()
+
+print(f"\nNetwork statistics:")
+print(f"  Nodes (features): {G.number_of_nodes()}")
+print(f"  Edges (correlations > {threshold}): {G.number_of_edges()}")
+print(f"  Density: {nx.density(G):.3f}")
+```
+
+**Interpretation:**
+
+- **Dense clusters**: Groups of tightly correlated features (potential factors)
+- **Bridge nodes**: Features that connect multiple clusters
+- **Isolated nodes**: Features with few strong correlations (may not load on major factors)
+
+## Practical Applications
+
+### 1. Feature Selection for Classification
+
+**Problem**: You're building a classifier to distinguish academic from journalistic writing. You have 67 Biber features, but many are highly correlated.
+
+**Solution**:
+
+```{python}
+# Step 1: Identify redundant features (|r| > 0.8)
+redundant_pairs = corr_df[corr_df['abs_corr'] > 0.8].copy()
+
+# Step 2: For each pair, keep the feature with higher variance (more information)
+features_to_drop = set()
+
+for _, row in redundant_pairs.iterrows():
+    feat1, feat2 = row['feature_1'], row['feature_2']
+    
+    # Compare variances
+    var1 = dfm_biber[feat1].to_numpy().var()
+    var2 = dfm_biber[feat2].to_numpy().var()
+    
+    # Drop lower-variance feature
+    to_drop = feat1 if var1 < var2 else feat2
+    features_to_drop.add(to_drop)
+
+print(f"\nFeature Selection for Classification:")
+print(f"  Original features: {len(feature_cols)}")
+print(f"  Features to drop (redundant): {len(features_to_drop)}")
+print(f"  Retained features: {len(feature_cols) - len(features_to_drop)}")
+
+print(f"\nFeatures dropped:")
+for feat in sorted(features_to_drop)[:10]:
+    print(f"  - {feat}")
+if len(features_to_drop) > 10:
+    print(f"  ... and {len(features_to_drop) - 10} more")
+```
+
+**Alternative**: Use **PCA** to create orthogonal components (no multi-collinearity by design).
+
+### 2. Understanding Functional Groupings
+
+**Problem**: Which features co-occur to serve similar communicative functions?
+
+**Solution**: Examine high-correlation clusters:
+
+```{python}
+# Example: Find all features strongly correlated with first-person pronouns
+target_feature = 'f_18_first_person_pronouns'
+
+# Get correlations with target
+target_corrs = correlation_matrix[target_feature].drop(target_feature)
+target_corrs_sorted = target_corrs.abs().sort_values(ascending=False)
+
+print(f"\nFeatures most correlated with {target_feature}:\n")
+for feat, corr in target_corrs_sorted.head(10).items():
+    direction = "+" if correlation_matrix.loc[feat, target_feature] > 0 else "-"
+    print(f"  {direction} {feat}: r = {correlation_matrix.loc[feat, target_feature]:.3f}")
+```
+
+**Interpretation**: Features that correlate with first-person pronouns likely characterize **involved, personal discourse**. This clustering motivates the **Involved Production** dimension in MDA.
+
+### 3. Hypothesis Testing
+
+**Problem**: You hypothesize that nominalized writing (high nominalizations) uses more prepositions (due to complex noun phrases).
+
+**Solution**: Test correlation significance:
+
+```{python}
+# Test hypothesis
+feat_x = 'f_42_nominalizations'
+feat_y = 'f_35_total_prepositions'
+
+r, p = pearsonr(dfm_biber[feat_x].to_numpy(), dfm_biber[feat_y].to_numpy())
+
+print(f"\nHypothesis Test: Nominalizations ~ Prepositions")
+print(f"  H₀: No correlation (r = 0)")
+print(f"  H₁: Positive correlation (r > 0)")
+print(f"  Observed r: {r:.3f}")
+print(f"  P-value: {p:.6f}")
+print(f"  Result: {'Reject H₀' if p < 0.05 else 'Fail to reject H₀'}")
+print(f"  Conclusion: {'Significant positive correlation supports hypothesis' if (p < 0.05 and r > 0) else 'Hypothesis not supported'}")
+```
+
+### 4. Comparing Correlation Across Corpora
+
+**Problem**: Do feature correlations differ across registers?
+
+**Solution**: Compute separate correlation matrices for genres:
+
+```{python}
+# Assume we have genre labels
+# dfm_biber = dfm_biber.with_columns(pl.lit("genre_column").alias("text_type"))
+
+# Example: Compare academic vs. fiction
+# academic_features = dfm_biber.filter(pl.col('text_type') == 'learned').select(feature_cols).to_pandas()
+# fiction_features = dfm_biber.filter(pl.col('text_type') == 'fiction').select(feature_cols).to_pandas()
+
+# corr_academic = academic_features.corr()
+# corr_fiction = fiction_features.corr()
+
+# # Compare specific correlation
+# feat_pair = ('f_18_first_person_pronouns', 'f_01_past_tense')
+# r_academic = corr_academic.loc[feat_pair[0], feat_pair[1]]
+# r_fiction = corr_fiction.loc[feat_pair[0], feat_pair[1]]
+
+# print(f"Correlation: {feat_pair[0]} ~ {feat_pair[1]}")
+# print(f"  Academic: r = {r_academic:.3f}")
+# print(f"  Fiction: r = {r_fiction:.3f}")
+# print(f"  Difference: Δr = {abs(r_academic - r_fiction):.3f}")
+
+print("\n(Example code—requires genre-labeled data)")
+```
+
+**Interpretation**: Different correlations across genres suggest that features serve different functions in different contexts.
+
+## Methodological Considerations
+
+### 1. Sample Size
+
+**Correlation stability** depends on sample size:
+
+- **n < 30**: Correlations unstable, prone to sampling error
+- **n = 100**: Moderate stability, r ≈ 0.25 detectable
+- **n = 500**: Good stability, r ≈ 0.12 detectable
+- **n > 1000**: Excellent stability, small correlations detectable
+
+**Brown Corpus** (n ≈ 500) provides stable estimates for moderate-to-strong correlations.
+
+**Significance vs. meaningfulness**: With large n, even tiny correlations (r = 0.05) can be statistically significant but substantively meaningless.
+
+### 2. Outliers
+
+**Outliers** can distort correlations:
+
+- One extreme document can artificially inflate or deflate r
+- Check scatterplots visually
+- Consider robust alternatives (Spearman correlation)
+
+**Solution**: Examine influential points, consider removing or transforming extreme values.
+
+### 3. Linearity Assumption
+
+**Pearson correlation** assumes linear relationships. If relationship is non-linear (curved), Pearson underestimates strength.
+
+**Check**: Examine scatterplots for curvature.
+
+**Solution**: Use Spearman (handles monotonic non-linear relationships) or transform variables (log, square root).
+
+### 4. Range Restriction
+
+**Problem**: If you only analyze academic writing (restricted range on informational features), correlations may be weaker than in full population.
+
+**Example**: In a corpus of only academic papers, nominalizations and prepositions may show weak correlation (both are consistently high). In a mixed corpus (academic + fiction), correlation is stronger.
+
+**Solution**: Ensure sufficient variation in both variables for meaningful correlation estimates.
+
+### 5. Shared Method Variance
+
+**Problem**: Features computed from same source (same linguistic annotation) may correlate due to measurement error, not true relationship.
+
+**Example**: If POS tagger makes systematic errors, features based on POS tags may show spurious correlations.
+
+**Solution**: Validate key findings with independent annotation or alternative feature extraction methods.
+
+## Connections to Other Methods
+
+### Correlation and Keyness
+
+**Keyness** identifies distinctive features between corpora. **Correlation** reveals which distinctive features co-occur.
+
+**Combined approach**:
+
+1. Use keyness to identify features distinguishing Genre A from Genre B
+2. Compute correlations among key features
+3. Discover functional groupings of distinctive features
+
+**Example**: Academic writing is key for nominalizations, passives, and attributive adjectives. Correlation analysis reveals these all correlate (r ≈ 0.5-0.7), forming an "informational production" dimension.
+
+### Correlation and Classification
+
+**Feature engineering**:
+
+1. Compute correlations among features
+2. Create composite features (sum/average of correlated features)
+3. Use composites as classifier inputs (reduces dimensionality, improves interpretability)
+
+**Example**: Instead of 10 correlated pronoun features, create one "pronoun density" composite.
+
+### Correlation and Embeddings
+
+**Contextual embeddings** (from transformers) capture semantic relationships implicitly. **Correlation** makes them explicit.
+
+**Workflow**:
+
+1. Extract embeddings for documents
+2. Compute pairwise document similarities (cosine)
+3. Check if similarity correlates with metadata (genre, time period)
+
+**Example**: Do documents with high embedding similarity also have similar first-person pronoun rates? If yes, embeddings capture "personal involvement" dimension.
+
+### Correlation and Time Series
+
+**Diachronic analysis**: Do feature correlations change over time?
+
+**Example**: In 19th-century texts, passives and nominalizations may correlate weakly (independent choices). In modern academic writing, they correlate strongly (package deal for informational style).
+
+**Interpretation**: Evolving correlations reveal changing functional relationships in language use.
+
+## Ethical Considerations
+
+### 1. Correlation Fishing
+
+**Risk**: Testing hundreds of correlations and reporting only significant ones ("p-hacking").
+
+**Problem**: With 67 features, there are 2,211 pairwise correlations. By chance, ~110 will be "significant" at p < 0.05 even if no true relationships exist.
+
+**Best practice**:
+
+- **Pre-register hypotheses**: Specify predicted correlations before analysis
+- **Bonferroni correction**: Adjust α = 0.05 / 2,211 ≈ 0.000023 for multiple comparisons
+- **Report all tests**: Show full correlation matrix, not cherry-picked results
+
+### 2. Spurious Correlations
+
+**Risk**: Interpreting meaningful relationships from coincidental patterns.
+
+**Example**: Number of Nicholas Cage films correlates with swimming pool drownings (r = 0.67)—clearly spurious.
+
+**In text analysis**: Two features may correlate in your corpus by chance (both happen to be common in Genre X) without reflecting functional relationship.
+
+**Best practice**:
+
+- **Theory first**: Only interpret correlations with plausible linguistic motivation
+- **Replicate**: Check if correlation holds in independent corpus
+- **Causal skepticism**: Remember correlation ≠ causation
+
+### 3. Ecological Fallacy
+
+**Risk**: Assuming document-level correlations apply to within-document variation.
+
+**Example**: Across documents, nominalizations and prepositions correlate (academic texts have more of both). Within a single document, they might not correlate (varied sentence structures).
+
+**Best practice**: Specify level of analysis (document, paragraph, sentence) and don't generalize across levels.
+
+### 4. Reification of Dimensions
+
+**Risk**: Treating statistically-derived dimensions (factors, PCs) as real psychological or linguistic entities.
+
+**Example**: "Dimension 1" from factor analysis is a mathematical construct explaining variance. Calling it "Involved Production" is an *interpretation*, not a discovery of natural category.
+
+**Best practice**:
+
+- Present dimensions as analytical tools, not ontological claims
+- Acknowledge alternative interpretations
+- Validate dimensions against external criteria (genre labels, expert judgments)
+
+## Summary
+
+**Correlation analysis** reveals relationships among variables:
+
+**Key concepts**:
+
+- **Pearson r**: Measures linear relationship strength (-1 to +1)
+- **Significance**: p-value tests if r differs from 0
+- **Strength**: |r| > 0.5 strong, 0.3-0.5 moderate, < 0.3 weak
+
+**Multi-collinearity**:
+
+- **Problem for regression/classification**: Unstable coefficients, inflated variance (VIF > 5-10)
+- **Opportunity for dimension reduction**: Factor analysis and PCA leverage correlations
+- **Detection**: Correlation matrix (|r| > 0.7), VIF (> 5)
+
+**Applications**:
+
+- **Feature selection**: Drop redundant features for classification
+- **Dimension reduction**: Identify correlated clusters for factor analysis (MDA)
+- **Theory development**: Discover functional groupings of linguistic features
+- **Hypothesis testing**: Test predicted relationships (e.g., nominalizations ~ prepositions)
+
+**Best practices**:
+
+1. **Visualize first**: Heatmaps, scatterplots reveal patterns
+2. **Consider context**: Strong correlation in one corpus may be weak in another
+3. **Check assumptions**: Linearity, outliers, sample size
+4. **Report transparently**: Full correlation matrix, not just significant pairs
+5. **Interpret cautiously**: Correlation ≠ causation; validate theoretically
+
+**Connections to MDA**:
+
+- Multi-collinearity among linguistic features is expected (functional groupings)
+- Factor analysis identifies latent dimensions from correlation patterns
+- See [MDA tutorial](#sec-mda) for how `pybiber` leverages correlation for dimension reduction
+
+**Next steps**: Apply correlation analysis to your data. Use it to inform feature selection (drop redundant features) or dimension reduction (identify correlated clusters for factor analysis). Combine with other methods (keyness, classification, MDA) for richer analysis.
+
+## Further Reading
+
+**Foundational:**
+
+- Cohen, J. (1988). *Statistical Power Analysis for the Behavioral Sciences* (2nd ed.). Routledge. (Correlation effect sizes)
+- Tabachnick, B. G., & Fidell, L. S. (2013). *Using Multivariate Statistics* (6th ed.). Pearson. (Chapter 4: Cleaning up your act—screening data, including multi-collinearity)
+
+**Multi-collinearity:**
+
+- Dormann, C. F., et al. (2013). Collinearity: A review of methods to deal with it and a simulation study evaluating their performance. *Ecography*, 36(1), 27-46. [DOI](https://doi.org/10.1111/j.1600-0587.2012.07348.x)
+- O'Brien, R. M. (2007). A caution regarding rules of thumb for variance inflation factors. *Quality & Quantity*, 41(5), 673-690. [DOI](https://doi.org/10.1007/s11135-006-9018-6)
+
+**Linguistic applications:**
+
+- Biber, D. (1988). *Variation Across Speech and Writing*. Cambridge University Press. (Chapters 3-4: Factor analysis of correlated linguistic features)
+- Gries, S. T. (2013). *Statistics for Linguistics with R* (2nd ed.). De Gruyter Mouton. (Chapter 5: Correlations)
+
+**Dimension reduction:**
+
+- Baayen, R. H. (2008). *Analyzing Linguistic Data: A Practical Introduction to Statistics Using R*. Cambridge University Press. (Chapter 6: PCA and factor analysis)
+- Jolliffe, I. T., & Cadima, J. (2016). Principal component analysis: A review and recent developments. *Philosophical Transactions of the Royal Society A*, 374(2065). [DOI](https://doi.org/10.1098/rsta.2015.0202)
+
+**Practical guides:**
+
+- Scikit-learn: [Feature Selection](https://scikit-learn.org/stable/modules/feature_selection.html)
+- Statsmodels: [Variance Inflation Factor](https://www.statsmodels.org/stable/generated/statsmodels.stats.outliers_influence.variance_inflation_factor.html)
+- Seaborn: [Visualizing Correlation Matrices](https://seaborn.pydata.org/examples/many_pairwise_correlations.html)

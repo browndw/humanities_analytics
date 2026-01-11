@@ -1,0 +1,325 @@
+# Distributions
+
+<a target="_blank" href="https://colab.research.google.com/github/browndw/humanities_analytics/blob/main/mini_labs/Mini_Lab_03_Frequencies.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
+## Prepare a corpus
+
+### Load the needed packages
+
+```{python}
+import polars as pl
+import matplotlib.pyplot as plt
+import numpy as np
+from great_tables import GT
+import docuscospacy.corpus_analysis as ds
+import spacy
+```
+
+### Load a corpus
+
+The repository comes with data sets for practice. The conventional way to format text data prior to processing is as a table with a column of document ids (which correspond to file names) and a column of texts.
+
+We'll load a sample corpus from a URL:
+
+```{python}
+url = "https://github.com/browndw/humanities_analytics/raw/refs/heads/main/data/data_tables/sample_corpus.parquet"
+sample_corpus = pl.read_parquet(url)
+```
+
+To peek at the data, we'll look at the first 100 characters in the "text" column:
+
+```{python}
+#| code-fold: true
+
+sample_corpus.with_columns(
+    pl.col("text").str.slice(0, 100)
+).head(10)
+```
+
+### Load the spaCy model
+
+We'll use the DocuScope-tagged spaCy model for tokenization and tagging:
+
+```{python}
+nlp = spacy.load("en_docusco_spacy")
+```
+
+And process the corpus:
+
+```{python}
+ds_tokens = ds.docuscope_parse(sample_corpus, nlp)
+```
+
+Check the result:
+
+```{python}
+#| code-fold: true
+
+ds_tokens.head()
+```
+
+## Document variables (Name your files systematically!)
+
+::: callout-important
+File names can encode important meta-data. In this case, the names include text-types, much like the [Corpus of Contemporary American English](https://www.english-corpora.org/coca/help/texts.asp).
+
+This is **extremely important**. When you build your own corpora, you want to purposefully and systematically name your files and organize your directories. This will save you time and effort later in your analysis.
+:::
+
+We can extract the meta-data from the file names using polars string operations. Notice how the `doc_id` values start with prefixes like "acad" or "fic". We can extract those:
+
+```{python}
+sample_corpus.select(
+    pl.col("doc_id").str.extract(r"^([a-z]+)", 1).alias("text_type")
+).unique()
+```
+
+This meta-data is already embedded in our tokens table via the `doc_id` column, so we can use it for grouping and filtering in our analyses.
+
+::: callout-tip
+## Why This Matters
+
+Frequency analysis is foundational to corpus linguistics and computational text analysis. Understanding word distributions helps us:
+
+- **Identify patterns**: What words characterize a text type or author?
+- **Make comparisons**: How does academic writing differ from fiction?
+- **Detect anomalies**: Are certain words unusually common or rare?
+- **Inform decisions**: Should we remove stopwords? Weight by frequency?
+
+But frequency alone can be misleading—a word might be common because it appears many times in one document, or because it appears once in every document. This is why we need **dispersion measures** alongside frequency counts.
+:::
+
+## Create a frequency table
+
+The `frequency_table()` function creates a comprehensive summary of token frequencies across our corpus:
+
+```{python}
+wc = ds.frequency_table(ds_tokens)
+```
+
+Check the result:
+
+```{python}
+#| code-fold: true
+
+wc.head(10)
+```
+
+The frequency table contains columns for:
+
+- `Token`: The word or token
+- `AF`: Absolute frequency (total count across all documents)
+- `RF`: Relative frequency (per million tokens)
+- `Range`: Number of documents containing the token
+- `DP`: Deviation of Proportions (dispersion measure)
+
+## Some properties of token frequencies
+
+Just glancing at the top of the frequency table, a couple of things are obvious. The first is that on their own, frequencies aren't obviously interpretable. The most frequent words in most English language corpora will look much like this one—dominated by function words like *the*, *of*, and *and*.
+
+### Zipf's Law
+
+Another fundamental property of word (or token) frequencies is called [Zipf's Law](https://en.wikipedia.org/wiki/Zipf%27s_law). To get a sense of what it is and its implications, let's create a simple plot.
+
+We'll add a row index (which we'll call `rank`) and take the first 250 rows:
+
+```{python}
+plot_df = wc.with_row_index("rank", offset=1).head(250)
+```
+
+And we can use matplotlib to create a simple scatter plot of rank vs. absolute frequency:
+
+```{python}
+#| code-fold: true
+
+x = plot_df.select("rank").to_numpy()
+y = plot_df.select("AF").to_numpy()
+
+plt.figure(figsize=(8, 5))
+plt.scatter(x, y, alpha=0.6)
+plt.xlabel('Token rank')
+plt.ylabel('Token frequency')
+plt.title("Zipf's Law")
+plt.tight_layout()
+plt.show()
+```
+
+The steep power-law curve you're seeing—where a small number of tokens account for the vast majority of occurrences—holds true for almost any corpus. This is **Zipf's Law**: the frequency of any word is inversely proportional to its rank in the frequency table. The most common word appears roughly twice as often as the second most common word, three times as often as the third most common word, and so on.
+
+::: callout-note
+## Why Zipf's Law Matters
+
+This distribution has profound implications for text analysis:
+
+1. **Common tokens dominate**: The top 100 words often account for 50%+ of all tokens
+2. **Long tail of rare words**: Most unique words appear only a few times
+3. **Statistical challenges**: Many standard statistical methods assume normal distributions, not power laws
+4. **Sampling concerns**: Even large corpora may have insufficient data for rare words
+
+Understanding this distribution helps us choose appropriate analysis methods and interpret results correctly.
+:::
+
+## Dispersions
+
+One fundamental question we might have when looking at token frequencies is: what is driving the frequency of a given token?
+
+For example, let's say we find that *raccoon* is particularly frequent in our data. Does that mean we have a particularly raccoon-heavy set of texts? Or is it that 1 or 2 texts are all about raccoons while the rest never mention them?
+
+For this reason, we might want to know how **dispersed** tokens are. One simple way to report this is to see what percentage of our texts a given token appears in.
+
+The limitation to this approach is that our corpus may not contain texts of equal length. If some are shorter than others, the opportunity for a token to appear will not be equal.
+
+Thus there are a variety of dispersion measures available. Some of these can be calculated using the `dispersions_table()` function. For this, we simply pass our original tokens object to the function:
+
+```{python}
+dt = ds.dispersions_table(ds_tokens)
+```
+
+Note that for some dispersion measures, the higher value means that the token is more dispersed:
+
+```{python}
+#| code-fold: true
+
+dt.head(10)
+```
+
+The most commonly used dispersion measure is **Deviation of Proportions (DP)**, which ranges from 0 to 1:
+
+- DP = 0: Token appears in perfectly equal proportions across all documents
+- DP = 1: Token appears in only one document
+- Higher DP = more uneven distribution
+
+Let's compare the DP values for a couple of tokens:
+
+```{python}
+dt.filter(pl.col("Token").is_in(["the", "data", "school"])).select(["Token", "DP"]).head(3)
+```
+
+Notice how *the* has very low DP (close to 0), meaning it's evenly distributed across documents—it's a true high-frequency word. Compare this to *data* or *school*, which may have higher DP values if they cluster in academic texts.
+
+::: callout-note
+## When Dispersion Matters
+
+Imagine comparing two corpora: one about climate science and one about cooking. The word *heat* might appear frequently in both. But in the climate corpus, it might appear in 90% of documents (high dispersion, DP ≈ 0.2), while in the cooking corpus it might appear in only 20% of documents (low dispersion, DP ≈ 0.7)—all the recipes for baking.
+
+This tells us something important: *heat* is a core term in climate discourse but a specialized term in cooking discourse. Frequency alone wouldn't reveal this distinction.
+:::
+
+## Create a document-feature matrix
+
+So far we've looked at individual token frequencies and dispersions. But many text analysis tasks require us to represent entire documents numerically—for clustering, classification, or statistical comparison. This is where **document-feature matrices** (DFMs) come in.
+
+A DFM converts each document into a vector of numbers, where each column represents a feature (like a word or tag) and each cell contains a count. This representation enables mathematical operations on texts.
+
+With our tokens object we can create a DFM using the `tags_dtm()` function. In this case, our features are POS (part-of-speech) tags rather than individual tokens. Each cell contains a count of how many times that tag appears in that document:
+
+```{python}
+dfm = ds.tags_dtm(ds_tokens)
+```
+
+Check the result:
+
+```{python}
+#| code-fold: true
+
+dfm.head()
+```
+
+The DFM has a column for `doc_id` and then columns for every POS tag (NN1 = singular noun, JJ = adjective, etc.).
+
+### Using document-feature matrices
+
+We can use the DFM to calculate document-level statistics. For example, we can get the total word counts for each document by summing across all tag columns:
+
+```{python}
+#| code-fold: true
+
+# Get total word counts per document
+doc_totals = dfm.with_columns(
+    pl.sum_horizontal(pl.exclude("doc_id")).alias("total")
+).select("doc_id", "total")
+
+doc_totals.head(10)
+```
+
+### Aggregating by text type
+
+We can use the text-type information embedded in our `doc_id` values to compare totals across different kinds of texts:
+
+```{python}
+# Extract text type and calculate totals
+totals = (
+    doc_totals
+    .with_columns(
+        pl.col("doc_id").str.extract(r"^([a-z]+)", 1).alias("text_type")
+    )
+    .group_by("text_type")
+    .agg(pl.col("total").sum())
+    .sort("text_type")
+)
+```
+
+We can format this as a table using `great_tables`:
+
+```{python}
+#| code-fold: true
+
+GT(totals)
+```
+
+## Common Pitfalls
+
+::: callout-warning
+## Watch Out For
+
+1. **Rare Word Illusion**: High-frequency rare words may appear in only one or two documents. Always check dispersion alongside frequency.
+
+2. **Normalization Matters**: Comparing raw frequencies across corpora of different sizes is misleading. Always normalize (e.g., per million words).
+
+3. **Function Word Dominance**: The most frequent tokens are rarely the most interesting. Consider filtering or focusing on content words.
+
+4. **Text Length Variation**: If your corpus has documents of very different lengths, some analyses may be biased toward longer documents.
+
+5. **Case Sensitivity**: Remember that tokenization decisions (lowercase vs. mixed case) affect frequency counts. Be consistent and document your choices.
+:::
+
+## Discussion Questions
+
+1. **Interpreting Zipf's Law**: What does the power-law distribution of token frequencies suggest about language use? How might this pattern differ in specialized vs. general corpora?
+
+2. **Frequency vs. Importance**: The most frequent words are function words (articles, prepositions). What does this tell us about using frequency as a proxy for "importance"? When might frequency be misleading?
+
+3. **Dispersion and Interpretation**: Why might a moderately frequent word with high dispersion be more interesting than a high-frequency word with low dispersion? Think of examples from your research area.
+
+4. **Document Length Effects**: How might varying document lengths in your corpus affect frequency and dispersion measures? What steps could you take to account for this?
+
+5. **Beyond Single Tokens**: This tutorial focuses on individual word frequencies. What might we miss by not considering multi-word expressions, collocations, or n-grams?
+
+6. **Critical Reflection**: Frequency tables reduce texts to counts, discarding context, order, and meaning. What are the trade-offs of this reductionist approach? When is it appropriate, and when might it be problematic?
+
+## Key Takeaways
+
+- **Frequency tables** provide a foundation for corpus analysis, showing how often tokens appear
+- **Zipf's Law** describes the power-law distribution where a few tokens dominate and most are rare
+- **Dispersion measures** like DP help distinguish between tokens that are evenly distributed vs. clustered in a few documents
+- **Document-feature matrices** convert texts into numerical representations for further analysis
+- **Normalization** (e.g., to per-million-word rates) is essential for comparing corpora of different sizes
+- **Context matters**: Raw frequency counts should always be interpreted in light of corpus composition, text length variation, and research questions
+
+## Further Reading
+
+- Brezina, V. (2018). *Statistics in Corpus Linguistics: A Practical Guide*. Chapter 3: Frequency.
+- Gries, S. Th. (2008). "Dispersions and adjusted frequencies in corpora." *International Journal of Corpus Linguistics* 13(4): 403-437.
+- Zipf, G. K. (1935). *The Psycho-Biology of Language*. Houghton, Mifflin.
+
+---
+
+::: callout-note
+## Ready to Practice?
+
+Head to [Mini Lab 03: Frequencies](../mini_labs/Mini_Lab_03_Frequencies.ipynb) to apply these concepts hands-on. You'll work with the same corpus and functions, but with opportunities to explore different tokens, create visualizations, and experiment with filtering and aggregation techniques.
+
+The mini lab includes experimentation prompts to help you develop intuitions about when frequency and dispersion measures are most useful in text analysis.
+:::

@@ -1,0 +1,661 @@
+# Topic Modeling
+
+<a target="_blank" href="https://colab.research.google.com/github/browndw/humanities_analytics/blob/main/mini_labs/Mini_Lab_09_Topic_Modeling.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
+```{python}
+#| echo: false
+#| message: false
+#| warning: false
+
+import logging
+import warnings
+import numpy as np
+import pandas as pd
+from copy import copy
+from tmtoolkit.topicmod.evaluate import results_by_parameter
+from tmtoolkit.topicmod.model_stats import generate_topic_labels_from_top_words
+from tmtoolkit.topicmod.tm_lda import compute_models_parallel, evaluate_topic_models
+from tmtoolkit.topicmod.model_io import print_ldamodel_topic_words, ldamodel_top_topic_words
+from tmtoolkit.topicmod.visualize import plot_eval_results
+from tmtoolkit.bow.bow_stats import doc_lengths
+from tmtoolkit.utils import disable_logging
+from tmtoolkit.corpus import (
+    Corpus, dtm, print_summary, lemmatize, to_lowercase,
+    remove_punctuation, filter_clean_tokens, filter_for_pos,
+    remove_common_tokens, remove_uncommon_tokens
+)
+import matplotlib.pyplot as plt
+
+# Suppress verbose output
+disable_logging()
+logger = logging.getLogger('lda')
+logger.addHandler(logging.NullHandler())
+logger.propagate = False
+warnings.filterwarnings('ignore')
+```
+
+## Introduction
+
+Imagine reading 10,000 newspaper articles about climate change. You want to know: What themes recur? Which articles discuss policy vs. science vs. activism? How do themes shift over time?
+
+**Topic modeling** is an unsupervised machine learning technique that discovers abstract "topics" in large text collections. Unlike supervised methods (where you pre-define categories), topic models **infer** thematic structures directly from word co-occurrence patterns.
+
+**How it works** (simplified):
+
+1. Assume each document is a **mixture** of topics (a speech might be 60% "economy," 30% "foreign policy," 10% "education")
+2. Assume each topic is a **probability distribution** over all words in the vocabulary
+3. Use an algorithm to infer both distributions from the data
+
+The most common algorithm is **LDA** (Latent Dirichlet Allocation), developed by Blei, Ng, and Jordan (2003).
+
+::: {.callout-note}
+## Why "Latent"?
+
+Topics are **latent** (hidden) structures. They don't exist explicitly in the text—the algorithm infers them from patterns of which words tend to co-occur across documents. This makes topic modeling powerful (discovers unexpected patterns) but also interpretively risky (topics are statistical artifacts, not authorial intentions).
+:::
+
+**Research questions topic modeling can help answer**:
+
+- What themes appear in a corpus of historical newspapers?
+- How do topics shift over time (e.g., Cold War discourse 1950-1990)?
+- Which documents are thematically similar despite surface differences?
+- What distinguishes one author's corpus from another's in terms of topical focus?
+
+**What topic modeling cannot answer**:
+
+- Questions requiring fine-grained semantic nuance (metaphor, irony, tone)
+- Authorship attribution (unless topics correlate strongly with style)
+- Causal claims ("This topic caused this historical event")
+- Interpretation without domain knowledge (topics are numbers until you make sense of them)
+
+## Understanding LDA
+
+### The Generative Story
+
+LDA assumes documents are generated through this process:
+
+1. **Choose topic proportions** for the document (e.g., 40% topic A, 30% topic B, 30% topic C)
+2. **For each word position**:
+   - Pick a topic according to those proportions
+   - Pick a word from that topic's distribution
+
+The algorithm **reverses** this: given observed words, infer the hidden topic assignments and distributions.
+
+### Key Concepts
+
+**Topics**: Probability distributions over words. Topic 1 might assign high probability to "government," "congress," "law," "policy" (a "governance" topic).
+
+**Document-topic distribution**: Each document's mixture of topics. Document A might be 80% Topic 1, 20% Topic 2.
+
+**Topic-word distribution**: Each topic's mixture of words. Topic 1 might assign 0.08 probability to "government," 0.06 to "congress," etc.
+
+**Hyperparameters**:
+- **α (alpha)**: Controls document-topic sparsity. Low α → documents concentrate in few topics.
+- **β (beta/eta)**: Controls topic-word sparsity. Low β → topics concentrate in few words.
+- **k**: Number of topics. Must be set in advance (or tested via evaluation).
+
+### What Makes a Good Topic?
+
+**Coherence**: Top words should be semantically related. A topic with "school," "student," "teacher," "education" is coherent. A topic with "school," "dog," "economy," "yesterday" is incoherent (probably noise).
+
+**Distinctiveness**: Topics should capture different themes, not overlap heavily.
+
+**Interpretability**: Humans can assign meaningful labels ("education," "war," "economy").
+
+**Statistical note**: These are interpretive goals, not guaranteed algorithmic outcomes. LDA optimizes for likelihood, not human interpretability.
+
+## Workflow: From Texts to Topics
+
+We'll analyze **U.S. Presidential Inaugural Addresses** to discover thematic patterns.
+
+### Load Corpus
+
+```{python}
+corp = Corpus.from_tabular(
+    "https://github.com/browndw/humanities_analytics/raw/refs/heads/main/data/data_tables/inaugural_subset.csv",
+    text_column='text', 
+    id_column='year', 
+    language='en'
+)
+print_summary(corp)
+```
+
+### Preprocessing Pipeline
+
+**Why preprocess aggressively?**
+
+Topic modeling relies on word co-occurrence. Preprocessing removes noise (punctuation, ultra-common words, typos) to surface meaningful patterns.
+
+```{python}
+# Lemmatize to group inflected forms
+lemmatize(corp)
+# Lowercase for consistency
+to_lowercase(corp)
+# Remove punctuation
+remove_punctuation(corp)
+
+print_summary(corp)
+```
+
+**Critical preprocessing choice**: Should we filter by part-of-speech?
+
+```{python}
+# Create noun-only version
+corp_nouns = copy(corp)
+filter_for_pos(corp_nouns, 'N')
+filter_clean_tokens(corp_nouns, remove_shorter_than=2)
+remove_common_tokens(corp_nouns, df_threshold=0.8)
+remove_uncommon_tokens(corp_nouns, df_threshold=0.1)
+
+print_summary(corp_nouns)
+```
+
+**Effect of noun-only filtering**:
+- **Pro**: Topics focus on entities, concepts, places (clearer semantic themes)
+- **Con**: Lose verbs (actions), adjectives (qualities), function words (rhetorical patterns)
+
+Compare to full-vocabulary version:
+
+```{python}
+corp_full = copy(corp)
+filter_clean_tokens(corp_full, remove_shorter_than=2)
+remove_common_tokens(corp_full, df_threshold=0.85)
+remove_uncommon_tokens(corp_full, df_threshold=0.05)
+
+print_summary(corp_full)
+```
+
+### Create Document-Term Matrix
+
+```{python}
+dtm_nouns, doc_labels_nouns, vocab_nouns = dtm(corp_nouns, return_doc_labels=True, return_vocab=True)
+dtm_full, doc_labels_full, vocab_full = dtm(corp_full, return_doc_labels=True, return_vocab=True)
+
+print(f"Noun-only DTM: {dtm_nouns.shape}")
+print(f"Full DTM: {dtm_full.shape}")
+```
+
+## Running the Model
+
+### Fixed k Model
+
+Start with **k=10 topics** as a baseline:
+
+```{python}
+#| output: false
+lda_params = {
+    'n_topics': 10,
+    'n_iter': 1000,
+    'random_state': 20191122
+}
+
+dtms = {'nouns': dtm_nouns, 'full': dtm_full}
+models = compute_models_parallel(dtms, constant_parameters=lda_params)
+```
+
+### Examine Topics
+
+```{python}
+model_nouns = models['nouns'][0][1]
+print_ldamodel_topic_words(model_nouns.topic_word_, vocab_nouns, top_n=3)
+```
+
+**Interpretation task**: Look at the top words. Can you assign thematic labels?
+
+- Topic with "government," "law," "congress" → "Governance"
+- Topic with "freedom," "liberty," "rights" → "Democratic ideals"
+- Topic with "war," "peace," "world" → "Foreign policy"
+
+**Compare to full-vocabulary model**:
+
+```{python}
+model_full = models['full'][0][1]
+print("Full vocabulary model:")
+print_ldamodel_topic_words(model_full.topic_word_, vocab_full, top_n=3)
+```
+
+**Comparison question**: Do the full-vocabulary topics include more verbs and adjectives? Do they feel more action-oriented or emotionally inflected compared to the noun-only topics?
+
+::: {.callout-warning}
+## The Interpretation Trap
+
+Topics are **probability distributions**, not themes. Assigning labels is **your interpretive act**, not a discovery. Two researchers might label the same topic differently ("foreign policy" vs. "international conflict"). Always acknowledge this subjectivity.
+:::
+
+## Model Evaluation
+
+### Testing Multiple k Values
+
+Which k is optimal? **Too few topics** → themes collapse together. **Too many topics** → fragmented, hard to interpret.
+
+Test k=5, 10, 15, ..., 45:
+
+```{python}
+#| output: false
+var_params = [{'n_topics': k, 'alpha': 1/k} for k in range(5, 50, 5)]
+const_params = {
+    'n_iter': 1000,
+    'random_state': 20191122,
+    'eta': 0.1
+}
+
+eval_results = evaluate_topic_models(
+    dtm_full,
+    varying_parameters=var_params,
+    constant_parameters=const_params,
+    coherence_mimno_2011_top_n=10,
+    return_models=True
+)
+```
+
+### Metrics
+
+**Perplexity**: How well the model predicts held-out data. Lower = better. But: low perplexity ≠ interpretable topics.
+
+**Coherence (Mimno 2011)**: Measures semantic relatedness of top words using PMI (pointwise mutual information). Higher = more coherent topics.
+
+```{python}
+eval_results_by_k = results_by_parameter(eval_results, 'n_topics')
+plot_eval_results(eval_results_by_k)
+plt.show()
+```
+
+**How to choose k**:
+
+1. Look for coherence peak (diminishing returns after a certain k)
+2. Check perplexity stabilization (rapid improvement levels off)
+3. Inspect topics manually (do they make sense at different k values?)
+4. Consider interpretive goals (5 topics for broad overview, 30 for granular analysis)
+
+::: {.callout-tip}
+## No "Correct" k
+
+The optimal k depends on your corpus and research questions. A corpus of 50 documents might work best with k=5. A corpus of 10,000 might need k=100. Use evaluation metrics as **guides**, not rules.
+:::
+
+## Interpreting Results
+
+### Generate Topic Labels
+
+```{python}
+# Select model with k=15 (balance between metrics)
+best_model = [m for k, m in eval_results_by_k if k == 15][0]['model']
+
+# Generate labels from top words
+vocab_full_array = np.array(vocab_full)
+doc_lengths_full = doc_lengths(dtm_full)
+
+topic_labels = generate_topic_labels_from_top_words(
+    best_model.topic_word_,
+    best_model.doc_topic_,
+    doc_lengths_full,
+    vocab_full_array,
+    lambda_=0.6  # Balance between word frequency and topic exclusivity (0=exclusive, 1=frequent)
+)
+
+print(topic_labels)
+```
+
+**Lambda parameter**: Controls the trade-off between word frequency and topic exclusivity. Lower values (0.0-0.4) favor distinctive words unique to each topic. Higher values (0.6-1.0) favor frequent words regardless of distinctiveness. We use 0.6 to balance interpretability with representativeness.
+
+### Top Words per Topic
+
+```{python}
+top_topic_words = ldamodel_top_topic_words(
+    best_model.topic_word_,
+    vocab_full,
+    row_labels=topic_labels
+)
+
+# Examine one topic
+print(top_topic_words.iloc[0])
+```
+
+### Document-Topic Distributions
+
+Which speeches emphasize which topics?
+
+```{python}
+from tmtoolkit.topicmod.model_io import ldamodel_full_doc_topics
+
+doc_topic_df = ldamodel_full_doc_topics(
+    best_model.doc_topic_,
+    doc_labels_full,
+    topic_labels=topic_labels
+)
+
+doc_topic_df.head(10)
+```
+
+**Computational reasoning question**: If Obama 2009 and Kennedy 1961 both have high proportions in the "freedom" topic, does that mean they're saying the same thing? Or does "freedom" mean different things in different Cold War vs. post-9/11 contexts?
+
+### Temporal Trends
+
+Do topics rise and fall over time?
+
+```{python}
+# Load metadata with years
+df_meta = pd.read_csv("https://github.com/browndw/humanities_analytics/raw/refs/heads/main/data/data_tables/inaugural_subset.csv")
+doc_topic_df['year'] = df_meta['year'].values
+
+# Plot one topic over time
+topic_col = topic_labels[0]  # First topic
+plt.figure(figsize=(12, 5))
+plt.plot(doc_topic_df['year'], doc_topic_df[topic_col], marker='o')
+plt.xlabel('Year')
+plt.ylabel(f'Proportion of {topic_col}')
+plt.title(f'Temporal Trend: {topic_col}')
+plt.show()
+```
+
+**Interpretation**: Does the trend correlate with historical events? For example, does a "war" topic spike during WWI, WWII, and Cold War periods?
+
+### Multiple Topics Over Time
+
+Compare several topics simultaneously:
+
+```{python}
+# Select 4 interesting topics to compare
+topics_to_plot = topic_labels[:4]
+
+fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+axes = axes.flatten()
+
+for i, topic in enumerate(topics_to_plot):
+    axes[i].plot(doc_topic_df['year'], doc_topic_df[topic], marker='o', linewidth=2)
+    axes[i].set_xlabel('Year')
+    axes[i].set_ylabel('Topic Proportion')
+    axes[i].set_title(f'{topic}')
+    axes[i].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+**Comparative reasoning**: Do some topics rise as others fall? Might suggest thematic displacement (e.g., "domestic policy" declining as "foreign policy" rises during wartime).
+
+## Visualizing Topic Distributions
+
+### Heatmap: Documents × Topics
+
+Heatmaps reveal **which documents emphasize which topics** and **which documents cluster together thematically**.
+
+```{python}
+from tmtoolkit.topicmod.visualize import plot_doc_topic_heatmap
+
+# Create heatmap of document-topic distributions
+fig, ax = plt.subplots(figsize=(16, 10))
+
+plot_doc_topic_heatmap(
+    fig, ax, 
+    best_model.doc_topic_, 
+    doc_labels_full,
+    topic_labels=topic_labels
+)
+
+plt.title('Document-Topic Distribution Heatmap', fontsize=16)
+plt.tight_layout()
+plt.show()
+```
+
+**Reading the heatmap**:
+- **Rows** = documents (speeches)
+- **Columns** = topics
+- **Color intensity** = topic proportion (darker = higher)
+
+**Patterns to look for**:
+- **Horizontal bands**: Documents dominated by one topic
+- **Vertical stripes**: Topics that appear across many documents
+- **Blocks**: Groups of documents sharing similar topic profiles
+
+**Interpretation question**: Do speeches from the same era cluster visually? Do Republican vs. Democratic presidents show different topic emphases?
+
+### Hierarchical Clustering: Document Similarity
+
+Dendrograms show **which documents are most similar based on their topic distributions**.
+
+```{python}
+from scipy.cluster.hierarchy import dendrogram, linkage
+
+# Extract numeric topic proportions
+data_array = doc_topic_df[topic_labels].values
+
+# Compute hierarchical clustering (Ward's method minimizes within-cluster variance)
+# This produces compact, balanced clusters rather than chains
+linked = linkage(data_array, 'ward')
+
+# Plot dendrogram
+plt.figure(figsize=(14, 8))
+dendrogram(
+    linked,
+    orientation='top',
+    labels=doc_labels_full,
+    distance_sort='descending',
+    leaf_rotation=90
+)
+plt.title('Hierarchical Clustering of Documents by Topic Similarity', fontsize=16)
+plt.xlabel('Document (Year)', fontsize=12)
+plt.ylabel('Distance (Dissimilarity)', fontsize=12)
+plt.tight_layout()
+plt.show()
+```
+
+**Reading the dendrogram**:
+- **Leaf nodes** (bottom) = individual documents
+- **Branch height** = dissimilarity (taller = more different)
+- **Clusters** = documents joined at low heights are thematically similar
+
+**Interpretation**: Do historical periods cluster together (all Cold War speeches in one branch)? Do clusters cross party lines, suggesting bipartisan consensus on certain topics?
+
+### Stacked Area Chart: Topic Evolution
+
+Visualize how **topic proportions change over time** as a compositional whole:
+
+```{python}
+# Create time-series matrix of topic proportions
+topic_by_year = doc_topic_df.groupby('year')[topic_labels].mean()
+
+# Stacked area chart
+fig, ax = plt.subplots(figsize=(14, 8))
+ax.stackplot(
+    topic_by_year.index, 
+    *[topic_by_year[col] for col in topic_labels],
+    labels=topic_labels,
+    alpha=0.7
+)
+
+ax.set_xlabel('Year', fontsize=12)
+ax.set_ylabel('Average Topic Proportion', fontsize=12)
+ax.set_title('Topic Composition Over Time (Stacked)', fontsize=16)
+ax.legend(loc='upper left', bbox_to_anchor=(1.05, 1), fontsize=8)
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+**Interpretation**: This shows the **relative balance** of topics. Does one topic dominate certain eras? Do topics become more evenly distributed over time (suggesting rhetorical diversification)?
+
+::: {.callout-tip}
+## Choosing Visualizations
+
+- **Heatmap**: Best for seeing **all document-topic relationships** at once. Good for exploratory analysis.
+- **Dendrogram**: Best for identifying **document clusters** and outliers. Useful for hypothesis generation about periodization.
+- **Line plots**: Best for **temporal trends** in specific topics. Ideal for hypothesis testing.
+- **Stacked area**: Best for understanding **compositional changes** (how the topic mix shifts over time).
+
+Use multiple visualizations—they reveal different aspects of the same model.
+:::
+
+## When to Use Topic Modeling
+
+::: {.callout-tip}
+## Well-Suited Research Questions
+
+- **Exploratory analysis**: "What themes appear in this corpus I don't know well?"
+- **Corpus comparison**: Do 19th-century novels emphasize different topics than 20th-century ones?
+- **Temporal change**: How did newspaper coverage of "immigration" shift from 1900-2000?
+- **Document clustering**: Group similar texts without reading all of them
+- **Hypothesis generation**: Identify patterns to investigate with close reading
+:::
+
+::: {.callout-warning}
+## Limitations and Alternatives
+
+**When topic modeling struggles**:
+
+- **Small corpora** (< 100 documents): Not enough data for stable patterns
+- **Short texts** (tweets, headlines): Too few words per document
+- **Highly heterogeneous corpora**: Mixing poems, scientific articles, and novels produces noisy topics
+- **Fine-grained semantic distinctions**: Can't distinguish irony, sarcasm, metaphor
+
+**Alternative approaches**:
+
+- **Manual coding**: For small corpora, human annotation may be more accurate
+- **Keyword analysis**: If you know what you're looking for, search directly
+- **Clustering with embeddings**: Use pre-trained models (BERT) for semantic similarity
+- **BERTopic**: Combines embeddings with topic modeling for better coherence on short texts
+:::
+
+## Common Pitfalls
+
+**1. Treating topics as "real"**
+
+Topics are statistical artifacts, not authorial intentions or cultural concepts. Don't claim "18th-century writers believed in Topic 5"—they had no concept of it.
+
+**2. Ignoring model sensitivity**
+
+Change k, change preprocessing, get different topics. Always report modeling choices and test robustness.
+
+**3. Cherry-picking topics**
+
+Presenting only the 3 coherent topics out of 20 misleads. Report full results, including messy topics.
+
+**4. Over-interpreting probabilities**
+
+A document with 0.25 in Topic A isn't "25% about that theme"—it's a statistical weight, not a precise measurement.
+
+**5. Conflating co-occurrence with meaning**
+
+Words co-occur for many reasons (syntax, genre conventions, corpus artifacts). Topic coherence ≠ semantic unity.
+
+**6. Forgetting to triangulate**
+
+Never rely on topic modeling alone. Validate with close reading, metadata analysis, and domain expertise.
+
+## What to Do After Topic Modeling
+
+### Connect to Close Reading
+
+1. **Identify exemplar documents**: Find speeches with high proportions in a topic
+2. **Read them closely**: Does the topic label fit? What context is missing?
+3. **Refine interpretation**: Adjust labels based on actual content
+
+### Connect to Historical Context
+
+- Do topic trends align with known events (wars, economic crises, social movements)?
+- Do unexpected patterns suggest overlooked historical dynamics?
+- How do topics relate to metadata (author, genre, publication venue)?
+
+### Iterate
+
+- Remove problematic words (names that dominate topics, corpus-specific noise)
+- Adjust preprocessing (try different POS filters, stopword lists)
+- Test different k values (broad overview vs. fine-grained analysis)
+- Compare algorithms (LDA vs. NMF vs. BERTopic)
+
+### Build On It
+
+- **Supervised classification**: Use topic distributions as features for predicting metadata
+- **Network analysis**: Connect documents via shared topics
+- **Visualization**: Create topic timelines, heatmaps, or interactive explorers
+
+## Troubleshooting Common Issues
+
+**"All my topics look the same"**
+
+- **Cause**: k too small, or vocabulary too restricted
+- **Fix**: Increase k, relax stopword filtering, or use full vocabulary instead of POS-filtered
+
+**"Topics contain gibberish or proper names"**
+
+- **Cause**: Insufficient preprocessing
+- **Fix**: Add custom stopwords (place names, character names), increase `df_threshold` for common words
+
+**"Topics are incoherent (random word lists)"**
+
+- **Cause**: k too large, or corpus too heterogeneous
+- **Fix**: Reduce k, subset corpus by genre/time period, increase `n_iter` for better convergence
+
+**"Document-topic distributions are too uniform (every doc has equal proportions in all topics)"**
+
+- **Cause**: alpha too high (documents encouraged to mix all topics)
+- **Fix**: Lower alpha (try `alpha=1/k` or `alpha=0.1`)
+
+**"Topics dominated by one or two words"**
+
+- **Cause**: eta/beta too low, or corpus has strong term imbalance
+- **Fix**: Increase eta (try 0.1-0.5), or remove dominant terms from vocabulary
+
+**"Results change dramatically with random_state"**
+
+- **Cause**: Model hasn't converged, or corpus is too small
+- **Fix**: Increase `n_iter` (try 2000-5000), or collect more documents
+
+::: {.callout-tip}
+## Model Stability Check
+
+Run the same model with 3-5 different `random_state` values. If topic assignments and labels remain consistent, your model is stable. If they change drastically, you need more iterations, more documents, or different preprocessing.
+:::
+
+## Conclusion
+
+Topic modeling is a **generative** tool—it suggests patterns you didn't know to look for. It's not a **confirmatory** tool—it doesn't prove hypotheses.
+
+**Use it to**:
+- Survey large corpora quickly
+- Generate hypotheses for close reading
+- Discover unexpected thematic connections
+- Track topical change over time
+
+**Don't use it to**:
+- Make causal claims
+- Replace close reading
+- Assume topics reflect authorial intentions
+- Treat statistical patterns as cultural truths
+
+The best topic modeling workflows combine:
+1. **Computational scale** (process thousands of texts)
+2. **Statistical rigor** (test multiple models, report uncertainties)
+3. **Interpretive depth** (close reading, historical context, domain knowledge)
+4. **Methodological transparency** (document all choices, acknowledge limitations)
+
+::: {.callout-tip}
+## Connecting to Mini Lab 9
+
+[Mini Lab 9: Topic Modeling](../mini_labs/Mini_Lab_09_Topic_Modeling.ipynb) provides hands-on practice with the complete workflow: preprocessing choices, model evaluation, topic labeling, and temporal analysis using U.S. presidential inaugural addresses.
+:::
+
+## See Also
+
+**Ted Underwood's Topic Modeling Guides**:
+- [Topic Modeling Made Just Simple Enough](https://tedunderwood.com/2012/04/07/topic-modeling-made-just-simple-enough/)
+- [What Kinds of Topics Does Topic Modeling Produce?](https://tedunderwood.com/2012/04/01/what-kinds-of-topics-does-topic-modeling-actually-produce/)
+- [Visualizing Topic Models](https://tedunderwood.com/2012/11/11/visualizing-topic-models/)
+
+**tmtoolkit Documentation**: [Topic Modeling Vignette](https://tmtoolkit.readthedocs.io/en/latest/topic_modeling.html)
+
+**Evaluation Methods**: [Topic Modeling Evaluation in Python](https://datascience.blog.wzb.eu/2017/11/09/topic-modeling-evaluation-in-python-with-tmtoolkit/)
+
+**Alternative Approaches**:
+- [BERTopic](https://maartengr.github.io/BERTopic/) for short texts and semantic embeddings
+- [Graph Neural Topic Models](https://github.com/SmilesDZgk/GNTM) for document networks
+
+**Project Examples**: [A Review of Topic Modeling Projects](https://medium.com/@neala/a-review-of-topic-modeling-projects-941922a1216c)
+
+## Works Cited
+
+Blei, D. M., Ng, A. Y., & Jordan, M. I. (2003). Latent Dirichlet allocation. *Journal of Machine Learning Research*, 3, 993-1022.
+
+Mimno, D., Wallach, H., Talley, E., Leenders, M., & McCallum, A. (2011). Optimizing semantic coherence in topic models. *Proceedings of the 2011 Conference on Empirical Methods in Natural Language Processing*, 262-272.

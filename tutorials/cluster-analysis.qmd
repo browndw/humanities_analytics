@@ -1,0 +1,877 @@
+---
+jupyter: python3
+---
+
+# Clustering Methods
+
+## Introduction
+
+**Clustering** is an unsupervised machine learning technique that groups similar observations together without predefined labels. Unlike classification (which requires labeled training data), clustering discovers patterns and structures in data automatically.
+
+**Why clustering matters for humanities research:**
+
+- **Exploratory analysis**: Discover natural groupings in texts, time periods, or authors
+- **Pattern recognition**: Identify thematic similarities across disparate sources
+- **Periodization**: Group time periods by linguistic similarity rather than arbitrary boundaries
+- **Document organization**: Sort large corpora into coherent themes or styles
+- **Hypothesis generation**: Let data suggest which texts merit comparative close reading
+
+This tutorial introduces two fundamental clustering methods widely used in humanities text analysis:
+
+1. **Hierarchical Clustering**: Creates nested groupings visualized as dendrograms (tree diagrams)
+2. **K-Means Clustering**: Partitions data into a specified number of distinct groups
+
+Both methods appear throughout this course: hierarchical clustering in [time series analysis](#sec-time-series) (Variability-Based Neighbor Clustering), [topic modeling](#sec-topic-modeling) (document similarity), and [spaCy](#sec-spacy) workflows; k-means in [contextual embeddings](#sec-embeddings) for semantic grouping.
+
+## Core Concepts
+
+### What Makes Observations "Similar"?
+
+Clustering requires a **distance metric** to measure similarity:
+
+- **Euclidean distance**: Straight-line distance in multi-dimensional space (most common)
+- **Cosine similarity**: Angle between vectors (often used for text, converted to distance)
+- **Manhattan distance**: Sum of absolute differences along each dimension
+- **Correlation distance**: Based on correlation coefficient
+
+**For text data**, we typically represent documents as:
+
+- **Word frequency vectors**: Each dimension is a word, each value is a count/proportion
+- **TF-IDF vectors**: Weighted by how distinctive each word is
+- **Topic distributions**: Proportions across latent topics (from topic models)
+- **Embeddings**: Dense semantic vectors from neural models (word2vec, BERT)
+
+### Unsupervised vs. Supervised
+
+**Clustering (unsupervised)**:
+
+- No predefined labels ("wartime speech", "Hamilton")
+- Algorithm discovers groupings based on similarity
+- Researcher interprets what clusters mean
+- Exploratory, hypothesis-generating
+
+**Classification (supervised)**:
+
+- Requires labeled training data
+- Algorithm learns to predict labels for new observations
+- Confirmatory, hypothesis-testing
+- See [classification tutorial](#sec-classification) for details
+
+## Hierarchical Clustering
+
+**Hierarchical clustering** creates a tree structure (dendrogram) showing how observations group at different similarity thresholds. It's "bottom-up" (agglomerative): each observation starts as its own cluster, then pairs merge iteratively based on similarity.
+
+### How It Works
+
+1. **Start**: Each observation is its own cluster (n clusters)
+2. **Merge**: Find the two closest clusters and combine them
+3. **Repeat**: Continue merging until all observations are in one cluster
+4. **Result**: Tree structure showing all possible groupings
+
+### Linkage Methods
+
+**Linkage** defines how to measure distance between clusters (not individual points):
+
+**Single linkage** (nearest neighbor):
+- Distance = minimum distance between any two points in different clusters
+- Creates "chaining" effect (long, stretched clusters)
+- Sensitive to outliers
+- Rarely used for text
+
+**Complete linkage** (farthest neighbor):
+- Distance = maximum distance between any two points in different clusters
+- Creates compact, spherical clusters
+- Good for well-separated groups
+
+**Average linkage**:
+- Distance = average of all pairwise distances between clusters
+- Compromise between single and complete
+- Robust to noise
+
+**Ward's linkage** (minimum variance):
+- Minimizes within-cluster variance at each merge
+- Creates balanced, compact clusters
+- **Most common for humanities text analysis**
+- Default in many tools
+
+### Example: Inaugural Address Periodization
+
+Let's cluster presidential inaugural addresses by word frequencies to discover historical periods:
+
+```{python}
+import polars as pl
+import numpy as np
+from scipy.cluster.hierarchy import dendrogram, linkage, fcluster
+from scipy.spatial.distance import pdist, squareform
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load inaugural address data (word frequencies by document)
+url = "https://github.com/browndw/humanities_analytics/raw/refs/heads/main/data/data_tables/inaugural_subset.csv"
+inaugural_df = pl.read_csv(url)
+
+print(f"Data shape: {inaugural_df.shape}")
+print("\nFirst few rows:")
+print(inaugural_df.head())
+```
+
+**Data structure**: Each row is a president, each column is a word frequency (or TF-IDF score).
+
+```{python}
+# Prepare data for clustering
+# Extract document identifiers and feature matrix
+doc_ids = inaugural_df.select('doc_id').to_numpy().flatten()
+
+# Select only numeric columns (word frequencies, TF-IDF scores, etc.)
+# Include additional numeric types to capture all possible numeric columns
+numeric_cols = [col for col in inaugural_df.columns 
+                if inaugural_df[col].dtype in [pl.Float64, pl.Float32, pl.Int64, pl.Int32, 
+                                                pl.UInt32, pl.UInt64, pl.Int16, pl.Int8, 
+                                                pl.UInt16, pl.UInt8]]
+
+# If no numeric columns found, select all columns except known metadata
+if len(numeric_cols) == 0:
+    print("Warning: No numeric columns detected. Using all columns except metadata.")
+    numeric_cols = [col for col in inaugural_df.columns 
+                   if col not in ['doc_id', 'year', 'president', 'party', 'text', 'full_text']]
+
+print(f"Selected {len(numeric_cols)} numeric columns")
+
+# Convert to numpy array (observations × features) with explicit float dtype
+X = inaugural_df.select(numeric_cols).to_numpy().astype(np.float64)
+
+print(f"Feature matrix: {X.shape} ({X.shape[0]} documents, {X.shape[1]} features)")
+```
+
+### Compute Hierarchical Clustering
+
+```{python}
+# Compute pairwise distances (Euclidean)
+distances = pdist(X, metric='euclidean')
+
+# Perform hierarchical clustering (Ward's linkage)
+linkage_matrix = linkage(distances, method='ward')
+
+print(f"Linkage matrix shape: {linkage_matrix.shape}")
+print("\nLast 5 merges (final clustering steps):")
+print(linkage_matrix[-5:])
+```
+
+**Understanding the linkage matrix**: Each row represents one merge:
+
+- Columns 0-1: Which clusters merged
+- Column 2: Distance at which they merged
+- Column 3: Number of observations in new cluster
+
+### Visualize: Dendrogram
+
+```{python}
+#| fig-cap: "Hierarchical clustering of inaugural addresses (Ward's linkage). Height indicates dissimilarity; cutting at different heights produces different numbers of clusters."
+#| label: fig-dendrogram-inaugural
+#| fig-width: 12
+#| fig-height: 6
+
+plt.figure(figsize=(12, 6))
+
+dendrogram(
+    linkage_matrix,
+    labels=doc_ids,
+    leaf_font_size=10,
+    leaf_rotation=90
+)
+
+plt.title("Hierarchical Clustering of Inaugural Addresses (Ward's Linkage)", fontsize=14)
+plt.xlabel("Document (President-Year)", fontsize=12)
+plt.ylabel("Distance (Ward)", fontsize=12)
+plt.axhline(y=50, color='red', linestyle='--', label='Suggested cut height')
+plt.legend()
+plt.tight_layout()
+plt.show()
+```
+
+**Reading the dendrogram:**
+
+- **X-axis**: Individual documents (leaves)
+- **Y-axis**: Distance at which clusters merge (dissimilarity)
+- **Height of branches**: Smaller height = more similar
+- **Horizontal cut line**: Determines number of clusters
+
+Documents connected at lower heights are more similar. Cutting the tree at different heights creates different numbers of clusters.
+
+### Choosing Number of Clusters
+
+**Visual inspection**: Look for long vertical branches (large distances between merges) suggesting natural groupings.
+
+**Scree plot** (elbow method): Plot distances where merges occur, look for "elbow" where merging becomes less informative:
+
+```{python}
+#| fig-cap: "Scree plot showing merge distances. The 'elbow' suggests optimal number of clusters."
+#| label: fig-scree-plot
+#| fig-width: 8
+#| fig-height: 5
+
+# Extract distances from last 20 merges
+last_merges = linkage_matrix[-20:, 2]
+n_clusters = np.arange(1, 21)
+
+plt.figure(figsize=(8, 5))
+plt.plot(n_clusters, last_merges[::-1], marker='o')
+plt.xlabel('Number of Clusters')
+plt.ylabel('Merge Distance')
+plt.title('Scree Plot: Merge Distances for Last 20 Steps')
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+**Interpretation**: Look for where the curve "bends" (the elbow). Before the elbow, merges create distinct clusters; after, you're just splitting similar observations.
+
+### Assign Cluster Labels
+
+```{python}
+# Cut dendrogram at specified height or number of clusters
+n_clusters = 4
+cluster_labels = fcluster(linkage_matrix, n_clusters, criterion='maxclust')
+
+# Add to dataframe
+inaugural_clustered = inaugural_df.with_columns(
+    pl.Series('cluster', cluster_labels)
+)
+
+print(f"Cluster assignments (first 10):")
+print(inaugural_clustered.select(['doc_id', 'year', 'cluster']).head(10))
+
+print("\nCluster sizes:")
+print(inaugural_clustered.group_by('cluster').agg(pl.count()).sort('cluster'))
+```
+
+### Interpret Clusters
+
+```{python}
+# Examine which documents are in each cluster
+for i in range(1, n_clusters + 1):
+    cluster_docs = inaugural_clustered.filter(pl.col('cluster') == i)
+    doc_list = cluster_docs.select('doc_id').to_numpy().flatten()
+    years = cluster_docs.select('year').to_numpy().flatten()
+    
+    print(f"\nCluster {i} (n={len(doc_list)}):")
+    if len(years) > 0:
+        print(f"  Years: {int(min(years))} - {int(max(years))}")
+    print(f"  Documents: {', '.join(str(d) for d in doc_list[:5])}", end="")
+    if len(doc_list) > 5:
+        print(f", ... (+{len(doc_list)-5} more)")
+    else:
+        print()
+```
+
+**Research questions to ask:**
+
+- Do clusters align with known historical periods (Founding era, Civil War, Progressive era, modern)?
+- Do clusters reflect thematic concerns (war, economy, civil rights) or stylistic patterns?
+- Are there surprising groupings that challenge conventional periodization?
+
+### Comparing Linkage Methods
+
+```{python}
+#| fig-cap: "Comparison of linkage methods. Ward's typically creates the most balanced, interpretable clusters for text data."
+#| label: fig-linkage-comparison
+#| fig-width: 14
+#| fig-height: 10
+
+fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+
+linkage_methods = ['single', 'complete', 'average', 'ward']
+
+for idx, method in enumerate(linkage_methods):
+    ax = axes[idx // 2, idx % 2]
+    
+    # Compute linkage
+    Z = linkage(distances, method=method)
+    
+    # Plot dendrogram
+    dendrogram(Z, ax=ax, labels=doc_ids, leaf_font_size=8, leaf_rotation=90)
+    ax.set_title(f"{method.capitalize()} Linkage", fontsize=12)
+    ax.set_xlabel("Document")
+    ax.set_ylabel("Distance")
+
+plt.tight_layout()
+plt.show()
+```
+
+**Observations:**
+
+- **Single linkage**: "Chaining" effect (one long cluster)
+- **Complete linkage**: More balanced, but may split natural groups
+- **Average linkage**: Middle ground
+- **Ward's linkage**: Most balanced, compact clusters (usually preferred)
+
+## K-Means Clustering
+
+**K-means** is a partitioning method that divides data into *k* distinct, non-overlapping clusters. Unlike hierarchical clustering, you must specify *k* in advance.
+
+### How It Works
+
+1. **Initialize**: Randomly place *k* cluster centers (centroids) in feature space
+2. **Assign**: Assign each observation to nearest centroid
+3. **Update**: Recalculate centroid as mean of assigned observations
+4. **Repeat**: Steps 2-3 until centroids stop moving (convergence)
+5. **Result**: *k* clusters with each observation assigned to exactly one cluster
+
+### Advantages & Disadvantages
+
+**Advantages:**
+
+- **Fast**: Scales well to large datasets
+- **Simple**: Easy to implement and interpret
+- **Definite assignments**: Each observation belongs to exactly one cluster
+- **Works with many features**: Handles high-dimensional data (embeddings)
+
+**Disadvantages:**
+
+- **Requires k**: Must specify number of clusters in advance
+- **Sensitive to initialization**: Different starting points can produce different results (use `n_init` parameter)
+- **Assumes spherical clusters**: Struggles with elongated or irregular shapes
+- **Sensitive to outliers**: Extreme values distort centroids
+
+### Example: Clustering by Semantic Content
+
+Using contextual embeddings (from [Mini Lab 11](#sec-embeddings)), we can cluster presidential speeches by **semantic content** rather than word overlap:
+
+```{python}
+# Assume we have sentence embeddings for inaugural addresses
+# (In practice, these would come from a transformer model like BERT)
+
+# For this example, simulate embeddings from the word frequency matrix
+# In real analysis, use actual embeddings from sentence-transformers
+from sklearn.decomposition import PCA
+from sklearn.cluster import KMeans
+
+# Reduce dimensionality for visualization (simulate embeddings)
+# Set n_components to min of 50 or the available features/samples
+n_components = min(50, X.shape[0] - 1, X.shape[1])
+pca = PCA(n_components=n_components, random_state=42)
+embeddings = pca.fit_transform(X)
+
+print(f"Embedding matrix: {embeddings.shape}")
+```
+
+### Choosing k: Elbow Method
+
+```{python}
+#| fig-cap: "Elbow plot for k-means. Choose k where adding more clusters provides diminishing returns (the 'elbow')."
+#| label: fig-kmeans-elbow
+#| fig-width: 8
+#| fig-height: 5
+
+# Test different values of k
+inertias = []
+k_range = range(2, 11)
+
+for k in k_range:
+    kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
+    kmeans.fit(embeddings)
+    inertias.append(kmeans.inertia_)
+
+# Plot
+plt.figure(figsize=(8, 5))
+plt.plot(k_range, inertias, marker='o')
+plt.xlabel('Number of Clusters (k)')
+plt.ylabel('Inertia (Within-Cluster Sum of Squares)')
+plt.title('Elbow Method for Optimal k')
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+**Inertia**: Sum of squared distances from each point to its cluster centroid. Lower is better, but we want the "elbow" where improvement plateaus.
+
+### Choosing k: Silhouette Score
+
+```{python}
+from sklearn.metrics import silhouette_score
+
+# Calculate silhouette scores
+silhouette_scores = []
+
+for k in k_range:
+    kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
+    labels = kmeans.fit_predict(embeddings)
+    score = silhouette_score(embeddings, labels)
+    silhouette_scores.append(score)
+
+# Plot
+plt.figure(figsize=(8, 5))
+plt.plot(k_range, silhouette_scores, marker='o', color='orange')
+plt.xlabel('Number of Clusters (k)')
+plt.ylabel('Silhouette Score')
+plt.title('Silhouette Method for Optimal k')
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()
+
+print("\nSilhouette scores by k:")
+for k, score in zip(k_range, silhouette_scores):
+    print(f"  k={k}: {score:.3f}")
+```
+
+**Silhouette score** (-1 to 1): Measures how similar observations are to their own cluster vs. other clusters. Higher is better.
+
+- **> 0.7**: Strong structure
+- **0.5-0.7**: Reasonable structure
+- **0.25-0.5**: Weak structure
+- **< 0.25**: No substantial structure
+
+### Fit K-Means Model
+
+```{python}
+# Choose k based on elbow/silhouette analysis
+k = 4
+
+# Fit k-means
+kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
+kmeans_labels = kmeans.fit_predict(embeddings)
+
+# Add to dataframe
+inaugural_kmeans = inaugural_df.with_columns(
+    pl.Series('kmeans_cluster', kmeans_labels)
+)
+
+print(f"K-means cluster assignments (first 10):")
+print(inaugural_kmeans.select(['doc_id', 'year', 'kmeans_cluster']).head(10))
+
+print("\nCluster sizes:")
+print(inaugural_kmeans.group_by('kmeans_cluster').agg(pl.count()).sort('kmeans_cluster'))
+```
+
+### Visualize Clusters
+
+```{python}
+#| fig-cap: "K-means clusters visualized in 2D (PCA projection). Colors indicate cluster assignments."
+#| label: fig-kmeans-viz
+#| fig-width: 10
+#| fig-height: 8
+
+# Further reduce to 2D for visualization
+n_dims_viz = min(2, embeddings.shape[1])
+pca_2d = PCA(n_components=n_dims_viz, random_state=42)
+coords_2d = pca_2d.fit_transform(embeddings)
+
+# Plot
+plt.figure(figsize=(10, 8))
+
+# If we only have 1 dimension, plot as 1D scatter with jitter
+if n_dims_viz == 1:
+    scatter = plt.scatter(
+        coords_2d[:, 0], 
+        np.random.normal(0, 0.02, size=len(coords_2d)),  # Add jitter on y-axis
+        c=kmeans_labels,
+        cmap='viridis',
+        s=100,
+        alpha=0.6,
+        edgecolors='black'
+    )
+    plt.xlabel(f'PC1 ({pca_2d.explained_variance_ratio_[0]:.1%} variance)')
+    plt.ylabel('Random jitter')
+else:
+    scatter = plt.scatter(
+        coords_2d[:, 0], 
+        coords_2d[:, 1],
+        c=kmeans_labels,
+        cmap='viridis',
+        s=100,
+        alpha=0.6,
+        edgecolors='black'
+    )
+    plt.xlabel(f'PC1 ({pca_2d.explained_variance_ratio_[0]:.1%} variance)')
+    plt.ylabel(f'PC2 ({pca_2d.explained_variance_ratio_[1]:.1%} variance)')
+
+# Add labels for select points
+for i, doc_id in enumerate(doc_ids):
+    if i % 3 == 0:  # Label every 3rd document to avoid crowding
+        y_coord = coords_2d[i, 1] if n_dims_viz == 2 else np.random.normal(0, 0.02)
+        plt.annotate(
+            str(doc_id),
+            (coords_2d[i, 0], y_coord),
+            fontsize=8,
+            alpha=0.7
+        )
+
+plt.colorbar(scatter, label='Cluster')
+plt.title('K-Means Clustering (Visualized in 2D via PCA)')
+plt.tight_layout()
+plt.show()
+```
+
+**Note**: This is a 2D projection of high-dimensional data. Clusters may appear to overlap in 2D even if they're well-separated in the full feature space.
+
+### Interpret Clusters
+
+```{python}
+# Examine cluster compositions
+for i in range(k):
+    cluster_docs = inaugural_kmeans.filter(pl.col('kmeans_cluster') == i)
+    doc_list = cluster_docs.select('doc_id').to_numpy().flatten()
+    years = cluster_docs.select('year').to_numpy().flatten()
+    
+    print(f"\nCluster {i} (n={len(doc_list)}):")
+    if len(years) > 0:
+        print(f"  Years: {int(min(years))} - {int(max(years))}")
+    print(f"  Documents: {', '.join(str(d) for d in doc_list[:5])}", end="")
+    if len(doc_list) > 5:
+        print(f", ... (+{len(doc_list)-5} more)")
+    else:
+        print()
+```
+
+**Research questions:**
+
+- Do clusters correspond to thematic concerns (war, prosperity, reform)?
+- Do clusters align with political parties or historical eras?
+- Which speeches bridge multiple clusters (high silhouette vs. low silhouette)?
+
+### Cluster Centroids
+
+```{python}
+# Get centroid coordinates
+centroids = kmeans.cluster_centers_
+
+# Find most representative document in each cluster (closest to centroid)
+from scipy.spatial.distance import cdist
+
+distances_to_centroids = cdist(embeddings, centroids, metric='euclidean')
+
+print("\nMost representative document per cluster:")
+for i in range(k):
+    closest_idx = np.argmin(distances_to_centroids[:, i])
+    print(f"  Cluster {i}: {str(doc_ids[closest_idx])}")
+```
+
+**Interpretation**: The document closest to the centroid is the most "typical" member of that cluster—a good starting point for close reading.
+
+## Hierarchical vs. K-Means: When to Use Each
+
+| **Aspect** | **Hierarchical** | **K-Means** |
+|------------|------------------|-------------|
+| **Number of clusters** | Don't need to specify; explore dendrogram | Must specify *k* in advance |
+| **Visualization** | Dendrogram shows all possible groupings | Requires dimensionality reduction for viz |
+| **Computation** | Slower (O(n² log n)) | Faster (O(nki)) |
+| **Dataset size** | Works for small-medium datasets (<1000) | Scales to large datasets (>10,000) |
+| **Cluster shape** | Handles irregular shapes | Assumes spherical clusters |
+| **Interpretation** | Tree structure shows relationships | Clear assignments, but no hierarchy |
+| **Stability** | Deterministic (same result every time) | Random initialization (use `n_init`) |
+| **Use cases** | Periodization, document similarity, exploratory | Thematic grouping, large corpora |
+
+**Rule of thumb:**
+
+- **Small datasets** (<500 observations) with **exploratory goals**: Use hierarchical
+- **Large datasets** (>1000 observations) with **known k**: Use k-means
+- **Both together**: Use hierarchical to choose *k*, then k-means for final clustering
+
+## Applications in Humanities Research
+
+### Historical Periodization
+
+**Problem**: When did linguistic shifts occur? Do conventional period boundaries (centuries, decades) align with actual language change?
+
+**Solution**: Hierarchical clustering of time periods by word frequencies (Variability-Based Neighbor Clustering).
+
+**Example**: [Mini Lab 7](#sec-time-series) clusters decades of the Brown corpus, revealing that 1800-1930 form one period, 1940-1980 another, with 1990-2000 as distinct modern periods.
+
+**Advantages**:
+
+- Data-driven periodization (not arbitrary bins)
+- Dendrograms show gradual vs. sharp transitions
+- Quantifies similarity across time
+
+### Thematic Discovery in Corpora
+
+**Problem**: You have 500 journal articles. What thematic groups exist?
+
+**Solution**: K-means clustering on contextual embeddings.
+
+**Example**: Cluster research articles by abstract embeddings. Discover that apparent clusters correspond to methodological approaches (quantitative vs. qualitative) rather than topic areas.
+
+**Advantages**:
+
+- Semantic similarity (not just word overlap)
+- Handles large corpora efficiently
+- Reveals unexpected groupings
+
+### Authorship and Style
+
+**Problem**: Do texts cluster by author, genre, or time period?
+
+**Solution**: Hierarchical clustering on stylometric features (function words, sentence length, etc.)
+
+**Example**: Cluster novels by function word frequencies. If they cluster by author (not by genre or era), style is author-specific.
+
+**Advantages**:
+
+- Dendrogram shows hierarchical relationships (author → period → genre)
+- Visualizes degrees of similarity
+- Identifies outliers (unusual texts)
+
+### Document Similarity in Topic Modeling
+
+**Problem**: After fitting a topic model, which documents are similar based on topic distributions?
+
+**Solution**: Hierarchical clustering on topic proportion vectors.
+
+**Example**: Cluster presidential speeches by topic distributions. Wartime speeches cluster together regardless of era.
+
+**Advantages**:
+
+- Topic-based similarity (reduced dimensionality)
+- Interpretable clusters (shared topics)
+- See [topic modeling tutorial](#sec-topic-modeling) for details
+
+## Methodological Considerations
+
+### Distance Metrics Matter
+
+Different metrics emphasize different aspects of similarity:
+
+- **Euclidean**: Total difference in all dimensions (standard)
+- **Cosine**: Directional similarity (ignores magnitude, good for sparse text)
+- **Correlation**: Pattern similarity (ignores scale)
+- **Manhattan**: Sum of absolute differences (less sensitive to outliers)
+
+**For text data**: Cosine distance often works better than Euclidean because it ignores document length (just looks at proportional similarity).
+
+### Feature Selection
+
+Clustering quality depends on features:
+
+**Good features:**
+
+- **Function words**: Capture style (authorship, genre)
+- **Topic distributions**: Capture content (themes)
+- **Embeddings**: Capture semantics (meaning)
+- **TF-IDF**: Captures distinctive vocabulary
+
+**Bad features:**
+
+- **Raw word counts**: Biased by document length
+- **All words**: Noise overwhelms signal (dimensionality curse)
+- **Rare words**: Unstable, unreliable
+
+**Rule of thumb**: Select features relevant to your research question. For style, use function words or syntactic features. For theme, use content words or embeddings.
+
+### Choosing the Number of Clusters
+
+There's no "correct" *k*—it's a research decision informed by:
+
+1. **Quantitative criteria**:
+   - Elbow method (inertia or merge distances)
+   - Silhouette score (cohesion vs. separation)
+   - Gap statistic (compare to random data)
+
+2. **Qualitative criteria**:
+   - Interpretability (do clusters make sense?)
+   - Research goals (what granularity is useful?)
+   - Prior knowledge (do clusters align with known categories?)
+
+3. **Practical criteria**:
+   - Sample size (avoid tiny clusters: n < 5)
+   - Comparison goals (need same *k* across datasets?)
+
+**Best practice**: Test multiple values of *k*, examine cluster compositions, choose the most interpretable solution that addresses your research question.
+
+### Validating Clusters
+
+**Internal validation** (uses only the data):
+
+- **Silhouette coefficient**: Are clusters cohesive and separated?
+- **Davies-Bouldin index**: Ratio of within-cluster to between-cluster distances (lower is better)
+- **Calinski-Harabasz index**: Ratio of between-cluster to within-cluster variance (higher is better)
+
+**External validation** (uses known labels):
+
+- **Adjusted Rand Index**: Do clusters align with known categories?
+- **V-measure**: Harmonic mean of homogeneity and completeness
+
+**Qualitative validation**:
+
+- **Examine cluster members**: Do they share meaningful properties?
+- **Compare to expert judgments**: Do historians agree with periodization?
+- **Read representative texts**: Does thematic interpretation hold up?
+
+**Reality check**: Clusters are *exploratory*. They suggest patterns, not prove hypotheses. Always validate computationally-discovered groups through close reading and domain expertise.
+
+## Connections to Other Methods
+
+### Clustering and Classification
+
+**Clustering** can inform **classification**:
+
+1. Cluster unlabeled data
+2. Manually label clusters (inspect members, assign category)
+3. Use labeled clusters to train supervised classifier
+
+**Example**: Cluster tweets by content, manually label clusters as "positive", "negative", "neutral", then train sentiment classifier.
+
+### Clustering and Topic Modeling
+
+**Topic modeling** is a form of soft clustering:
+
+- **Topic models**: Each document is a *mixture* of topics (partial membership)
+- **Clustering**: Each document belongs to *one* cluster (hard assignment)
+
+**Combined approach**:
+
+1. Fit topic model to discover themes
+2. Cluster documents by topic distributions
+3. Result: Documents with similar thematic profiles group together
+
+See [topic modeling tutorial](#sec-topic-modeling) for hierarchical clustering of topic distributions.
+
+### Clustering and Embeddings
+
+**Embeddings** provide rich features for clustering:
+
+- **Static embeddings** (word2vec, GloVe): Average word vectors per document
+- **Contextual embeddings** (BERT, sentence-transformers): Sentence/document vectors
+
+**Why embeddings improve clustering**:
+
+- Capture semantic similarity (synonyms cluster together)
+- Reduce dimensionality (768 dimensions vs. 10,000+ words)
+- Pretrained on large corpora (better generalization)
+
+See [contextual embeddings tutorial](#sec-embeddings) for k-means on sentence embeddings.
+
+### Clustering and MDA
+
+**Multi-Dimensional Analysis** uses clustering indirectly:
+
+1. Compute linguistic features (rates of nominalizations, passives, etc.)
+2. Reduce to dimensions via factor analysis
+3. Cluster texts by dimension scores
+4. Result: Texts grouped by register/genre
+
+See [MDA tutorial](#sec-mda) for dimension-based grouping.
+
+## Practical Tips
+
+### 1. Preprocessing Matters
+
+**Before clustering**:
+
+- **Normalize**: Scale features to same range (StandardScaler) if using Euclidean distance
+- **Remove outliers**: Extreme values distort clusters (especially in k-means)
+- **Handle missing data**: Impute or remove (clustering algorithms can't handle NaN)
+
+### 2. Visualize Before and After
+
+**Before clustering**:
+
+- PCA or t-SNE plots: Do natural groupings exist?
+- Correlation heatmaps: Are features redundant?
+
+**After clustering**:
+
+- Dendrograms or scatter plots: Do clusters make sense?
+- Silhouette plots: Are assignments confident?
+
+### 3. Interpret with Domain Knowledge
+
+**Computational patterns are starting points**:
+
+- Why do these texts cluster together?
+- What do cluster members share (theme, style, era)?
+- Are there surprising members that challenge assumptions?
+
+**Combine distant and close reading**: Let clustering suggest *which* texts to read closely, then use close reading to *interpret* why they cluster.
+
+### 4. Report Transparently
+
+**In publications, report**:
+
+- Distance metric and linkage method (hierarchical) or *k* and initialization (k-means)
+- How *k* was chosen (elbow, silhouette, theory)
+- Validation metrics (silhouette score, qualitative assessment)
+- Cluster compositions (which texts are in which clusters)
+
+**Reproducibility**: Set `random_state` for k-means so results are replicable.
+
+## Ethical Considerations
+
+### Overgeneralization
+
+**Risk**: Treating clusters as natural categories rather than analytical constructs.
+
+**Example**: Clustering social media posts into "liberal" and "conservative" may obscure ideological complexity and diversity within groups.
+
+**Best practice**: Present clusters as *patterns in the data* for this specific corpus with these features, not universal truths.
+
+### Decontextualization
+
+**Risk**: Grouping texts by statistical similarity without considering historical/cultural context.
+
+**Example**: Clustering enslaved persons' narratives with abolitionist speeches because both use "freedom" frequently obscures power dynamics and authorial agency.
+
+**Best practice**: Interpret clusters in context. Ask *why* these texts are similar and whether that similarity is meaningful given their social/historical positions.
+
+### Stereotype Reinforcement
+
+**Risk**: Clusters may reflect and amplify societal biases present in training data.
+
+**Example**: Clustering job applicants by résumé language might group by gender or race due to systematic differences in phrasing, perpetuating discrimination.
+
+**Best practice**: Examine features driving clusters. Are they substantive or proxies for protected categories? Validate against known biases.
+
+### Reductive Categorization
+
+**Risk**: Forcing continuous variation into discrete clusters obscures nuance.
+
+**Example**: Clustering authors into "early modern" vs. "modern" styles may miss authors who blend traditions or evolved across their careers.
+
+**Best practice**: Acknowledge clustering simplifies complexity. Consider fuzzy clustering (soft assignments) or report silhouette scores (confidence in assignments) to capture ambiguity.
+
+## Summary
+
+**Clustering** discovers structure in data without predefined labels:
+
+**Hierarchical clustering**:
+
+- Creates tree of nested groupings (dendrogram)
+- Linkage methods: single, complete, average, **Ward's** (most common)
+- Don't need to choose *k* in advance
+- Best for exploration, small-medium datasets
+- Applications: periodization, document similarity, authorship
+
+**K-means clustering**:
+
+- Partitions data into *k* distinct clusters
+- Fast, scales well to large datasets
+- Must choose *k* (use elbow method, silhouette score)
+- Best for large corpora, semantic grouping
+- Applications: thematic discovery, embedding-based clustering
+
+**Key insights**:
+
+1. **Distance metrics matter**: Euclidean for general use, cosine for text
+2. **Feature selection is critical**: Use features relevant to research question
+3. **Choosing *k* is a research decision**: Balance quantitative criteria with interpretability
+4. **Validate qualitatively**: Computational patterns suggest hypotheses; close reading confirms
+5. **Report transparently**: Document methods, parameters, and validation metrics
+
+**Next steps**: Apply clustering to your own data. Use hierarchical clustering for exploratory periodization, k-means for thematic grouping. Combine with other methods (topic modeling, embeddings, classification) for richer analysis.
+
+## Further Reading
+
+**Foundational:**
+
+- Jain, A. K. (2010). Data clustering: 50 years beyond K-means. *Pattern Recognition Letters*, 31(8), 651-666. [DOI](https://doi.org/10.1016/j.patrec.2009.09.011)
+- Murtagh, F., & Contreras, P. (2012). Algorithms for hierarchical clustering: An overview. *Wiley Interdisciplinary Reviews: Data Mining and Knowledge Discovery*, 2(1), 86-97. [DOI](https://doi.org/10.1002/widm.53)
+
+**Humanities applications:**
+
+- Gries, S. T., & Hilpert, M. (2008). The identification of stages in diachronic data: Variability-based neighbour clustering. *Corpora*, 3(1), 59-81. [DOI](https://doi.org/10.3366/E1749503208000075)
+- Eder, M. (2015). Visualization in stylometry: Cluster analysis using networks. *Digital Scholarship in the Humanities*, 32(1), 50-64. [DOI](https://doi.org/10.1093/llc/fqv061)
+- Underwood, T. (2019). *Distant Horizons: Digital Evidence and Literary Change*. University of Chicago Press. (Chapter 5: "The Life Spans of Genres")
+
+**Practical guides:**
+
+- Scikit-learn documentation: [Clustering](https://scikit-learn.org/stable/modules/clustering.html)
+- SciPy documentation: [Hierarchical clustering](https://docs.scipy.org/doc/scipy/reference/cluster.hierarchy.html)
