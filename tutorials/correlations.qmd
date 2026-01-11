@@ -221,6 +221,11 @@ print(f"Analyzing {len(feature_cols)} linguistic features")
 print(f"\nSample features:")
 for i, col in enumerate(feature_cols[:10], 1):
     print(f"  {i}. {col}")
+    
+# Check if expected features exist
+if 'f_42_nominalizations' not in feature_cols:
+    print("\nWarning: Feature names may differ from expected. Actual feature columns:")
+    print(feature_cols[:20])
 ```
 
 **Feature examples** (see [pybiber documentation](https://browndw.github.io/pybiber/feature-categories.html) for full list):
@@ -330,11 +335,20 @@ print(corr_df_sorted.head(20).to_string(index=False))
 Let's examine one strong positive correlation in detail:
 
 ```{python}
-# Example: Correlation between nominalizations and prepositions
-# (both typical of informational writing)
+# Example: Correlation between two features
+# Use available features (names may vary by pybiber version)
 
-feature_x = 'f_42_nominalizations'
-feature_y = 'f_35_total_prepositions'
+# Try to find nominalization and preposition features
+nom_features = [col for col in feature_cols if 'nominal' in col.lower()]
+prep_features = [col for col in feature_cols if 'prep' in col.lower() or 'preposition' in col.lower()]
+
+# Use first available, or fall back to first two features
+if nom_features and prep_features:
+    feature_x = nom_features[0]
+    feature_y = prep_features[0]
+else:
+    feature_x = feature_cols[0] if len(feature_cols) > 0 else 'f_01'
+    feature_y = feature_cols[1] if len(feature_cols) > 1 else 'f_02'
 
 # Get correlation coefficient and p-value
 r, p = pearsonr(dfm_biber[feature_x].to_numpy(), dfm_biber[feature_y].to_numpy())
@@ -428,10 +442,13 @@ print(high_collinearity.head(15).to_string(index=False))
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 # Compute VIF for each feature
+# Extract features as numpy array
+features_array = dfm_biber.select(feature_cols).to_numpy().astype(np.float64)
+
 vif_data = pd.DataFrame()
 vif_data['Feature'] = feature_cols
 vif_data['VIF'] = [
-    variance_inflation_factor(features_df.values, i) 
+    variance_inflation_factor(features_array, i) 
     for i in range(len(feature_cols))
 ]
 
@@ -494,14 +511,14 @@ print(f"  2. Perfect multi-collinearity (|r| > 0.95): {perfect_corrs} pairs (sho
 # 3. Bartlett's test of sphericity
 from factor_analyzer.factor_analyzer import calculate_bartlett_sphericity
 
-chi_square, p_value = calculate_bartlett_sphericity(features_df)
+chi_square, p_value = calculate_bartlett_sphericity(features_array)
 print(f"  3. Bartlett's test: χ² = {chi_square:.1f}, p = {p_value:.4f}")
 print(f"     {'✓ Adequate correlations' if p_value < 0.05 else '✗ Insufficient correlations'}")
 
 # 4. KMO measure of sampling adequacy
 from factor_analyzer.factor_analyzer import calculate_kmo
 
-kmo_all, kmo_model = calculate_kmo(features_df)
+kmo_all, kmo_model = calculate_kmo(features_array)
 print(f"  4. KMO measure: {kmo_model:.3f}")
 if kmo_model >= 0.9:
     print("     ✓ Excellent sampling adequacy")
@@ -610,7 +627,9 @@ if len(features_to_drop) > 10:
 
 ```{python}
 # Example: Find all features strongly correlated with first-person pronouns
-target_feature = 'f_18_first_person_pronouns'
+# Find a feature related to first-person or pronouns
+pronoun_features = [col for col in feature_cols if 'pronoun' in col.lower() or 'first' in col.lower()]
+target_feature = pronoun_features[0] if pronoun_features else feature_cols[0]
 
 # Get correlations with target
 target_corrs = correlation_matrix[target_feature].drop(target_feature)
@@ -632,8 +651,9 @@ for feat, corr in target_corrs_sorted.head(10).items():
 
 ```{python}
 # Test hypothesis
-feat_x = 'f_42_nominalizations'
-feat_y = 'f_35_total_prepositions'
+# Use same features as above example
+feat_x = feature_x
+feat_y = feature_y
 
 r, p = pearsonr(dfm_biber[feat_x].to_numpy(), dfm_biber[feat_y].to_numpy())
 
