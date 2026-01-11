@@ -1,0 +1,594 @@
+# Course Data Resources {.unnumbered}
+
+This course provides curated datasets specifically selected for humanities text analysis. All data is hosted in this repository and can be accessed directly from Google Colab or any Python environment with internet access.
+
+## Accessing Data
+
+### From Google Colab (Recommended)
+
+All mini labs use direct URLs to load data from GitHub, which works seamlessly in Colab:
+
+```python
+import polars as pl
+
+# Load a dataset directly from GitHub
+df = pl.read_parquet('https://github.com/browndw/humanities_analytics/raw/refs/heads/main/data/data_tables/sample_corpus.parquet')
+```
+
+This approach:
+
+- ✅ Requires no Google Drive mounting
+- ✅ Works immediately without setup
+- ✅ Always loads the current version
+- ✅ Can be used from anywhere with internet
+
+### From Your Local Machine
+
+If you clone the repository, data is available at:
+```
+humanities_analytics/data/
+```
+
+## Available Datasets
+
+### Sample Corpora
+
+#### `sample_corpus.parquet`
+**Description:** A small corpus designed to replicate the Corpus of Contemporary American English (COCA) on a toy scale. Includes multiple text types with metadata.
+
+**Size:** ~1 million tokens  
+**Text types:** Academic, blog, fiction, magazine, news, spoken, TV/movies, web  
+**Variables:** `doc_id`, `text`, `text_type`, `tokens`  
+**Use cases:** Learning basic corpus analysis, frequency studies, keyness analysis, classification
+
+**Related tutorials:** [Corpus Basics](../tutorials/corpus-basics.qmd), [Keyness](../tutorials/keyness.qmd), [Frequency & Distributions](../tutorials/frequency-and-distributions.qmd)
+
+```python
+# Load and explore
+import polars as pl
+df = pl.read_parquet('https://github.com/browndw/humanities_analytics/raw/refs/heads/main/data/data_tables/sample_corpus.parquet')
+print(df.head())
+```
+
+---
+
+### Word Lists and Frequency Data
+
+#### `micusp_wordlist.csv`
+**Description:** Complete word frequency list from the Michigan Corpus of Upper-Level Student Papers (MICUSP)
+
+**Columns:** `token`, `frequency`, `documents`  
+**Size:** ~30,000 unique word types  
+**Use cases:** Reference frequencies for academic writing, Zipf's law demonstrations, vocabulary analysis
+
+**Related tutorials:** [Frequency & Distributions](../tutorials/frequency-and-distributions.qmd)
+
+#### `eng_words.csv` & `bio_words.csv`
+**Description:** Specialized vocabulary lists for different disciplines
+
+**Use cases:** Domain-specific analysis, keyword extraction, vocabulary studies
+
+#### `pronoun_frequencies.csv`
+**Description:** Pronoun usage frequencies across text types
+
+**Use cases:** Register analysis, stance analysis, personal vs. impersonal writing
+
+---
+
+### Historical & Literary Texts
+
+#### Inaugural Addresses
+
+Multiple formats available:
+
+- `inaugural.tsv` - Complete corpus with metadata
+- `inaugural_subset.csv` - Selected speeches for quick analysis
+- `inaugural_subset.tsv` - Same subset in TSV format
+
+**Description:** U.S. Presidential inaugural addresses from 1789-2021  
+**Metadata:** President, year, party, speech length  
+**Use cases:** Diachronic analysis, political discourse, time series studies, clustering, classification
+
+**Related tutorials:** [Time Series](../tutorials/time-series.qmd), [Cluster Analysis](../tutorials/cluster-analysis.qmd), [Keyness](../tutorials/keyness.qmd)
+
+```python
+# Load inaugural addresses
+df = pl.read_csv('https://github.com/browndw/humanities_analytics/raw/refs/heads/main/data/data_tables/inaugural.tsv', separator='\t')
+```
+
+#### Classic Novels
+
+Full text files available in `data/data_text/`:
+
+- `grail.txt` - Monty Python and the Holy Grail screenplay
+- `pride.txt` - Jane Austen's Pride and Prejudice
+
+**Use cases:** Sentiment analysis, character analysis, narrative arc studies, contextual embeddings
+
+**Related tutorials:** [Sentiment & Syuzhet](../tutorials/sentiment-and-syuzhet.qmd), [Contextual Embeddings](../tutorials/contextual-embeddings.qmd)
+
+```python
+# Load full text
+import requests
+
+url = 'https://raw.githubusercontent.com/browndw/humanities_analytics/main/data/data_text/pride.txt'
+response = requests.get(url)
+text = response.text
+```
+
+---
+
+### Sentiment & Narrative Data
+
+#### `sentiment_data.tsv`
+**Description:** Four classic novels used in sentiment trajectory research
+
+**Novels included:**
+
+- Madame Bovary (Gustave Flaubert)
+- Portrait of the Artist as a Young Man (James Joyce)
+- The Rise of Silas Lapham (William Dean Howells)  
+- Ragged Dick; or, Street Life in New York (Horatio Alger Jr.)
+
+**Use cases:** Sentiment analysis, narrative arc visualization, DCT transformation studies
+
+**Related tutorials:** [Sentiment & Syuzhet](../tutorials/sentiment-and-syuzhet.qmd), Mini Labs 1, 11, 12
+
+---
+
+### Metadata & Reference
+
+#### `micusp_meta.csv`
+**Description:** Complete metadata for MICUSP texts
+
+**Variables:** Document ID, discipline, student level, paper type, nativeness, gender, raw text  
+**Size:** 829 student papers  
+**Disciplines:** Biology, Civil Engineering, Economics, Education, English, History, Industrial Engineering, Linguistics, Mechanical Engineering, Natural Resources, Nursing, Philosophy, Physics, Political Science, Psychology, Statistics, Sociology  
+**Use cases:** Register variation studies, academic writing analysis, multidimensional analysis, disciplinary comparison, classification
+
+**Related tutorials:** [Multi-Dimensional Analysis](../tutorials/multi-dimensional-analysis.qmd), [Correlation Analysis](../tutorials/correlation-analysis.qmd), [ANOVA & R²](../tutorials/anova-and-r-squared.qmd)
+
+---
+
+### Processed Corpora
+
+#### `micusp.dfm.csv`
+**Description:** Document-Feature Matrix from MICUSP
+
+**Format:** Pre-processed document-term matrix with normalized frequencies  
+**Use cases:** Skip preprocessing, jump directly to statistical analysis, topic modeling, classification
+
+**Related tutorials:** Mini Labs 9, 12
+
+#### `brown_corpus.tsv`
+**Description:** Token-level data from the Brown Corpus
+
+**Variables:** `doc_id`, `token`, `pos`, `lemma`  
+**Use cases:** Part-of-speech analysis, lemmatization studies, linguistic feature extraction, Biber feature calculation
+
+**Related tutorials:** [Multi-Dimensional Analysis](../tutorials/multi-dimensional-analysis.qmd), [Correlation Analysis](../tutorials/correlation-analysis.qmd), Mini Lab 10
+
+---
+
+## Data Format Guide
+
+### Parquet Files
+- Fast loading, compressed format
+- Best for large datasets
+- Use `pl.read_parquet()` or `pd.read_parquet()`
+
+### CSV Files
+- Human-readable, widely compatible
+- Use `pl.read_csv()` or `pd.read_csv()`
+- Specify `separator=','`
+
+### TSV Files
+- Tab-separated values
+- Use `separator='\t'` when loading
+- Good for text with commas
+
+### TXT Files
+- Plain text, one document per file
+- Load with `open()` or `requests.get()`
+
+## Example Workflows
+
+### Quick Frequency Analysis
+```python
+import polars as pl
+
+# Load pre-processed wordlist
+wordlist = pl.read_csv('https://github.com/browndw/humanities_analytics/raw/refs/heads/main/data/data_tables/micusp_wordlist.csv')
+
+# View most frequent words
+print(wordlist.head(20))
+```
+
+### Processing Your Own Data
+```python
+import docuscospacy as ds
+import spacy
+
+# Load model
+nlp = spacy.load("en_docusco_spacy")
+
+# Process your text
+doc = nlp("Your text here...")
+
+# Extract features
+features = ds.corpus_features(doc)
+```
+
+### Comparative Analysis
+```python
+# Load two corpora
+academic = pl.read_parquet('path/to/academic.parquet')
+fiction = pl.read_parquet('path/to/fiction.parquet')
+
+# Calculate keyness
+keyness = ds.keyness_table(academic, fiction)
+```
+
+## Data Ethics & Attribution
+
+::: {.callout-important}
+## Responsible Use
+When using these datasets in your research:
+
+1. **Cite appropriately** - Many datasets have original sources that should be cited
+2. **Respect copyright** - Literary texts may have restrictions on redistribution
+3. **Consider context** - Student writing (MICUSP) was collected with consent for research
+4. **Verify quality** - External sources vary in quality and completeness
+5. **Be transparent** - Document your data sources and processing steps
+:::
+
+### Key Citations
+
+**MICUSP:**
+> University of Michigan. (2009). Michigan Corpus of Upper-Level Student Papers. Ann Arbor, MI: Regents of the University of Michigan.
+
+**Brown Corpus:**
+> Francis, W.N. and Kučera, H. (1979). Brown Corpus Manual, Brown University.
+
+**Inaugural Addresses:**
+> American Presidency Project, UC Santa Barbara
+
+---
+
+## External Data Sources
+
+Beyond the course datasets, several repositories provide texts suitable for humanities computational analysis. Each has strengths and limitations to consider.
+
+### Project Gutenberg
+
+**Website:** [gutenberg.org](https://www.gutenberg.org)
+
+**What it is:**  
+Over 70,000 public domain books (primarily English literature published before 1928), all freely available. Focuses on literary classics, historical texts, and cultural heritage materials.
+
+**Strengths:**
+- ✅ Completely free and legal (public domain)
+- ✅ High-quality OCR and proofreading
+- ✅ Plain text format (easy to process)
+- ✅ Standardized structure (easy to parse)
+- ✅ Extensive metadata (author, title, date, genre)
+
+**Limitations:**
+- ❌ Copyright restrictions (pre-1928 for most works)
+- ❌ Limited non-English texts
+- ❌ Inconsistent formatting across texts
+- ❌ Header/footer boilerplate must be removed
+
+**Accessing texts** (simple HTTP approach):
+
+Most Python packages for Gutenberg build local databases, which is overkill for student projects. Instead, use direct HTTP access:
+
+```python
+import requests
+import re
+
+# Download a specific text by ID
+# Find IDs by browsing gutenberg.org
+gutenberg_id = 1342  # Pride and Prejudice
+
+url = f'https://www.gutenberg.org/files/{gutenberg_id}/{gutenberg_id}-0.txt'
+response = requests.get(url)
+text = response.text
+
+# Remove Gutenberg header/footer
+# Start of book usually marked by "*** START OF"
+# End usually marked by "*** END OF"
+start_pattern = r'\*\*\* START OF .+ \*\*\*'
+end_pattern = r'\*\*\* END OF .+ \*\*\*'
+
+start_match = re.search(start_pattern, text)
+end_match = re.search(end_pattern, text)
+
+if start_match and end_match:
+    clean_text = text[start_match.end():end_match.start()].strip()
+else:
+    # Fallback: just use the whole text
+    clean_text = text
+
+print(f"Retrieved {len(clean_text)} characters")
+```
+
+**Finding book IDs:**
+1. Search gutenberg.org for your title
+2. Look at the URL: `gutenberg.org/ebooks/1342` ← this is the ID
+3. Try `https://www.gutenberg.org/files/1342/1342-0.txt` (UTF-8 version)
+4. If that fails, try `1342.txt` or check the book's page for download links
+
+**Batch downloading:**
+```python
+# Download multiple books
+book_ids = {
+    'pride_prejudice': 1342,
+    'frankenstein': 84,
+    'dracula': 345,
+    'moby_dick': 2701
+}
+
+corpus = {}
+for name, book_id in book_ids.items():
+    url = f'https://www.gutenberg.org/files/{book_id}/{book_id}-0.txt'
+    try:
+        response = requests.get(url)
+        corpus[name] = response.text
+        print(f"✓ Downloaded {name}")
+    except:
+        print(f"✗ Failed to download {name}")
+```
+
+**Use cases for this course:**
+- Sentiment analysis on 19th-century novels
+- Stylometric analysis (authorship attribution)
+- Diachronic change in literary language
+- Genre comparison (Gothic vs. Realist vs. Romantic)
+- Character network analysis
+
+---
+
+### Oxford Text Archive (OTA)
+
+**Website:** [ota.bodleian.ox.ac.uk](https://ota.bodleian.ox.ac.uk)
+
+**What it is:**  
+One of the oldest and most reputable digital humanities text repositories, maintained by Oxford University. Contains over 2,500 literary and linguistic resources, including corpora, editions, and linguistic datasets.
+
+**Strengths:**
+- ✅ High scholarly quality (peer-reviewed, curated)
+- ✅ Diverse text types (literature, drama, poetry, correspondence, historical documents)
+- ✅ Rich metadata and documentation
+- ✅ Multiple languages and time periods
+- ✅ Linguistically annotated corpora (POS-tagged, parsed)
+- ✅ Freely available for research (with registration)
+
+**Limitations:**
+- ❌ Requires free registration to download
+- ❌ Some texts have licensing restrictions
+- ❌ Variable formats (XML, plain text, TEI)
+- ❌ May require XML parsing skills
+- ❌ Smaller than Gutenberg (more selective)
+
+**Access process:**
+1. Register for free account at [ota.bodleian.ox.ac.uk](https://ota.bodleian.ox.ac.uk)
+2. Search catalog by author, period, genre, or language
+3. Download texts (usually as ZIP files)
+4. Check README for format details and licensing
+
+**Notable collections:**
+- **Shakespeare's plays** (TEI-encoded)
+- **British National Corpus** (100 million word sample of British English)
+- **Corpus of Early English Correspondence** (historical letters)
+- **Lampeter Corpus** (18th-19th century essays and treatises)
+
+**Processing OTA texts:**
+
+Many OTA texts use TEI (Text Encoding Initiative) XML. Here's a simple parser:
+
+```python
+import requests
+from bs4 import BeautifulSoup
+
+# Example: parse TEI-encoded text
+# (You'd download this from OTA first)
+
+with open('shakespeare_hamlet.xml', 'r', encoding='utf-8') as f:
+    xml_content = f.read()
+
+# Parse with BeautifulSoup
+soup = BeautifulSoup(xml_content, 'xml')
+
+# Extract all speech text (for drama)
+speeches = soup.find_all('sp')  # Speech elements
+for speech in speeches[:5]:  # First 5 speeches
+    speaker = speech.find('speaker')
+    lines = speech.find_all('l')  # Line elements
+    if speaker and lines:
+        print(f"{speaker.text}:")
+        for line in lines:
+            print(f"  {line.text}")
+```
+
+**For simpler workflows:**  
+Many OTA texts are also available in plain text. Check the download options or convert XML to text:
+
+```python
+# Extract just the text content from TEI
+soup = BeautifulSoup(xml_content, 'xml')
+text_body = soup.find('text')
+plain_text = text_body.get_text(separator=' ', strip=True)
+```
+
+**Use cases for this course:**
+- Register variation (academic vs. literary vs. spoken)
+- Historical language change (Early Modern → Contemporary)
+- Drama analysis (character speech patterns)
+- Corpus linguistics (using pre-annotated corpora)
+
+---
+
+### Kaggle
+
+**Website:** [kaggle.com/datasets](https://www.kaggle.com/datasets)
+
+**What it is:**  
+A platform for data science competitions and dataset sharing. Contains thousands of user-contributed datasets on diverse topics, including text corpora.
+
+**Strengths:**
+- ✅ Huge variety (100,000+ datasets)
+- ✅ Modern, relevant corpora (social media, news, reviews)
+- ✅ Often pre-cleaned and formatted
+- ✅ Includes code notebooks showing example analyses
+- ✅ Easy download (API or direct download)
+- ✅ Community discussions and ratings
+
+**Limitations & Pitfalls:**
+- ⚠️ **Quality varies widely** - User-contributed, not peer-reviewed
+- ⚠️ **Copyright unclear** - Not all datasets have clear licensing
+- ⚠️ **Bias and representativeness** - Often scraped from social media (skewed demographics)
+- ⚠️ **Sustainability** - Datasets can be removed or become unavailable
+- ⚠️ **Documentation inconsistent** - Some datasets poorly described
+- ⚠️ **Computational focus** - Designed for ML, not humanities research
+
+::: {.callout-warning}
+## Use Kaggle Datasets Critically
+Before using a Kaggle dataset for academic work:
+
+1. **Check provenance**: Where did the data come from? Is scraping/collection ethical?
+2. **Verify licensing**: Can you legally use it? Can you redistribute findings?
+3. **Assess quality**: Is it clean? Complete? Representative?
+4. **Consider bias**: Who is included/excluded? What are the demographic skews?
+5. **Document thoroughly**: Kaggle datasets can disappear—save metadata and URLs
+6. **Cross-reference**: Can findings be validated with established corpora?
+
+**Red flags:**
+- No information about data collection methods
+- Scraped from platforms without API authorization
+- No demographic metadata (who is represented?)
+- Dataset owner has no credentials or history
+- Violates platform terms of service (e.g., Twitter scraping after 2023)
+:::
+
+**Appropriate use cases:**
+
+✅ **Good for exploratory work:**
+- Testing methods on contemporary language
+- Comparing social media vs. formal writing
+- Analyzing product reviews for sentiment patterns
+- Exploring informal language and emoji use
+
+❌ **Problematic for:**
+- Making generalizable claims about language use
+- Historical or canonical literary analysis
+- Academic writing analysis (use MICUSP instead)
+- Any work requiring demographic representativeness
+
+**Accessing Kaggle datasets:**
+
+```python
+# Option 1: Manual download from website
+# 1. Go to kaggle.com/datasets
+# 2. Search for your topic
+# 3. Download CSV/JSON
+# 4. Upload to Colab or load locally
+
+# Option 2: Kaggle API (requires setup)
+# Not recommended for novices—stick with manual download
+
+import polars as pl
+
+# After downloading, load like any other CSV
+df = pl.read_csv('path/to/kaggle_dataset.csv')
+```
+
+**Example datasets relevant to humanities:**
+- **Movie reviews** (sentiment, rhetoric)
+- **Reddit comments** (informal language, communities)
+- **News articles** (genre, bias, framing)
+- **Song lyrics** (poetic language, cultural trends)
+- **Wikipedia articles** (encyclopedic register)
+
+**Bottom line:**  
+Kaggle is useful for **exploring modern, informal, or domain-specific language**, but should be used cautiously and critically. For canonical humanities research, prefer established repositories like OTA, Gutenberg, or domain-specific corpora.
+
+---
+
+### Other Useful Repositories
+
+**HathiTrust Digital Library**  
+**Website:** [hathitrust.org](https://www.hathitrust.org)  
+**Content:** 17+ million digitized books, many post-1928  
+**Access:** Browse freely, bulk access requires research agreement  
+**Use case:** Large-scale diachronic studies, 20th-century texts
+
+**Internet Archive**  
+**Website:** [archive.org](https://archive.org)  
+**Content:** Books, periodicals, audio, video, web archives  
+**Access:** Free download (check copyright)  
+**Use case:** Historical periodicals, early 20th-century materials
+
+**Corpus of Contemporary American English (COCA)**  
+**Website:** [english-corpora.org/coca](https://www.english-corpora.org/coca)  
+**Content:** 1 billion words of American English (1990-2019)  
+**Access:** Free online interface, full download requires purchase  
+**Use case:** Contemporary American English reference corpus
+
+**British National Corpus (BNC)**  
+**Website:** [english-corpora.org/bnc](https://www.english-corpora.org/bnc)  
+**Content:** 100 million words of British English  
+**Access:** Free online, downloadable via OTA  
+**Use case:** British English reference, register variation
+
+---
+
+## Adding Your Own Data## Adding Your Own Data
+
+You can adapt most mini labs to work with your own data:
+
+### Option 1: Upload to Google Drive
+```python
+from google.colab import drive
+drive.mount('/content/drive')
+
+# Load from your Drive
+df = pl.read_csv('/content/drive/MyDrive/my_data.csv')
+```
+
+### Option 2: Upload Directly to Colab Session
+```python
+from google.colab import files
+uploaded = files.upload()
+
+import io
+df = pl.read_csv(io.BytesIO(uploaded['filename.csv']))
+```
+
+### Option 3: Load from URL
+```python
+# If your data is hosted online
+df = pl.read_csv('https://your-url.com/data.csv')
+```
+
+## Getting Help with Data
+
+If you encounter issues loading or processing data:
+
+1. **Check the file path** - URLs must be exact
+2. **Verify the format** - Is it CSV, TSV, or Parquet?
+3. **Look at the examples** - Mini labs show working code
+4. **Check encoding** - Some text files may need `encoding='utf-8'`
+5. **Ask for help** - Share error messages on the discussion board
+
+::: {.callout-tip}
+## Pro Tip: Exploring New Data
+When working with a new dataset:
+```python
+# Quick exploration
+print(df.shape)       # How many rows/columns?
+print(df.columns)     # What variables are there?
+print(df.head())      # What do the first rows look like?
+print(df.describe())  # What are the summary statistics?
+```
+:::
