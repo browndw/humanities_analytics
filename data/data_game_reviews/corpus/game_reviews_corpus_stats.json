@@ -1,0 +1,38 @@
+{
+  "Action": {
+    "words": 400015,
+    "docs": 5525,
+    "games": 367,
+    "words_by_recommend": {
+      "Recommended": 200143,
+      "Not Recommended": 199872
+    }
+  },
+  "RPG": {
+    "words": 400027,
+    "docs": 5036,
+    "games": 344,
+    "words_by_recommend": {
+      "Recommended": 200074,
+      "Not Recommended": 199953
+    }
+  },
+  "Strategy": {
+    "words": 400050,
+    "docs": 5447,
+    "games": 361,
+    "words_by_recommend": {
+      "Recommended": 200226,
+      "Not Recommended": 199824
+    }
+  },
+  "Simulation": {
+    "words": 400003,
+    "docs": 5960,
+    "games": 364,
+    "words_by_recommend": {
+      "Recommended": 200086,
+      "Not Recommended": 199917
+    }
+  }
+}
